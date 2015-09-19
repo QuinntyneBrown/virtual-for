@@ -1,0 +1,19 @@
+{
+  "name": "virtualIndexedListView",
+  "version": "1.0.0",
+  "description": "Virtual Indexed List View",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QuinntyneBrown/virtualIndexedListView"
+  },
+  "author": "Quinntyne Brown",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuinntyneBrown/virtualIndexedListView/issues"
+  },
+  "homepage": "https://github.com/QuinntyneBrown/virtualIndexedListView"
+}
