@@ -3,6 +3,7 @@
 module VirtualIndexedListView {
 
     export class VirtualIndexedListView {
+
         constructor(private getHtml: IGetHtmlFn, private virtualIndexedListViewManager: IVirtualIndexedListViewManager ) { }
 
         public static createInstance = (getHtml: IGetHtmlFn, virtualIndexedListViewManager: IVirtualIndexedListViewManager) => {
@@ -24,30 +25,19 @@ module VirtualIndexedListView {
 
                 transclude(scope.$new(),  (clone: ng.IAugmentedJQuery) => {
 
-                    var items = getItems(attributes, scope);
-
                     removeVirtualListCustomAttributes(clone);
 
                     virtualIndexedListViewManager.createInstance({
                         element: angular.element(parentElement),
                         template: getHtml(clone[0], true),
                         scope: scope,
-                        items: items,
+                        items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
                         itemName: attributes["virtualIndexedListViewItemName"],
                         itemHeight: attributes["virtualIndexedListViewItemHeight"],
                         window: window
                     }).render();
 
                 });
-
-            }
-
-            function getItems(attributes: ng.IAttributes, scope:ng.IScope) {
-                if (attributes["virtualIndexedListViewItems"]) {
-                    return JSON.parse(attributes["virtualIndexedListViewItems"]);
-                } else {
-                    return scope[attributes["virtualIndexedListViewCollectionName"]];
-                }                
             }
 
             function removeVirtualListCustomAttributes(clone: ng.IAugmentedJQuery) {

@@ -7,14 +7,15 @@
 <body data-ng-app="basicApp">
 
     <div virtual-indexed-list-view
-         virtual-indexed-list-view-items='[{ "name" : "Matrix" }]'
+         virtual-indexed-list-view-items='[{ "name" : "Matrix" },{ "name" : "This the End" }]'
          virtual-indexed-list-view-item-name="movie"
-         virtual-indexed-list-view-item-height="10">
+         virtual-indexed-list-view-item-height="30">
 
         {{ movie.name }}
 
     </div>
 
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
     <script src="../../node_modules/rx/dist/rx.all.compat.min.js"></script>
     <script src="../../node_modules/angular/angular.min.js"></script>

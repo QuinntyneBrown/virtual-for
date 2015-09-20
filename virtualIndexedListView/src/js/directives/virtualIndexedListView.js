@@ -15,27 +15,18 @@ var VirtualIndexedListView;
                 var getHtml = _this.getHtml;
                 return function (scope, element, attributes, controller, transclude) {
                     transclude(scope.$new(), function (clone) {
-                        var items = getItems(attributes, scope);
                         removeVirtualListCustomAttributes(clone);
                         virtualIndexedListViewManager.createInstance({
                             element: angular.element(parentElement),
                             template: getHtml(clone[0], true),
                             scope: scope,
-                            items: items,
+                            items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
                             itemName: attributes["virtualIndexedListViewItemName"],
                             itemHeight: attributes["virtualIndexedListViewItemHeight"],
                             window: window
                         }).render();
                     });
                 };
-                function getItems(attributes, scope) {
-                    if (attributes["virtualIndexedListViewItems"]) {
-                        return JSON.parse(attributes["virtualIndexedListViewItems"]);
-                    }
-                    else {
-                        return scope[attributes["virtualIndexedListViewCollectionName"]];
-                    }
-                }
                 function removeVirtualListCustomAttributes(clone) {
                     clone[0].removeAttribute("virtual-indexed-list-view");
                     clone[0].removeAttribute("virtual-indexed-list-view-collection-name");

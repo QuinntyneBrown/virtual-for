@@ -13,7 +13,7 @@ var VirtualIndexedListView;
                 instance.template = options.template;
                 var virtualIndexedListViewRenderer = _this.$injector.get("virtualIndexedListViewRenderer");
                 instance.virtualIndexedListViewRenderer = virtualIndexedListViewRenderer.createInstance({
-                    containerHeight: options.items.length * 10,
+                    containerHeight: options.items.length * options.itemHeight,
                     items: options.items,
                     itemName: options.itemName,
                     itemHeight: options.itemHeight,

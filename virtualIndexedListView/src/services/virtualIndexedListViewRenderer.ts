@@ -26,6 +26,8 @@ module VirtualIndexedListView {
 
                 var containerElement = angular.element("<div class='container'></div>");
 
+                containerElement.css("height", this.containerHeight);
+
                 for (var i = 0; i < this.items.length; i++) {
                     var childScope = this.scope.$new(true);
                     childScope[this.itemName] = this.items[i];
