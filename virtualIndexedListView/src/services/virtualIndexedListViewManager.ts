@@ -4,9 +4,7 @@ module VirtualIndexedListView {
 
     class VirtualIndexedListViewManager implements IVirtualIndexedListViewManager {
 
-        constructor(private $injector: ng.auto.IInjectorService, private $timeout: ng.ITimeoutService) {
-
-        }
+        constructor(private $injector: ng.auto.IInjectorService, private $timeout: ng.ITimeoutService) { }
 
         public createInstance = (options: any) => {
             var instance = new VirtualIndexedListViewManager(this.$injector, this.$timeout);

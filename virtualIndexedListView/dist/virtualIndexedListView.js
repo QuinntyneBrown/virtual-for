@@ -4,84 +4,6 @@ angular.module("virtualIndexedListView", ["rx"]);
 //# sourceMappingURL=virtualIndexedListView.module.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
-(function (VirtualIndexedListView_1) {
-    var VirtualIndexedListView = (function () {
-        function VirtualIndexedListView(getHtml, virtualIndexedListViewManager) {
-            var _this = this;
-            this.getHtml = getHtml;
-            this.virtualIndexedListViewManager = virtualIndexedListViewManager;
-            this.restirct = "A";
-            this.transclude = 'element';
-            this.scope = false;
-            this.compile = function (template) {
-                var virtualIndexedListViewManager = _this.virtualIndexedListViewManager;
-                var parentElement = template.parent();
-                var getHtml = _this.getHtml;
-                return function (scope, element, attributes, controller, transclude) {
-                    transclude(scope.$new(), function (clone) {
-                        var items = getItems(attributes, scope);
-                        removeVirtualListCustomAttributes(clone);
-                        virtualIndexedListViewManager.createInstance({
-                            element: angular.element(parentElement),
-                            template: getHtml(clone[0], true),
-                            scope: scope,
-                            items: items,
-                            itemName: attributes["virtualIndexedListViewItemName"],
-                            itemHeight: attributes["virtualIndexedListViewItemHeight"],
-                            window: window
-                        }).render();
-                    });
-                };
-                function getItems(attributes, scope) {
-                    if (attributes["virtualIndexedListViewItems"]) {
-                        return JSON.parse(attributes["virtualIndexedListViewItems"]);
-                    }
-                    else {
-                        return scope[attributes["virtualIndexedListViewCollectionName"]];
-                    }
-                }
-                function removeVirtualListCustomAttributes(clone) {
-                    clone[0].removeAttribute("virtual-indexed-list-view");
-                    clone[0].removeAttribute("virtual-indexed-list-view-collection-name");
-                    clone[0].removeAttribute("virtual-indexed-list-view-item-name");
-                    clone[0].removeAttribute("virtual-indexed-list-view-item-height");
-                    clone[0].removeAttribute("virtual-indexed-list-view-items");
-                }
-            };
-        }
-        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListViewManager) {
-            return new VirtualIndexedListView(getHtml, virtualIndexedListViewManager);
-        };
-        return VirtualIndexedListView;
-    })();
-    VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
-    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListViewManager", VirtualIndexedListView.createInstance]);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../directives/virtualIndexedListView.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
-    var getHtml = function (who, deep) {
-        if (!who || !who.tagName)
-            return '';
-        var txt, ax, el = document.createElement("div");
-        el.appendChild(who.cloneNode(false));
-        txt = el.innerHTML;
-        if (deep) {
-            ax = txt.indexOf('>') + 1;
-            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
-        }
-        el = null;
-        return txt;
-    };
-    angular.module("virtualIndexedListView").value("getHtml", getHtml);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../values/getHtml.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     var VirtualIndexedListViewManager = (function () {
         function VirtualIndexedListViewManager($injector, $timeout) {
@@ -167,3 +89,81 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/virtualIndexedListViewRenderer.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView_1) {
+    var VirtualIndexedListView = (function () {
+        function VirtualIndexedListView(getHtml, virtualIndexedListViewManager) {
+            var _this = this;
+            this.getHtml = getHtml;
+            this.virtualIndexedListViewManager = virtualIndexedListViewManager;
+            this.restirct = "A";
+            this.transclude = 'element';
+            this.scope = false;
+            this.compile = function (template) {
+                var virtualIndexedListViewManager = _this.virtualIndexedListViewManager;
+                var parentElement = template.parent();
+                var getHtml = _this.getHtml;
+                return function (scope, element, attributes, controller, transclude) {
+                    transclude(scope.$new(), function (clone) {
+                        var items = getItems(attributes, scope);
+                        removeVirtualListCustomAttributes(clone);
+                        virtualIndexedListViewManager.createInstance({
+                            element: angular.element(parentElement),
+                            template: getHtml(clone[0], true),
+                            scope: scope,
+                            items: items,
+                            itemName: attributes["virtualIndexedListViewItemName"],
+                            itemHeight: attributes["virtualIndexedListViewItemHeight"],
+                            window: window
+                        }).render();
+                    });
+                };
+                function getItems(attributes, scope) {
+                    if (attributes["virtualIndexedListViewItems"]) {
+                        return JSON.parse(attributes["virtualIndexedListViewItems"]);
+                    }
+                    else {
+                        return scope[attributes["virtualIndexedListViewCollectionName"]];
+                    }
+                }
+                function removeVirtualListCustomAttributes(clone) {
+                    clone[0].removeAttribute("virtual-indexed-list-view");
+                    clone[0].removeAttribute("virtual-indexed-list-view-collection-name");
+                    clone[0].removeAttribute("virtual-indexed-list-view-item-name");
+                    clone[0].removeAttribute("virtual-indexed-list-view-item-height");
+                    clone[0].removeAttribute("virtual-indexed-list-view-items");
+                }
+            };
+        }
+        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListViewManager) {
+            return new VirtualIndexedListView(getHtml, virtualIndexedListViewManager);
+        };
+        return VirtualIndexedListView;
+    })();
+    VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
+    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListViewManager", VirtualIndexedListView.createInstance]);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../directives/virtualIndexedListView.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    var getHtml = function (who, deep) {
+        if (!who || !who.tagName)
+            return '';
+        var txt, ax, el = document.createElement("div");
+        el.appendChild(who.cloneNode(false));
+        txt = el.innerHTML;
+        if (deep) {
+            ax = txt.indexOf('>') + 1;
+            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+        }
+        el = null;
+        return txt;
+    };
+    angular.module("virtualIndexedListView").value("getHtml", getHtml);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../values/getHtml.js.map

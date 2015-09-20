@@ -1,6 +1,6 @@
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
-(function (VirtualIndexedListView_1) {
+(function (_VirtualIndexedListView) {
     var VirtualIndexedListView = (function () {
         function VirtualIndexedListView(getHtml, virtualIndexedListViewManager) {
             var _this = this;
@@ -50,7 +50,7 @@ var VirtualIndexedListView;
         };
         return VirtualIndexedListView;
     })();
-    VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
+    _VirtualIndexedListView.VirtualIndexedListView = VirtualIndexedListView;
     angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListViewManager", VirtualIndexedListView.createInstance]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListView.js.map
