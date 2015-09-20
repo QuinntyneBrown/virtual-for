@@ -22,6 +22,21 @@
     },
     "angularjs/angular-mocks.d.ts": {
       "commit": "2e85e74fae2de7de4ab4adea0b183d74e9f7d92a"
+    },
+    "rx/rx-lite.d.ts": {
+      "commit": "947dd5063b9fbfdc6eb74c77ab03a5b539ebc541"
+    },
+    "rx/rx.d.ts": {
+      "commit": "947dd5063b9fbfdc6eb74c77ab03a5b539ebc541"
+    },
+    "rx/rx.time.d.ts": {
+      "commit": "947dd5063b9fbfdc6eb74c77ab03a5b539ebc541"
+    },
+    "rx/rx.time-lite.d.ts": {
+      "commit": "947dd5063b9fbfdc6eb74c77ab03a5b539ebc541"
+    },
+    "rx-angular/rx.angular.d.ts": {
+      "commit": "947dd5063b9fbfdc6eb74c77ab03a5b539ebc541"
     }
   }
 }

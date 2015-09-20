@@ -2,46 +2,56 @@
 var VirtualIndexedListView;
 (function (VirtualIndexedListView_1) {
     var VirtualIndexedListView = (function () {
-        function VirtualIndexedListView(getHtml, virtualIndexedListManager) {
+        function VirtualIndexedListView(getHtml, virtualIndexedListViewManager) {
             var _this = this;
             this.getHtml = getHtml;
-            this.virtualIndexedListManager = virtualIndexedListManager;
+            this.virtualIndexedListViewManager = virtualIndexedListViewManager;
             this.restirct = "A";
             this.transclude = 'element';
             this.scope = false;
             this.compile = function (template) {
-                var virtualIndexedListManager = _this.virtualIndexedListManager;
+                var virtualIndexedListViewManager = _this.virtualIndexedListViewManager;
                 var parentElement = template.parent();
-                var getHTML = _this.getHtml;
+                var getHtml = _this.getHtml;
                 return function (scope, element, attributes, controller, transclude) {
                     transclude(scope.$new(), function (clone) {
+                        var items = getItems(attributes, scope);
                         removeVirtualListCustomAttributes(clone);
-                        virtualIndexedListManager.createInstance({
+                        virtualIndexedListViewManager.createInstance({
                             element: angular.element(parentElement),
-                            template: getHTML(clone[0], true),
+                            template: getHtml(clone[0], true),
                             scope: scope,
-                            items: scope[attributes["virtualIndexedListViewCollectionName"]],
+                            items: items,
                             itemName: attributes["virtualIndexedListViewItemName"],
                             itemHeight: attributes["virtualIndexedListViewItemHeight"],
                             window: window
                         }).render();
                     });
                 };
+                function getItems(attributes, scope) {
+                    if (attributes["virtualIndexedListViewItems"]) {
+                        return JSON.parse(attributes["virtualIndexedListViewItems"]);
+                    }
+                    else {
+                        return scope[attributes["virtualIndexedListViewCollectionName"]];
+                    }
+                }
                 function removeVirtualListCustomAttributes(clone) {
                     clone[0].removeAttribute("virtual-indexed-list-view");
                     clone[0].removeAttribute("virtual-indexed-list-view-collection-name");
                     clone[0].removeAttribute("virtual-indexed-list-view-item-name");
                     clone[0].removeAttribute("virtual-indexed-list-view-item-height");
+                    clone[0].removeAttribute("virtual-indexed-list-view-items");
                 }
             };
         }
-        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListManager) {
-            return new VirtualIndexedListView(getHtml, virtualIndexedListManager);
+        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListViewManager) {
+            return new VirtualIndexedListView(getHtml, virtualIndexedListViewManager);
         };
         return VirtualIndexedListView;
     })();
     VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
-    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListManager", VirtualIndexedListView.createInstance]);
+    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListViewManager", VirtualIndexedListView.createInstance]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../directives/virtualIndexedListView.js.map

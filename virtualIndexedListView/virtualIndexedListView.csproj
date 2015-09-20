@@ -62,15 +62,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="examples\basic\basic.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewManager.ts" />
-    <TypeScriptCompile Include="src\values\getHTML.ts" />
+    <TypeScriptCompile Include="src\services\virtualIndexedListViewRenderer.ts" />
+    <TypeScriptCompile Include="src\values\getHtml.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
+    <TypeScriptCompile Include="test\virtualIndexedListViewManager.spec.ts" />
+    <TypeScriptCompile Include="typings\angularjs\angular-mocks.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="typings\es6-promise\es6-promise.d.ts" />
+    <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="typings\lovefield\lovefield.d.ts" />
+    <TypeScriptCompile Include="typings\rx-angular\rx.angular.d.ts" />
+    <TypeScriptCompile Include="typings\rx\rx-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rx\rx.d.ts" />
+    <TypeScriptCompile Include="typings\rx\rx.time-lite.d.ts" />
+    <TypeScriptCompile Include="typings\rx\rx.time.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
     <TypeScriptCompile Include="typings\typeScriptApp.d.ts" />
   </ItemGroup>
@@ -79,9 +89,9 @@
     <Content Include="dist\virtualIndexedListView.js" />
     <Content Include="dist\virtualIndexedListView.min.js" />
     <Content Include="examples\basic\basic.html" />
-    <Content Include="examples\basic\basic.js" />
     <Content Include="gulpfile.js" />
     <Content Include="gulpfile.config.js" />
+    <Content Include="karma.conf.js" />
     <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>

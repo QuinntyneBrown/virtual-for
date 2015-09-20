@@ -41,8 +41,10 @@ gulp.task('concat-compiled-ts-tests', ['compile-ts-tests'], function () {
 
 gulp.task('run-unit-tests', ['concat-compiled-ts-tests'], function () {
     return gulp.src([
+        'node_modules/rx/dist/rx.all.compat.min.js',
         'node_modules/angular/angular.js',
         'node_modules/angular-mocks/angular-mocks.js',
+        'node_modules/rx-angular/dist/rx.angular.min.js',
         'dist/virtualIndexedListView.js',
         'test/tests.js'])
         .pipe(karma({

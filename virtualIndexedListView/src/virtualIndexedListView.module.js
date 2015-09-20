@@ -1,3 +1,3 @@
-/// <reference path="../typings/angularjs/angular.d.ts" />
-angular.module("virtualIndexedListView", []);
+/// <reference path="../typings/typescriptapp.d.ts" />
+angular.module("virtualIndexedListView", ["rx"]);
 //# sourceMappingURL=virtualIndexedListView.module.js.map

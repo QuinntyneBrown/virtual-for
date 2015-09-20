@@ -2,11 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Basic Example</title>
+    <link href="basic.css" rel="stylesheet" />
 </head>
-    <body data-ng-app="basicApp">
-        
-        <script src="../../node_modules/angular/angular.min.js"></script>
-        <script src="../../dist/virtualIndexedListView.min.js"></script>
-        <script src="basic.js"></script>
-    </body>
+<body data-ng-app="basicApp">
+
+    <div virtual-indexed-list-view
+         virtual-indexed-list-view-items="[1,2,3]"
+         virtual-indexed-list-view-item-name="foo"
+         virtual-indexed-list-view-collection-name="foos"
+         virtual-indexed-list-view-item-height="10">
+
+        {{ foo }}
+
+    </div>
+
+    <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
+    <script src="../../node_modules/rx/dist/rx.all.compat.min.js"></script>
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="../../node_modules/rx-angular/dist/rx.angular.min.js"></script>
+    <script src="../../dist/virtualIndexedListView.js"></script>
+
+    <script src="basic.js"></script>
+</body>
 </html>

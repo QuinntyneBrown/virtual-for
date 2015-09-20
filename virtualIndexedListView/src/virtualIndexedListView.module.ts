@@ -1,3 +1,3 @@
-﻿/// <reference path="../typings/angularjs/angular.d.ts" />
+﻿/// <reference path="../typings/typescriptapp.d.ts" />
 
-angular.module("virtualIndexedListView", []); 
+angular.module("virtualIndexedListView", ["rx"]); 

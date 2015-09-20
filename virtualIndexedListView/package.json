@@ -36,6 +36,8 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
     "karma-spec-reporter": "0.0.19",
-    "lovefield": "^2.0.63"
+    "lovefield": "^2.0.63",
+    "rx": "^3.1.2",
+    "rx-angular": "0.0.14"
   }
 }
