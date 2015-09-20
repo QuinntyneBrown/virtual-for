@@ -1,6 +1,10 @@
+/// <reference path="../typings/angularjs/angular.d.ts" />
+angular.module("virtualIndexedListView", []);
+
+//# sourceMappingURL=virtualIndexedListView.module.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
-(function (_VirtualIndexedListView) {
+(function (VirtualIndexedListView_1) {
     var VirtualIndexedListView = (function () {
         function VirtualIndexedListView(getHtml, virtualIndexedListManager) {
             var _this = this;
@@ -40,7 +44,34 @@ var VirtualIndexedListView;
         };
         return VirtualIndexedListView;
     })();
-    _VirtualIndexedListView.VirtualIndexedListView = VirtualIndexedListView;
+    VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
     angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["getHtml", "virtualIndexedListManager", VirtualIndexedListView.createInstance]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
-//# sourceMappingURL=virtualIndexedListView.js.map
+
+//# sourceMappingURL=../directives/virtualIndexedListView.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    var VirtualIndexedListViewManager = (function () {
+        function VirtualIndexedListViewManager() {
+            this.createInstance = function (options) {
+                var instance = new VirtualIndexedListViewManager();
+                return instance;
+            };
+            this.render = function () {
+            };
+        }
+        return VirtualIndexedListViewManager;
+    })();
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewManager", [VirtualIndexedListViewManager]);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../services/virtualIndexedListViewManager.js.map
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    var getHtml = function () {
+    };
+    angular.module("virtualIndexedListView").value("getHtml", getHtml);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../values/getHTML.js.map

@@ -66,6 +66,7 @@
     <TypeScriptCompile Include="src\services\virtualIndexedListViewManager.ts" />
     <TypeScriptCompile Include="src\values\getHTML.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
+    <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="typings\es6-promise\es6-promise.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
@@ -73,11 +74,10 @@
     <TypeScriptCompile Include="typings\tsd.d.ts" />
     <TypeScriptCompile Include="typings\typeScriptApp.d.ts" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="dist\" />
-    <Folder Include="test\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="dist\virtualIndexedListView.js" />
+    <Content Include="dist\virtualIndexedListView.min.js" />
     <Content Include="examples\basic\basic.html" />
     <Content Include="examples\basic\basic.js" />
     <Content Include="gulpfile.js" />

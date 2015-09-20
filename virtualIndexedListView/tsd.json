@@ -16,6 +16,12 @@
     },
     "lovefield/lovefield.d.ts": {
       "commit": "6f6e5c7dd9effe21fee14eb65fe340ecbbc8580a"
+    },
+    "jasmine/jasmine.d.ts": {
+      "commit": "aa306fbea1487a27a21b19b3d3027b895f797962"
+    },
+    "angularjs/angular-mocks.d.ts": {
+      "commit": "2e85e74fae2de7de4ab4adea0b183d74e9f7d92a"
     }
   }
 }

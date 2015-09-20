@@ -1,9 +1,21 @@
-﻿module VirtualIndexedListView {
+﻿/// <reference path="../../typings/typescriptapp.d.ts" />
 
-    class VirtualIndexedListViewManager {
+module VirtualIndexedListView {
+
+    class VirtualIndexedListViewManager implements IVirtualIndexedListManager {
 
         constructor() {
 
+        }
+
+        public createInstance = (options: any) => {
+            var instance = new VirtualIndexedListViewManager();
+
+            return instance;
+        }
+
+        public render = () => {
+            
         }
 
     }
