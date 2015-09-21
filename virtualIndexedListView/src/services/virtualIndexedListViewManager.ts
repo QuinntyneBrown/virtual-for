@@ -4,10 +4,13 @@ module VirtualIndexedListView {
 
     class VirtualIndexedListViewManager implements IVirtualIndexedListViewManager {
 
-        constructor(private $injector: ng.auto.IInjectorService, private $timeout: ng.ITimeoutService) { }
+        constructor(private $injector: ng.auto.IInjectorService,
+            private $interval: ng.IIntervalService,
+            private $timeout: ng.ITimeoutService,
+            private $window: ng.IWindowService) { }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewManager(this.$injector, this.$timeout);
+            var instance = new VirtualIndexedListViewManager(this.$injector, this.$interval, this.$timeout, this.$window);
             instance.element = options.element;
             instance.scope = options.scope;
             instance.template = options.template;
@@ -24,11 +27,11 @@ module VirtualIndexedListView {
                 template: options.template
             });
 
-            instance.elementCSS = options.window.getComputedStyle(instance.element[0], null);
+            instance.elementCSS = instance.$window.getComputedStyle(instance.element[0], null);
             if (instance.elementCSS && instance.elementCSS.overflowY && (instance.elementCSS.overflowY == "auto" || instance.elementCSS.overflowY == "scroll")) { instance.element[0].addEventListener("scroll", instance.debouceRender); }
-            options.window.addEventListener("mousewheel", instance.debouceRender);
-            options.window.addEventListener("scroll", instance.debouceRender);
-            options.window.addEventListener("resize", instance.debouceRender);
+            this.$window.addEventListener("mousewheel", instance.debouceRender);
+            this.$window.addEventListener("scroll", instance.onScroll);
+            this.$window.addEventListener("resize", instance.debouceRender);
 
             return instance;
         }
@@ -66,8 +69,26 @@ module VirtualIndexedListView {
 
         }
 
+        public onScroll = (e: Event) => {
+            if (this.lastScrollY == window.pageYOffset) {
+                setTimeout(this.debouceRender, 100);
+                return;
+            } else {
+                this.lastScrollY = window.pageYOffset;
+            }
+        }
+
+        public lastScrollY: number = window.pageYOffset; 
+
+        public scrollY: number = window.pageYOffset;
+
+        public innerHeight: number;
+
+        public topViewPort: number;
+
+        public bottomViewPort: number;
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewManager", ["$injector","$timeout",VirtualIndexedListViewManager]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewManager", ["$injector","$interval","$timeout","$window",VirtualIndexedListViewManager]);
 }
 

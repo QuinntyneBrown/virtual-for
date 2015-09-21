@@ -22,8 +22,7 @@ var VirtualIndexedListView;
                             scope: scope,
                             items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
                             itemName: attributes["virtualIndexedListViewItemName"],
-                            itemHeight: attributes["virtualIndexedListViewItemHeight"],
-                            window: window
+                            itemHeight: attributes["virtualIndexedListViewItemHeight"]
                         }).render();
                     });
                 };

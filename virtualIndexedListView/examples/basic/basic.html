@@ -5,15 +5,34 @@
     <link href="basic.css" rel="stylesheet" />
 </head>
 <body data-ng-app="basicApp">
-
+    
     <div virtual-indexed-list-view
-         virtual-indexed-list-view-items='[{ "name" : "Matrix" },{ "name" : "This the End" }]'
+         virtual-indexed-list-view-items='[
+         { "name" : "Matrix" },
+         { "name" : "This the End" },
+         { "name" : "Ghostbusters" },
+         { "name" : "300" },
+         { "name" : "Top Five" },
+         { "name" : "Wedding Crashers" },
+         { "name" : "Mission Impossible 2" },
+         { "name" : "Despicable Me" },
+         { "name" : "Her" },
+         { "name" : "Argo" },
+         { "name" : "The Two" },
+         { "name" : "Pain and No Gain" },
+         { "name" : "The Wedding Ringer" },
+         { "name" : "The Town" },
+         { "name" : "Hangover" },
+         { "name" : "Terminator" },
+         { "name" : "Avengers" },
+         { "name" : "The Transporter" }]'
          virtual-indexed-list-view-item-name="movie"
-         virtual-indexed-list-view-item-height="30">
+         virtual-indexed-list-view-item-height="75">
 
-        {{ movie.name }}
+        <h1>{{ movie.name }}</h1>
 
-    </div>
+    </div>        
+
 
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
@@ -23,5 +42,6 @@
     <script src="../../dist/virtualIndexedListView.js"></script>
 
     <script src="basic.js"></script>
+
 </body>
 </html>

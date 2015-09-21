@@ -48,5 +48,10 @@ table {
 }
 
 div {
-    height: 30px;
+    height: 75px;
+}
+
+h1 {
+    font-family: Arial;
+    font-size: 24px;
 }

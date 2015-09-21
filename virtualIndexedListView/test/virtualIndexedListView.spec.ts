@@ -16,9 +16,9 @@ describe("virtualList", () => {
     var template: string = [
         "<div virtual-indexed-list-view",
          "virtual-indexed-list-view-items='[1,2,3]'",
-         "virtual-indexed-list-view-item - name='foo'",
+         "virtual-indexed-list-view-item-name='foo'",
          "virtual-indexed-list-view-collection-name='foos'",
-         "virtual-indexed-list-view-item - height='10'>",
+         "virtual-indexed-list-view-item-height='10'>",
         "{{ foo }}",
     "</div>"
     ].join(" ");
