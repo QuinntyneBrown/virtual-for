@@ -65,11 +65,16 @@
     <TypeScriptCompile Include="examples\basic\basic.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
     <TypeScriptCompile Include="src\enums\scrollingDirection.ts" />
+    <TypeScriptCompile Include="src\functions\getY.ts" />
+    <TypeScriptCompile Include="src\functions\moveToY.ts" />
+    <TypeScriptCompile Include="src\functions\transformY.ts" />
     <TypeScriptCompile Include="src\services\viewPort.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewManager.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewRenderer.ts" />
-    <TypeScriptCompile Include="src\values\getHtml.ts" />
+    <TypeScriptCompile Include="src\functions\getHtml.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
+    <TypeScriptCompile Include="test\getY.spec.ts" />
+    <TypeScriptCompile Include="test\moveToY.spec.ts" />
     <TypeScriptCompile Include="test\viewPort.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListViewManager.spec.ts" />

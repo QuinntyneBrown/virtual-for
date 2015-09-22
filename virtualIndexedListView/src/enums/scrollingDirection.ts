@@ -4,7 +4,8 @@
 
     export enum ScrollingDirection {
         Up,
-        Down
+        Down,
+        None
     }
 
 } 

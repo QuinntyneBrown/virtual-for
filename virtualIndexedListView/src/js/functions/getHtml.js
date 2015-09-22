@@ -18,4 +18,4 @@ var VirtualIndexedListView;
     angular.module("virtualIndexedListView").value("virtualIndexedListView.getHtml", getHtml);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
-//# sourceMappingURL=../values/getHtml.js.map
+//# sourceMappingURL=../functions/getHtml.js.map

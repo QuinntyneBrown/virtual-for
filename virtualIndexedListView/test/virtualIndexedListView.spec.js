@@ -23,4 +23,5 @@ describe("virtualIndexedListView", function () {
         scope = $rootScope.$new(true);
     }));
 });
+
 //# sourceMappingURL=virtualIndexedListView.spec.js.map

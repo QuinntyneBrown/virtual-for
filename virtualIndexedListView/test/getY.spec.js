@@ -1,16 +1,16 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
 "use strict";
-describe("viewPort", function () {
+describe("getY", function () {
     beforeEach(function () {
         angular.mock.module("virtualIndexedListView");
     });
-    var viewPort;
+    var getY;
     beforeEach(inject(function ($injector) {
-        viewPort = $injector.get("virtualIndexedListView.viewPort");
+        getY = $injector.get("virtualIndexedListView.getY");
     }));
     it("should be defined", function () {
-        expect(viewPort).toBeDefined();
+        expect(getY).toBeDefined();
     });
 });
 
-//# sourceMappingURL=viewPort.spec.js.map
+//# sourceMappingURL=getY.spec.js.map

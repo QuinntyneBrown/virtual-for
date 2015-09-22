@@ -2,6 +2,18 @@
 
 declare module VirtualIndexedListView {
     
+    export interface IMoveToY {
+        (element: HTMLElement, y: number): HTMLElement;
+    }
+
+    export interface ITransformY {
+        (element: HTMLElement, y: number): HTMLElement;
+    }
+
+    export interface IGetY {
+        (element: HTMLElement): number;
+    }
+
     export interface IRenderOptions {
         scrollY: number;
         lastScrollY: number;
