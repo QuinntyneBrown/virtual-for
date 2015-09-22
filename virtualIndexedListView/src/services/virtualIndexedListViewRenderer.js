@@ -3,16 +3,17 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $injector, $interval, getY, observeOnScope, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $injector, $interval, $timeout, getY, observeOnScope, transformY) {
             var _this = this;
             this.$compile = $compile;
             this.$injector = $injector;
             this.$interval = $interval;
+            this.$timeout = $timeout;
             this.getY = getY;
             this.observeOnScope = observeOnScope;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.getY, _this.observeOnScope, _this.transformY);
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.$timeout, _this.getY, _this.observeOnScope, _this.transformY);
                 instance.items = options.items;
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
@@ -22,15 +23,15 @@ var VirtualIndexedListView;
                 instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: instance.element });
                 if (instance.numberOfRenderedItems > instance.items.length)
                     instance.numberOfRenderedItems = instance.items.length;
-                setInterval(function () {
+                instance.$interval(function () {
                     instance.render({
                         scrollY: instance.viewPort.scrollY,
                         lastScrollY: instance.lastYScroll,
                         viewPortHeight: instance.viewPort.height
                     });
                     instance.lastYScroll = instance.viewPort.scrollY;
-                }, 10);
-                var timeoutId = null;
+                }, 10, null, false);
+                var timeoutPromise = null;
                 instance.observeOnScope(instance.scope, 'vm.filterTerm')
                     .map(function (data) {
                     return data;
@@ -42,10 +43,11 @@ var VirtualIndexedListView;
                     instance.filterFn = function (value) {
                         return value.name.indexOf(instance.filterTerm.newValue) > -1;
                     };
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(function () {
+                    if (timeoutPromise)
+                        instance.$timeout.cancel(timeoutPromise);
+                    timeoutPromise = instance.$timeout(function () {
                         instance.render({ force: true, lastScrollY: 0, scrollY: 0, viewPortHeight: instance.viewPort.height });
-                    }, 10);
+                    }, 10, false);
                 });
                 instance.filterFn = instance.scope.filterFn;
                 return instance;
@@ -56,7 +58,7 @@ var VirtualIndexedListView;
                     options = {
                         lastScrollY: 0,
                         scrollY: 0,
-                        viewPortHeight: options.viewPortHeight || _this.viewPort.height
+                        viewPortHeight: _this.viewPort.height
                     };
                 }
                 var containerElement;
@@ -303,6 +305,6 @@ var VirtualIndexedListView;
         });
         return VirtualIndexedListViewRenderer;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListViewRenderer.js.map

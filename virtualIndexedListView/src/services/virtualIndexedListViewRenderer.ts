@@ -8,6 +8,7 @@ module VirtualIndexedListView {
         constructor(private $compile: ng.ICompileService,
             private $injector: ng.auto.IInjectorService,
             private $interval: ng.IIntervalService,
+            private $timeout: ng.ITimeoutService,
             private getY: IGetY,
             private observeOnScope: any,
             private transformY: ITransformY) {
@@ -15,7 +16,7 @@ module VirtualIndexedListView {
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.getY, this.observeOnScope, this.transformY);
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getY, this.observeOnScope, this.transformY);
             instance.items = options.items;
             instance.itemName = options.itemName;
             instance.scope = options.scope;
@@ -27,16 +28,16 @@ module VirtualIndexedListView {
             if (instance.numberOfRenderedItems > instance.items.length)
                 instance.numberOfRenderedItems = instance.items.length;
 
-            setInterval(() => {
+            instance.$interval(() => {
                 instance.render({
                     scrollY: instance.viewPort.scrollY,
                     lastScrollY: instance.lastYScroll,
                     viewPortHeight: instance.viewPort.height
                 });
                 instance.lastYScroll = instance.viewPort.scrollY;
-            }, 10);
+            }, 10,null, false);
 
-            var timeoutId = null;
+            var timeoutPromise:any = null;
 
             instance.observeOnScope(instance.scope, 'vm.filterTerm')
                 .map(function (data) {
@@ -49,11 +50,13 @@ module VirtualIndexedListView {
                 instance.filterFn = (value: any) => {
                     return value.name.indexOf(instance.filterTerm.newValue) > -1;
                 }
-                clearTimeout(timeoutId);
 
-                timeoutId = setTimeout(() => {
-                    instance.render({ force: true, lastScrollY: 0, scrollY: 0, viewPortHeight: instance.viewPort.height });
-                }, 10);
+                if (timeoutPromise)
+                    instance.$timeout.cancel(timeoutPromise);
+
+                timeoutPromise = instance.$timeout(() => {
+                        instance.render({ force: true, lastScrollY: 0, scrollY: 0, viewPortHeight: instance.viewPort.height });
+                }, 10, false);
             });
 
             instance.filterFn = instance.scope.filterFn;
@@ -77,7 +80,7 @@ module VirtualIndexedListView {
                 options = {
                     lastScrollY:  0,
                     scrollY: 0,
-                    viewPortHeight: options.viewPortHeight || this.viewPort.height
+                    viewPortHeight: this.viewPort.height
                 };
             }
 
@@ -388,5 +391,5 @@ module VirtualIndexedListView {
         }
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 } 
