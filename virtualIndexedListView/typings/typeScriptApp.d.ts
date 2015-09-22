@@ -2,6 +2,7 @@
 
 declare module VirtualIndexedListView {
     
+
     export interface IMoveToY {
         (element: HTMLElement, y: number): HTMLElement;
     }
@@ -17,7 +18,9 @@ declare module VirtualIndexedListView {
     export interface IRenderOptions {
         scrollY: number;
         lastScrollY: number;
-        viewPortHeight:number;
+        viewPortHeight: number;
+        force?: boolean;
+        items?:any[];
     }
 
     export interface IViewPortInstanceOptions {
@@ -31,7 +34,7 @@ declare module VirtualIndexedListView {
 
     export interface IVirtualIndexedListViewRenderer {
         createInstance(options: any): IVirtualIndexedListViewRenderer;
-        render(options:any):void;
+        render(options?:any):void;
     }
 
     export interface IGetHtmlFn {

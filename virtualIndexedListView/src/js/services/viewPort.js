@@ -13,7 +13,8 @@ var VirtualIndexedListView;
             this.getScrollableParent = function (hTMLElement) {
                 if (hTMLElement.tagName == "HTML")
                     return null;
-                if (angular.element(hTMLElement).css("overflowY") == "scroll")
+                var scrollYCssValue = angular.element(hTMLElement).css("overflowY");
+                if (scrollYCssValue == "scroll" || scrollYCssValue == "auto")
                     return angular.element(hTMLElement);
                 if (hTMLElement.parentNode)
                     return _this.getScrollableParent(hTMLElement.parentNode);

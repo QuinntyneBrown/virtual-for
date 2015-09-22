@@ -3,16 +3,16 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $injector, $interval, getY, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $injector, $interval, getY, observeOnScope, transformY) {
             var _this = this;
             this.$compile = $compile;
             this.$injector = $injector;
             this.$interval = $interval;
             this.getY = getY;
+            this.observeOnScope = observeOnScope;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.getY, _this.transformY);
-                instance.containerHeight = options.containerHeight;
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.getY, _this.observeOnScope, _this.transformY);
                 instance.items = options.items;
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
@@ -30,10 +30,58 @@ var VirtualIndexedListView;
                     });
                     instance.lastYScroll = instance.viewPort.scrollY;
                 }, 10);
+                var timeoutId = null;
+                instance.observeOnScope(instance.scope, 'vm.filterTerm')
+                    .map(function (data) {
+                    return data;
+                })
+                    .subscribe(function (change) {
+                    instance.filterTerm.observedChange = change;
+                    instance.filterTerm.newValue = change.newValue;
+                    instance.filterTerm.oldValue = change.oldValue;
+                    instance.filterFn = function (value) {
+                        return value.name.indexOf(instance.filterTerm.newValue) > -1;
+                    };
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(function () {
+                        instance.render({ force: true, lastScrollY: 0, scrollY: 0, viewPortHeight: instance.viewPort.height });
+                    }, 10);
+                });
+                instance.filterFn = instance.scope.filterFn;
                 return instance;
             };
+            this._filterTerm = {};
             this.render = function (options) {
+                if (!options) {
+                    options = {
+                        lastScrollY: 0,
+                        scrollY: 0,
+                        viewPortHeight: options.viewPortHeight || _this.viewPort.height
+                    };
+                }
                 var containerElement;
+                if (options.force) {
+                    var container = _this.containerElement[0];
+                    for (var i = 0; i < container.children.length; i++) {
+                        var oldScope = angular.element(container.children[i]).scope();
+                        oldScope.$destroy();
+                    }
+                    container.innerHTML = "";
+                    angular.element(container).css("height", _this.containerHeight);
+                    for (var i = 0; i < _this.numberOfRenderedItems; i++) {
+                        var childScope = _this.scope.$new(true);
+                        childScope[_this.itemName] = _this.items[i];
+                        childScope.$$index = i;
+                        var itemContent = _this.$compile(angular.element(_this.template))(childScope);
+                        angular.element(container).append(itemContent);
+                    }
+                    try {
+                        _this.scope.$digest();
+                    }
+                    catch (error) {
+                    }
+                    _this.hasRendered = true;
+                }
                 if (_this.hasRendered === false) {
                     containerElement = angular.element("<div class='container'></div>");
                     containerElement.css("height", _this.containerHeight);
@@ -45,15 +93,21 @@ var VirtualIndexedListView;
                         var itemContent = _this.$compile(angular.element(_this.template))(childScope);
                         containerElement.append(itemContent);
                     }
+                    var cachedItemsList = _this.computeCacheItemsList();
+                    try {
+                        _this.scope.$digest();
+                    }
+                    catch (error) {
+                    }
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === 1 /* Down */) {
+                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Down) {
                     var reachedBottom = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
                     var index = null;
                     do {
                         var cachedItemsList = _this.computeCacheItemsList();
-                        if (_this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].bottom >= (_this.items.length * _this.itemHeight)) {
+                        if (cachedItemsList[_this.cacheItemsItemList.length - 1].bottom >= _this.containerBottom) {
                             reachedBottom = true;
                         }
                         else {
@@ -71,7 +125,7 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedBottom && !allNodesHaveBeenMoved);
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === 0 /* Up */) {
+                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Up) {
                     var reachedTop = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
@@ -96,14 +150,14 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedTop && !allNodesHaveBeenMoved);
                 }
-                if (_this.hasRendered && _this.getScrollDirections(options.scrollY, options.lastScrollY) === 2 /* None */) {
+                if (_this.hasRendered && _this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.None) {
                     var cachedItemsList = _this.computeCacheItemsList();
                     var top = cachedItemsList[0].top;
                     var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
                     if (top > options.scrollY) {
                         console.log("missing items on top");
                     }
-                    if (bottom < options.scrollY + options.viewPortHeight) {
+                    if (bottom <= options.scrollY + options.viewPortHeight) {
                         console.log("missing items on bottom");
                         var reachedBottom = false;
                         var allNodesHaveBeenMoved = false;
@@ -160,19 +214,48 @@ var VirtualIndexedListView;
             this.cacheItemsItemList = [];
             this.getScrollDirections = function (scrollY, lastScrollY) {
                 if (lastScrollY && scrollY > lastScrollY) {
-                    return 1 /* Down */;
+                    return VirtualIndexedListView.ScrollingDirection.Down;
                 }
                 if (lastScrollY && scrollY < lastScrollY) {
-                    return 0 /* Up */;
+                    return VirtualIndexedListView.ScrollingDirection.Up;
                 }
                 if (lastScrollY && scrollY === lastScrollY) {
-                    return 2 /* None */;
+                    return VirtualIndexedListView.ScrollingDirection.None;
                 }
                 return null;
             };
             this.hasRendered = false;
             this.lastYScroll = 0;
         }
+        Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "filterTerm", {
+            get: function () {
+                return this._filterTerm;
+            },
+            set: function (value) {
+                this._filterTerm = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "containerHeight", {
+            get: function () {
+                return this.items.length * this.itemHeight;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "items", {
+            get: function () {
+                if (this.filterFn && this.filterTerm.newValue)
+                    return this._items.filter(this.filterFn);
+                return this._items;
+            },
+            set: function (value) {
+                this._items = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "numberOfRenderedItems", {
             get: function () {
                 if (!this._numberOfRenderedItems)
@@ -197,6 +280,20 @@ var VirtualIndexedListView;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "containerBottom", {
+            get: function () {
+                return this.containerElement[0].offsetHeight + this.containerElement[0].offsetTop;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "containerTop", {
+            get: function () {
+                return this.containerElement[0].offsetTop;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "renderedNodes", {
             get: function () {
                 return this.containerElement[0].children;
@@ -206,6 +303,6 @@ var VirtualIndexedListView;
         });
         return VirtualIndexedListViewRenderer;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "virtualIndexedListView.getY", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListViewRenderer.js.map

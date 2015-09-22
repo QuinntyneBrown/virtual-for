@@ -1,16 +1,23 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Inside Scrollable Element Example</title>
-    <link href="insideScrollableElement.css" rel="stylesheet" />
+    <title>Filter Example</title>
+    <link href="filter.css" rel="stylesheet" />
 </head>
-<body data-ng-app="insideScrollableElementApp" data-ng-controller="appController as vm">
+<body data-ng-app="filterApp" data-ng-controller="appController as vm">
 
-    <div id="scrollableElement" style="height: 500px; width: 500px; overflow-y: scroll;">
-        
+    <div>
+        <label>Filter:</label>
+
+        <input type="text" data-ng-model="vm.filterTerm" />
+
+    </div>
+
+    <div id="scrollableElement" style="height: 300px; width: 500px; overflow-y: auto;">
+
         <h1 class="title">Movies</h1>
 
-        <div style="height: 300px; width: 300px;">
+        <div>
             <div virtual-indexed-list-view
                  virtual-indexed-list-view-items='[
          { "name" : "Matrix" },
@@ -44,14 +51,15 @@
 
     </div>
 
+
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
     <script src="../../node_modules/rx/dist/rx.all.compat.min.js"></script>
     <script src="../../node_modules/angular/angular.min.js"></script>
     <script src="../../node_modules/rx-angular/dist/rx.angular.min.js"></script>
     <script src="../../dist/virtualIndexedListView.js"></script>
-    <script src="insideScrollableElement.js"></script>
 
+    <script src="filter.js"></script>
 
 </body>
 </html>

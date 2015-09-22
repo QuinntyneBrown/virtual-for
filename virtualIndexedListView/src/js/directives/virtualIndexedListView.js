@@ -2,21 +2,21 @@
 var VirtualIndexedListView;
 (function (VirtualIndexedListView_1) {
     var VirtualIndexedListView = (function () {
-        function VirtualIndexedListView(getHtml, virtualIndexedListViewManager) {
+        function VirtualIndexedListView(getHtml, virtualIndexedListViewRenderer) {
             var _this = this;
             this.getHtml = getHtml;
-            this.virtualIndexedListViewManager = virtualIndexedListViewManager;
+            this.virtualIndexedListViewRenderer = virtualIndexedListViewRenderer;
             this.restirct = "A";
             this.transclude = 'element';
             this.scope = false;
             this.compile = function (template) {
-                var virtualIndexedListViewManager = _this.virtualIndexedListViewManager;
+                var virtualIndexedListViewRenderer = _this.virtualIndexedListViewRenderer;
                 var parentElement = template.parent();
                 var getHtml = _this.getHtml;
                 return function (scope, element, attributes, controller, transclude) {
                     transclude(scope.$new(), function (clone) {
                         removeVirtualListCustomAttributes(clone);
-                        virtualIndexedListViewManager.createInstance({
+                        virtualIndexedListViewRenderer.createInstance({
                             element: angular.element(parentElement),
                             template: getHtml(clone[0], true),
                             scope: scope,
@@ -35,13 +35,13 @@ var VirtualIndexedListView;
                 }
             };
         }
-        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListViewManager) {
-            return new VirtualIndexedListView(getHtml, virtualIndexedListViewManager);
+        VirtualIndexedListView.createInstance = function (getHtml, virtualIndexedListViewRenderer) {
+            return new VirtualIndexedListView(getHtml, virtualIndexedListViewRenderer);
         };
         return VirtualIndexedListView;
     })();
     VirtualIndexedListView_1.VirtualIndexedListView = VirtualIndexedListView;
-    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["virtualIndexedListView.getHtml", "virtualIndexedListViewManager", VirtualIndexedListView.createInstance]);
+    angular.module("virtualIndexedListView").directive("virtualIndexedListView", ["virtualIndexedListView.getHtml", "virtualIndexedListViewRenderer", VirtualIndexedListView.createInstance]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../directives/virtualIndexedListView.js.map

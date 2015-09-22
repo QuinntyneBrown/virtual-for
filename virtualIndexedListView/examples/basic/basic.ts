@@ -6,9 +6,8 @@ module Basic {
     export class AppController {
 
     }
+
 }
 
 basicApp.controller("appController", [Basic.AppController]);
-
-
 
