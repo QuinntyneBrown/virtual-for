@@ -71,6 +71,7 @@
     <TypeScriptCompile Include="src\functions\getScrollDirection.ts" />
     <TypeScriptCompile Include="src\functions\getY.ts" />
     <TypeScriptCompile Include="src\functions\transformY.ts" />
+    <TypeScriptCompile Include="src\services\container.ts" />
     <TypeScriptCompile Include="src\services\viewPort.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewRenderer.ts" />
     <TypeScriptCompile Include="src\functions\getHtml.ts" />

@@ -1,7 +1,20 @@
 ﻿/// <reference path="tsd.d.ts" />
 
 declare module VirtualIndexedListView {
-    
+
+    export interface IContainer {
+        height: number;
+        bottom: number;
+        top: number;
+        augmentedJQuery: ng.IAugmentedJQuery;
+        htmlElement: HTMLElement;
+        reInitialize():void;
+    }
+
+    export interface IContainerInstanceOptions {
+        
+    }
+
     export interface IMoveToY {
         (element: HTMLElement, y: number): HTMLElement;
     }

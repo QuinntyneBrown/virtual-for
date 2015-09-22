@@ -2,6 +2,18 @@
 angular.module("virtualIndexedListView", ["rx"]);
 
 //# sourceMappingURL=virtualIndexedListView.module.js.map
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    (function (ScrollingDirection) {
+        ScrollingDirection[ScrollingDirection["Up"] = 0] = "Up";
+        ScrollingDirection[ScrollingDirection["Down"] = 1] = "Down";
+        ScrollingDirection[ScrollingDirection["None"] = 2] = "None";
+    })(VirtualIndexedListView.ScrollingDirection || (VirtualIndexedListView.ScrollingDirection = {}));
+    var ScrollingDirection = VirtualIndexedListView.ScrollingDirection;
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../enums/scrollingDirection.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView_1) {
@@ -49,122 +61,73 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../directives/virtualIndexedListView.js.map
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
-    (function (ScrollingDirection) {
-        ScrollingDirection[ScrollingDirection["Up"] = 0] = "Up";
-        ScrollingDirection[ScrollingDirection["Down"] = 1] = "Down";
-        ScrollingDirection[ScrollingDirection["None"] = 2] = "None";
-    })(VirtualIndexedListView.ScrollingDirection || (VirtualIndexedListView.ScrollingDirection = {}));
-    var ScrollingDirection = VirtualIndexedListView.ScrollingDirection;
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../enums/scrollingDirection.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
-    "use strict";
-    var getHtml = function (who, deep) {
-        if (!who || !who.tagName)
-            return '';
-        var txt, ax, el = document.createElement("div");
-        el.appendChild(who.cloneNode(false));
-        txt = el.innerHTML;
-        if (deep) {
-            ax = txt.indexOf('>') + 1;
-            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+    var Container = (function () {
+        function Container() {
+            this.createInstance = function (options) {
+                return new Container();
+            };
+            this.reInitialize = function () {
+            };
         }
-        el = null;
-        return txt;
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.getHtml", getHtml);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../functions/getHtml.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
-    var getRenderedNodesComputedInfo = function (options) {
-        var computedInfo = [];
-        for (var i = 0; i < options.renderedNodes.length; i++) {
-            var y = options.getY(options.renderedNodes[i]);
-            var offsetTop = options.renderedNodes[i].offsetTop;
-            var itemHeight = options.itemHeight;
-            computedInfo.push({
-                top: y + offsetTop,
-                bottom: y + offsetTop + itemHeight,
-                index: angular.element(options.renderedNodes[i]).scope().$$index,
-                node: options.renderedNodes[i]
-            });
-        }
-        if (options.desc) {
-            computedInfo.sort(function (a, b) {
-                return b.top - a.top;
-            });
-        }
-        else {
-            computedInfo.sort(function (a, b) {
-                return a.top - b.top;
-            });
-        }
-        return computedInfo;
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.getRenderedNodesComputedInfo", getRenderedNodesComputedInfo);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../functions/getRenderedNodesComputedInfo.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
-    var getScrollDirection = function (scrollY, lastScrollY) {
-        if (lastScrollY && scrollY > lastScrollY) {
-            return VirtualIndexedListView.ScrollingDirection.Down;
-        }
-        if (lastScrollY && scrollY < lastScrollY) {
-            return VirtualIndexedListView.ScrollingDirection.Up;
-        }
-        if (lastScrollY && scrollY === lastScrollY) {
-            return VirtualIndexedListView.ScrollingDirection.None;
-        }
-        return null;
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.getScrollDirection", getScrollDirection);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../functions/getScrollDirection.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    VirtualIndexedListView.getY = function (element) {
-        var transform = angular.element(element).css("transform");
-        if (transform === "none") {
-            return 0;
-        }
-        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.getY", VirtualIndexedListView.getY);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../functions/getY.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    VirtualIndexedListView.transformY = function (element, y) {
-        angular.element(element).css({
-            "-moz-transform": "translateY(" + y + "px)",
-            "-webkit-transform": "translateY(" + y + "px)",
-            "-ms-transform": "translateY(" + y + "px)",
-            "-transform": "translateY(" + y + "px)"
+        Object.defineProperty(Container.prototype, "height", {
+            get: function () {
+                return this._height;
+            },
+            set: function (value) {
+                this._height = value;
+            },
+            enumerable: true,
+            configurable: true
         });
-        return element;
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.transformY", VirtualIndexedListView.transformY);
+        Object.defineProperty(Container.prototype, "bottom", {
+            get: function () {
+                return this._bottom;
+            },
+            set: function (value) {
+                this._bottom = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Container.prototype, "top", {
+            get: function () {
+                return this._top;
+            },
+            set: function (value) {
+                this._top = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Container.prototype, "augmentedJQuery", {
+            get: function () {
+                return this._augmentedJQuery;
+            },
+            set: function (value) {
+                this._augmentedJQuery = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Container.prototype, "htmlElement", {
+            get: function () {
+                return this._htmlElement;
+            },
+            set: function (value) {
+                this._htmlElement = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Container;
+    })();
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", [Container]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
-//# sourceMappingURL=../functions/transformY.js.map
+//# sourceMappingURL=../services/container.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
@@ -500,3 +463,107 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/virtualIndexedListViewRenderer.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    var getHtml = function (who, deep) {
+        if (!who || !who.tagName)
+            return '';
+        var txt, ax, el = document.createElement("div");
+        el.appendChild(who.cloneNode(false));
+        txt = el.innerHTML;
+        if (deep) {
+            ax = txt.indexOf('>') + 1;
+            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+        }
+        el = null;
+        return txt;
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getHtml", getHtml);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/getHtml.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    var getRenderedNodesComputedInfo = function (options) {
+        var computedInfo = [];
+        for (var i = 0; i < options.renderedNodes.length; i++) {
+            var y = options.getY(options.renderedNodes[i]);
+            var offsetTop = options.renderedNodes[i].offsetTop;
+            var itemHeight = options.itemHeight;
+            computedInfo.push({
+                top: y + offsetTop,
+                bottom: y + offsetTop + itemHeight,
+                index: angular.element(options.renderedNodes[i]).scope().$$index,
+                node: options.renderedNodes[i]
+            });
+        }
+        if (options.desc) {
+            computedInfo.sort(function (a, b) {
+                return b.top - a.top;
+            });
+        }
+        else {
+            computedInfo.sort(function (a, b) {
+                return a.top - b.top;
+            });
+        }
+        return computedInfo;
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getRenderedNodesComputedInfo", getRenderedNodesComputedInfo);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/getRenderedNodesComputedInfo.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    var getScrollDirection = function (scrollY, lastScrollY) {
+        if (lastScrollY && scrollY > lastScrollY) {
+            return VirtualIndexedListView.ScrollingDirection.Down;
+        }
+        if (lastScrollY && scrollY < lastScrollY) {
+            return VirtualIndexedListView.ScrollingDirection.Up;
+        }
+        if (lastScrollY && scrollY === lastScrollY) {
+            return VirtualIndexedListView.ScrollingDirection.None;
+        }
+        return null;
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getScrollDirection", getScrollDirection);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/getScrollDirection.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    VirtualIndexedListView.getY = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none") {
+            return 0;
+        }
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getY", VirtualIndexedListView.getY);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/getY.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    VirtualIndexedListView.transformY = function (element, y) {
+        angular.element(element).css({
+            "-moz-transform": "translateY(" + y + "px)",
+            "-webkit-transform": "translateY(" + y + "px)",
+            "-ms-transform": "translateY(" + y + "px)",
+            "-transform": "translateY(" + y + "px)"
+        });
+        return element;
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.transformY", VirtualIndexedListView.transformY);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/transformY.js.map
