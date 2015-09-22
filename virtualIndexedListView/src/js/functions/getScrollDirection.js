@@ -1,5 +1,4 @@
 /// <reference path="../../typings/typescriptapp.d.ts" />
-/// <reference path="../enums/scrollingdirection.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";

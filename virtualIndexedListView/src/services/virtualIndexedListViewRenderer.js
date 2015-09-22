@@ -3,18 +3,19 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $injector, $interval, $timeout, getScrollDirection, getY, observeOnScope, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $injector, $interval, $timeout, getRenderedNodesComputedInfo, getScrollDirection, getY, observeOnScope, transformY) {
             var _this = this;
             this.$compile = $compile;
             this.$injector = $injector;
             this.$interval = $interval;
             this.$timeout = $timeout;
+            this.getRenderedNodesComputedInfo = getRenderedNodesComputedInfo;
             this.getScrollDirection = getScrollDirection;
             this.getY = getY;
             this.observeOnScope = observeOnScope;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.$timeout, _this.getScrollDirection, _this.getY, _this.observeOnScope, _this.transformY);
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.$timeout, _this.getRenderedNodesComputedInfo, _this.getScrollDirection, _this.getY, _this.observeOnScope, _this.transformY);
                 instance.items = options.items;
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
@@ -94,7 +95,6 @@ var VirtualIndexedListView;
                         var itemContent = _this.$compile(angular.element(_this.template))(childScope);
                         containerElement.append(itemContent);
                     }
-                    var cachedItemsList = _this.computeCacheItemsList();
                     try {
                         _this.scope.$digest();
                     }
@@ -107,19 +107,19 @@ var VirtualIndexedListView;
                     var item = null;
                     var index = null;
                     do {
-                        var cachedItemsList = _this.computeCacheItemsList();
-                        if (cachedItemsList[_this.cacheItemsItemList.length - 1].bottom >= _this.containerBottom) {
+                        var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.renderedNodes, itemHeight: _this.itemHeight, desc: false });
+                        if (cachedItemsList[cachedItemsList.length - 1].bottom >= _this.containerBottom) {
                             reachedBottom = true;
                         }
                         else {
-                            index = _this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].index + 1;
+                            index = cachedItemsList[cachedItemsList.length - 1].index + 1;
                             item = _this.items[index];
                         }
                         if (cachedItemsList[0].bottom >= options.scrollY)
                             allNodesHaveBeenMoved = true;
                         if (!reachedBottom && !allNodesHaveBeenMoved) {
-                            _this.transformY(_this.cacheItemsItemList[0].node, (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(_this.cacheItemsItemList[0].node));
-                            var scope = angular.element(_this.cacheItemsItemList[0].node).scope();
+                            _this.transformY(cachedItemsList[0].node, (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(cachedItemsList[0].node));
+                            var scope = angular.element(cachedItemsList[0].node).scope();
                             scope[_this.itemName] = item;
                             scope.$$index = index;
                             scope.$digest();
@@ -132,19 +132,19 @@ var VirtualIndexedListView;
                     var item = null;
                     var index = null;
                     do {
-                        var cachedItemsList = _this.computeCacheItemsList({ desc: true });
-                        if (_this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].top <= 0) {
+                        var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.renderedNodes, itemHeight: _this.itemHeight, desc: true });
+                        if (cachedItemsList[cachedItemsList.length - 1].top <= 0) {
                             reachedTop = true;
                         }
                         else {
-                            index = _this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].index - 1;
+                            index = cachedItemsList[cachedItemsList.length - 1].index - 1;
                             item = _this.items[index];
                         }
                         if (cachedItemsList[0].top <= options.scrollY + options.viewPortHeight)
                             allNodesHaveBeenMoved = true;
                         if (!reachedTop && !allNodesHaveBeenMoved) {
-                            _this.transformY(_this.cacheItemsItemList[0].node, _this.getY(_this.cacheItemsItemList[0].node) - (_this.numberOfRenderedItems * _this.itemHeight));
-                            var scope = angular.element(_this.cacheItemsItemList[0].node).scope();
+                            _this.transformY(cachedItemsList[0].node, _this.getY(cachedItemsList[0].node) - (_this.numberOfRenderedItems * _this.itemHeight));
+                            var scope = angular.element(cachedItemsList[0].node).scope();
                             scope[_this.itemName] = item;
                             scope.$$index = index;
                             scope.$digest();
@@ -152,7 +152,7 @@ var VirtualIndexedListView;
                     } while (!reachedTop && !allNodesHaveBeenMoved);
                 }
                 if (_this.hasRendered && _this.getScrollDirection(options.scrollY, options.lastScrollY) === 2 /* None */) {
-                    var cachedItemsList = _this.computeCacheItemsList();
+                    var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.renderedNodes, itemHeight: _this.itemHeight, desc: false });
                     var top = cachedItemsList[0].top;
                     var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
                     if (top > options.scrollY) {
@@ -165,19 +165,19 @@ var VirtualIndexedListView;
                         var item = null;
                         var index = null;
                         do {
-                            var cachedItemsList = _this.computeCacheItemsList();
-                            if (_this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].bottom >= (_this.items.length * _this.itemHeight)) {
+                            var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.renderedNodes, itemHeight: _this.itemHeight, desc: false });
+                            if (cachedItemsList[cachedItemsList.length - 1].bottom >= (_this.items.length * _this.itemHeight)) {
                                 reachedBottom = true;
                             }
                             else {
-                                index = _this.cacheItemsItemList[_this.cacheItemsItemList.length - 1].index + 1;
+                                index = cachedItemsList[cachedItemsList.length - 1].index + 1;
                                 item = _this.items[index];
                             }
                             if (cachedItemsList[0].bottom >= options.scrollY)
                                 allNodesHaveBeenMoved = true;
                             if (!reachedBottom && !allNodesHaveBeenMoved) {
-                                _this.transformY(_this.cacheItemsItemList[0].node, (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(_this.cacheItemsItemList[0].node));
-                                var scope = angular.element(_this.cacheItemsItemList[0].node).scope();
+                                _this.transformY(cachedItemsList[0].node, (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(cachedItemsList[0].node));
+                                var scope = angular.element(cachedItemsList[0].node).scope();
                                 scope[_this.itemName] = item;
                                 scope.$$index = index;
                                 scope.$digest();
@@ -187,32 +187,6 @@ var VirtualIndexedListView;
                 }
                 _this.hasRendered = true;
             };
-            this.computeCacheItemsList = function (options) {
-                _this.cacheItemsItemList = [];
-                for (var i = 0; i < _this.renderedNodes.length; i++) {
-                    var y = _this.getY(_this.renderedNodes[i]);
-                    var offsetTop = _this.renderedNodes[i].offsetTop;
-                    var itemHeight = _this.itemHeight;
-                    _this.cacheItemsItemList.push({
-                        top: y + offsetTop,
-                        bottom: y + offsetTop + itemHeight,
-                        index: angular.element(_this.renderedNodes[i]).scope().$$index,
-                        node: _this.renderedNodes[i]
-                    });
-                }
-                if (options && options.desc) {
-                    _this.cacheItemsItemList.sort(function (a, b) {
-                        return b.top - a.top;
-                    });
-                }
-                else {
-                    _this.cacheItemsItemList.sort(function (a, b) {
-                        return a.top - b.top;
-                    });
-                }
-                return _this.cacheItemsItemList;
-            };
-            this.cacheItemsItemList = [];
             this.hasRendered = false;
             this.lastYScroll = 0;
         }
@@ -292,6 +266,6 @@ var VirtualIndexedListView;
         });
         return VirtualIndexedListViewRenderer;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getRenderedNodesComputedInfo", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListViewRenderer.js.map

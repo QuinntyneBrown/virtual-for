@@ -9,6 +9,7 @@ module VirtualIndexedListView {
             private $injector: ng.auto.IInjectorService,
             private $interval: ng.IIntervalService,
             private $timeout: ng.ITimeoutService,
+            private getRenderedNodesComputedInfo:any,
             private getScrollDirection:any,
             private getY: IGetY,
             private observeOnScope: any,
@@ -17,7 +18,7 @@ module VirtualIndexedListView {
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getScrollDirection, this.getY, this.observeOnScope, this.transformY);
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getRenderedNodesComputedInfo, this.getScrollDirection, this.getY, this.observeOnScope, this.transformY);
             instance.items = options.items;
             instance.itemName = options.itemName;
             instance.scope = options.scope;
@@ -132,8 +133,6 @@ module VirtualIndexedListView {
                     containerElement.append(itemContent);
                 }
 
-                var cachedItemsList = this.computeCacheItemsList();
-
                 try {
                     this.scope.$digest();
                 } catch (error) {
@@ -153,12 +152,12 @@ module VirtualIndexedListView {
 
                 do {
 
-                    var cachedItemsList = this.computeCacheItemsList();
-
-                    if (cachedItemsList[this.cacheItemsItemList.length - 1].bottom >= this.containerBottom) {
+                    var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
+                        
+                    if (cachedItemsList[cachedItemsList.length - 1].bottom >= this.containerBottom) {
                         reachedBottom = true;
                     } else {
-                        index = this.cacheItemsItemList[this.cacheItemsItemList.length - 1].index + 1;
+                        index = cachedItemsList[cachedItemsList.length - 1].index + 1;
                         item = this.items[index];
                     }
 
@@ -167,8 +166,8 @@ module VirtualIndexedListView {
                     
 
                     if (!reachedBottom && !allNodesHaveBeenMoved) {
-                        this.transformY(this.cacheItemsItemList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(this.cacheItemsItemList[0].node));
-                        var scope: any = angular.element(this.cacheItemsItemList[0].node).scope();
+                        this.transformY(cachedItemsList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(cachedItemsList[0].node));
+                        var scope: any = angular.element(cachedItemsList[0].node).scope();
                         scope[this.itemName] = item;
                         scope.$$index = index;
                         scope.$digest();
@@ -190,12 +189,12 @@ module VirtualIndexedListView {
 
                 do {
 
-                    var cachedItemsList = this.computeCacheItemsList({ desc: true });
+                    var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: true }));
 
-                    if (this.cacheItemsItemList[this.cacheItemsItemList.length - 1].top <= 0) {
+                    if (cachedItemsList[cachedItemsList.length - 1].top <= 0) {
                         reachedTop = true;
                     } else {
-                        index = this.cacheItemsItemList[this.cacheItemsItemList.length - 1].index - 1;
+                        index = cachedItemsList[cachedItemsList.length - 1].index - 1;
                         item = this.items[index];
                     }
 
@@ -203,8 +202,8 @@ module VirtualIndexedListView {
                         allNodesHaveBeenMoved = true;
 
                     if (!reachedTop && !allNodesHaveBeenMoved) {
-                        this.transformY(this.cacheItemsItemList[0].node, this.getY(this.cacheItemsItemList[0].node) - (this.numberOfRenderedItems * this.itemHeight));
-                        var scope: any = angular.element(this.cacheItemsItemList[0].node).scope();
+                        this.transformY(cachedItemsList[0].node, this.getY(cachedItemsList[0].node) - (this.numberOfRenderedItems * this.itemHeight));
+                        var scope: any = angular.element(cachedItemsList[0].node).scope();
                         scope[this.itemName] = item;
                         scope.$$index = index;
                         scope.$digest();
@@ -215,7 +214,7 @@ module VirtualIndexedListView {
 
             if (this.hasRendered && this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.None) {
 
-                var cachedItemsList = this.computeCacheItemsList();
+                var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
 
                 var top = cachedItemsList[0].top;
                 var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
@@ -237,12 +236,12 @@ module VirtualIndexedListView {
 
                     do {
 
-                        var cachedItemsList = this.computeCacheItemsList();
+                        var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
 
-                        if (this.cacheItemsItemList[this.cacheItemsItemList.length - 1].bottom >= (this.items.length * this.itemHeight)) {
+                        if (cachedItemsList[cachedItemsList.length - 1].bottom >= (this.items.length * this.itemHeight)) {
                             reachedBottom = true;
                         } else {
-                            index = this.cacheItemsItemList[this.cacheItemsItemList.length - 1].index + 1;
+                            index = cachedItemsList[cachedItemsList.length - 1].index + 1;
                             item = this.items[index];
                         }
 
@@ -251,8 +250,8 @@ module VirtualIndexedListView {
 
 
                         if (!reachedBottom && !allNodesHaveBeenMoved) {
-                            this.transformY(this.cacheItemsItemList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(this.cacheItemsItemList[0].node));
-                            var scope: any = angular.element(this.cacheItemsItemList[0].node).scope();
+                            this.transformY(cachedItemsList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(cachedItemsList[0].node));
+                            var scope: any = angular.element(cachedItemsList[0].node).scope();
                             scope[this.itemName] = item;
                             scope.$$index = index;
                             scope.$digest();
@@ -266,41 +265,6 @@ module VirtualIndexedListView {
             this.hasRendered = true;
 
         }
-
-
-        public computeCacheItemsList = (options?:any) => {
-            this.cacheItemsItemList = [];
-
-            for (var i = 0; i < this.renderedNodes.length; i++) {
-
-                var y = this.getY(this.renderedNodes[i]);
-
-                var offsetTop = this.renderedNodes[i].offsetTop;
-
-                var itemHeight = this.itemHeight;
-
-                this.cacheItemsItemList.push({
-                    top: y + offsetTop,
-                    bottom: y + offsetTop + itemHeight,
-                    index: (<any>angular.element(this.renderedNodes[i]).scope()).$$index,
-                    node: this.renderedNodes[i]
-                });
-            }
-
-            if (options && options.desc) {
-                this.cacheItemsItemList.sort((a: any, b: any) => {
-                    return b.top - a.top;
-                });       
-            } else {
-                this.cacheItemsItemList.sort((a: any, b: any) => {
-                    return a.top - b.top;
-                });                
-            }
-
-            return this.cacheItemsItemList;
-        }
-
-        public cacheItemsItemList:Array<any> = [];
 
         private viewPort: IViewPort;
 
@@ -371,10 +335,19 @@ module VirtualIndexedListView {
         public get containerTop() {
             return this.containerElement[0].offsetTop;
         }
+
         public get renderedNodes(): Array<HTMLElement> {            
             return <any>this.containerElement[0].children;
         }
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",
+        "$injector",
+        "$interval",
+        "$timeout",
+        "virtualIndexedListView.getRenderedNodesComputedInfo",
+        "virtualIndexedListView.getScrollDirection",
+        "virtualIndexedListView.getY",
+        "observeOnScope",
+        "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 } 
