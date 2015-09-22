@@ -3,17 +3,18 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $injector, $interval, $timeout, getY, observeOnScope, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $injector, $interval, $timeout, getScrollDirection, getY, observeOnScope, transformY) {
             var _this = this;
             this.$compile = $compile;
             this.$injector = $injector;
             this.$interval = $interval;
             this.$timeout = $timeout;
+            this.getScrollDirection = getScrollDirection;
             this.getY = getY;
             this.observeOnScope = observeOnScope;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.$timeout, _this.getY, _this.observeOnScope, _this.transformY);
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.$timeout, _this.getScrollDirection, _this.getY, _this.observeOnScope, _this.transformY);
                 instance.items = options.items;
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
@@ -32,11 +33,9 @@ var VirtualIndexedListView;
                     instance.lastYScroll = instance.viewPort.scrollY;
                 }, 10, null, false);
                 var timeoutPromise = null;
-                instance.observeOnScope(instance.scope, 'vm.filterTerm')
-                    .map(function (data) {
+                instance.observeOnScope(instance.scope, 'vm.filterTerm').map(function (data) {
                     return data;
-                })
-                    .subscribe(function (change) {
+                }).subscribe(function (change) {
                     instance.filterTerm.observedChange = change;
                     instance.filterTerm.newValue = change.newValue;
                     instance.filterTerm.oldValue = change.oldValue;
@@ -102,7 +101,7 @@ var VirtualIndexedListView;
                     catch (error) {
                     }
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Down) {
+                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === 1 /* Down */) {
                     var reachedBottom = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
@@ -127,7 +126,7 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedBottom && !allNodesHaveBeenMoved);
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Up) {
+                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === 0 /* Up */) {
                     var reachedTop = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
@@ -152,7 +151,7 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedTop && !allNodesHaveBeenMoved);
                 }
-                if (_this.hasRendered && _this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.None) {
+                if (_this.hasRendered && _this.getScrollDirection(options.scrollY, options.lastScrollY) === 2 /* None */) {
                     var cachedItemsList = _this.computeCacheItemsList();
                     var top = cachedItemsList[0].top;
                     var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
@@ -214,18 +213,6 @@ var VirtualIndexedListView;
                 return _this.cacheItemsItemList;
             };
             this.cacheItemsItemList = [];
-            this.getScrollDirections = function (scrollY, lastScrollY) {
-                if (lastScrollY && scrollY > lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.Down;
-                }
-                if (lastScrollY && scrollY < lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.Up;
-                }
-                if (lastScrollY && scrollY === lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.None;
-                }
-                return null;
-            };
             this.hasRendered = false;
             this.lastYScroll = 0;
         }
@@ -305,6 +292,6 @@ var VirtualIndexedListView;
         });
         return VirtualIndexedListViewRenderer;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListViewRenderer.js.map

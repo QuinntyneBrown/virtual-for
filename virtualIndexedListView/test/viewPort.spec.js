@@ -12,5 +12,4 @@ describe("viewPort", function () {
         expect(viewPort).toBeDefined();
     });
 });
-
 //# sourceMappingURL=viewPort.spec.js.map

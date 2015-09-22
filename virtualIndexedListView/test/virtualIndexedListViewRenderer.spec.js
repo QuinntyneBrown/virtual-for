@@ -11,5 +11,4 @@ describe("virtualIndexedListViewRender", function () {
         expect(virtualIndexedListViewRenderer).toBeDefined();
     });
 });
-
 //# sourceMappingURL=virtualIndexedListViewRenderer.spec.js.map

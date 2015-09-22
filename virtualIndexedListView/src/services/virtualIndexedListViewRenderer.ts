@@ -9,6 +9,7 @@ module VirtualIndexedListView {
             private $injector: ng.auto.IInjectorService,
             private $interval: ng.IIntervalService,
             private $timeout: ng.ITimeoutService,
+            private getScrollDirection:any,
             private getY: IGetY,
             private observeOnScope: any,
             private transformY: ITransformY) {
@@ -16,7 +17,7 @@ module VirtualIndexedListView {
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getY, this.observeOnScope, this.transformY);
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getScrollDirection, this.getY, this.observeOnScope, this.transformY);
             instance.items = options.items;
             instance.itemName = options.itemName;
             instance.scope = options.scope;
@@ -140,7 +141,7 @@ module VirtualIndexedListView {
                 }
             }
 
-            if (this.getScrollDirections(options.scrollY, options.lastScrollY) === ScrollingDirection.Down) {
+            if (this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.Down) {
 
                 var reachedBottom = false;
 
@@ -177,7 +178,7 @@ module VirtualIndexedListView {
                 
             }
 
-            if (this.getScrollDirections(options.scrollY, options.lastScrollY) === ScrollingDirection.Up) {
+            if (this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.Up) {
 
                 var reachedTop = false;
 
@@ -212,7 +213,7 @@ module VirtualIndexedListView {
                 } while (!reachedTop && !allNodesHaveBeenMoved)
             }
 
-            if (this.hasRendered && this.getScrollDirections(options.scrollY, options.lastScrollY) === ScrollingDirection.None) {
+            if (this.hasRendered && this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.None) {
 
                 var cachedItemsList = this.computeCacheItemsList();
 
@@ -300,22 +301,6 @@ module VirtualIndexedListView {
         }
 
         public cacheItemsItemList:Array<any> = [];
-         
-        public getScrollDirections = (scrollY:number, lastScrollY:number): ScrollingDirection => {
-            if (lastScrollY && scrollY > lastScrollY) {
-                return ScrollingDirection.Down;
-            }
-
-            if (lastScrollY && scrollY < lastScrollY) {
-                return ScrollingDirection.Up;
-            }
-
-            if (lastScrollY && scrollY === lastScrollY) {
-                return ScrollingDirection.None;
-            }
-
-            return null;
-        }
 
         private viewPort: IViewPort;
 
@@ -391,5 +376,5 @@ module VirtualIndexedListView {
         }
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$injector", "$interval", "$timeout", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "observeOnScope", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 } 

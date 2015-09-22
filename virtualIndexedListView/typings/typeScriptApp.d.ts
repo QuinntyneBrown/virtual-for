@@ -2,7 +2,6 @@
 
 declare module VirtualIndexedListView {
     
-
     export interface IMoveToY {
         (element: HTMLElement, y: number): HTMLElement;
     }
