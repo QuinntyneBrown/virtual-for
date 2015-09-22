@@ -10,12 +10,13 @@ module VirtualIndexedListView {
             private $window: ng.IWindowService) { }
 
         public createInstance = (options: any) => {
+            var virtualIndexedListViewRenderer: IVirtualIndexedListViewRenderer = (<IVirtualIndexedListViewRenderer>this.$injector.get("virtualIndexedListViewRenderer"));
+
             var instance = new VirtualIndexedListViewManager(this.$injector, this.$interval, this.$timeout, this.$window);
             instance.element = options.element;
             instance.scope = options.scope;
             instance.template = options.template;
 
-            var virtualIndexedListViewRenderer: IVirtualIndexedListViewRenderer = (<IVirtualIndexedListViewRenderer>this.$injector.get("virtualIndexedListViewRenderer"));
 
             instance.virtualIndexedListViewRenderer = virtualIndexedListViewRenderer.createInstance({
                 containerHeight: options.items.length * options.itemHeight,
@@ -26,12 +27,6 @@ module VirtualIndexedListView {
                 scope: options.scope,
                 template: options.template
             });
-
-            instance.elementCSS = instance.$window.getComputedStyle(instance.element[0], null);
-            if (instance.elementCSS && instance.elementCSS.overflowY && (instance.elementCSS.overflowY == "auto" || instance.elementCSS.overflowY == "scroll")) { instance.element[0].addEventListener("scroll", instance.debouceRender); }
-            this.$window.addEventListener("mousewheel", instance.debouceRender);
-            this.$window.addEventListener("scroll", instance.onScroll);
-            this.$window.addEventListener("resize", instance.debouceRender);
 
             return instance;
         }
@@ -89,6 +84,6 @@ module VirtualIndexedListView {
         public bottomViewPort: number;
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewManager", ["$injector","$interval","$timeout","$window",VirtualIndexedListViewManager]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewManager", ["$injector", "$interval", "$timeout", "$window", VirtualIndexedListViewManager]);
 }
 

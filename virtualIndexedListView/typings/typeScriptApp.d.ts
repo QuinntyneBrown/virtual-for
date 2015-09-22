@@ -2,6 +2,16 @@
 
 declare module VirtualIndexedListView {
     
+    export interface IRenderOptions {
+        scrollY: number;
+        lastScrollY: number;
+        viewPortHeight:number;
+    }
+
+    export interface IViewPortInstanceOptions {
+        element: ng.IAugmentedJQuery;    
+    }
+
     export interface IVirtualIndexedListViewManager {
         createInstance(options: any): IVirtualIndexedListViewManager;
         render():void;
@@ -14,5 +24,11 @@ declare module VirtualIndexedListView {
 
     export interface IGetHtmlFn {
         (who: HTMLElement, deep: boolean):string
+    }
+
+    export interface IViewPort {
+        createInstance(options?:any):IViewPort;
+        scrollY: number;
+        height: number;
     }
 }

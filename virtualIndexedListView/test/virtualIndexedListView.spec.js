@@ -1,6 +1,6 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
 "use strict";
-describe("virtualList", function () {
+describe("virtualIndexedListView", function () {
     beforeEach(function () {
         angular.mock.module("virtualIndexedListView");
     });
@@ -22,11 +22,5 @@ describe("virtualList", function () {
         rootScope = $rootScope;
         scope = $rootScope.$new(true);
     }));
-    it("should be defined", function () {
-        var linkFn = compile(angular.element(template));
-        var content = linkFn(scope);
-        expect(content).toBeDefined();
-    });
 });
-
 //# sourceMappingURL=virtualIndexedListView.spec.js.map

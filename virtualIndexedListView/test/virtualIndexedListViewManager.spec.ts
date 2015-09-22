@@ -1,6 +1,6 @@
 ﻿/// <reference path="../typings/typescriptapp.d.ts" />
 
-describe("virtualIndexedListView", () => {
+describe("virtualIndexedListViewManager", () => {
 
     var virtualIndexedListViewManager: VirtualIndexedListView.IVirtualIndexedListViewManager;
 

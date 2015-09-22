@@ -2,7 +2,7 @@
 
 "use strict";
 
-describe("virtualList", () => {
+describe("virtualIndexedListView", () => {
 
     beforeEach(() => {
         angular.mock.module("virtualIndexedListView");
@@ -28,12 +28,5 @@ describe("virtualList", () => {
         rootScope = $rootScope;
         scope = $rootScope.$new(true);
     }));
-
-    it("should be defined", () => {
-        var linkFn = compile(angular.element(template));
-        var content = linkFn(scope);
-        expect(content).toBeDefined();
-    });
-
 
 });

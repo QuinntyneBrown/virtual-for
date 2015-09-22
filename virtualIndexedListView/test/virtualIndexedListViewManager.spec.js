@@ -1,5 +1,5 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
-describe("virtualIndexedListView", function () {
+describe("virtualIndexedListViewManager", function () {
     var virtualIndexedListViewManager;
     beforeEach(function () {
         angular.mock.module("virtualIndexedListView");
@@ -11,5 +11,4 @@ describe("virtualIndexedListView", function () {
         expect(virtualIndexedListViewManager).toBeDefined();
     });
 });
-
 //# sourceMappingURL=virtualIndexedListViewManager.spec.js.map

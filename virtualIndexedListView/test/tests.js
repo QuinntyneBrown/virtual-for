@@ -1,6 +1,22 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
 "use strict";
-describe("virtualList", function () {
+describe("viewPort", function () {
+    beforeEach(function () {
+        angular.mock.module("virtualIndexedListView");
+    });
+    var viewPort;
+    beforeEach(inject(function ($injector) {
+        viewPort = $injector.get("virtualIndexedListView.viewPort");
+    }));
+    it("should be defined", function () {
+        expect(viewPort).toBeDefined();
+    });
+});
+
+//# sourceMappingURL=viewPort.spec.js.map
+/// <reference path="../typings/typescriptapp.d.ts" />
+"use strict";
+describe("virtualIndexedListView", function () {
     beforeEach(function () {
         angular.mock.module("virtualIndexedListView");
     });
@@ -22,16 +38,11 @@ describe("virtualList", function () {
         rootScope = $rootScope;
         scope = $rootScope.$new(true);
     }));
-    it("should be defined", function () {
-        var linkFn = compile(angular.element(template));
-        var content = linkFn(scope);
-        expect(content).toBeDefined();
-    });
 });
 
 //# sourceMappingURL=virtualIndexedListView.spec.js.map
 /// <reference path="../typings/typescriptapp.d.ts" />
-describe("virtualIndexedListView", function () {
+describe("virtualIndexedListViewManager", function () {
     var virtualIndexedListViewManager;
     beforeEach(function () {
         angular.mock.module("virtualIndexedListView");
@@ -45,3 +56,18 @@ describe("virtualIndexedListView", function () {
 });
 
 //# sourceMappingURL=virtualIndexedListViewManager.spec.js.map
+/// <reference path="../typings/typescriptapp.d.ts" />
+describe("virtualIndexedListViewRender", function () {
+    var virtualIndexedListViewRenderer;
+    beforeEach(function () {
+        angular.mock.module("virtualIndexedListView");
+    });
+    beforeEach(inject(function (_virtualIndexedListViewRenderer_) {
+        virtualIndexedListViewRenderer = _virtualIndexedListViewRenderer_;
+    }));
+    it("should be defined", function () {
+        expect(virtualIndexedListViewRenderer).toBeDefined();
+    });
+});
+
+//# sourceMappingURL=virtualIndexedListViewRenderer.spec.js.map

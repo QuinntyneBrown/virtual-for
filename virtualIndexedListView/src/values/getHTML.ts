@@ -17,5 +17,5 @@ module VirtualIndexedListView {
         return txt;
     }
 
-    angular.module("virtualIndexedListView").value("getHtml", getHtml);
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getHtml", getHtml);
 }
