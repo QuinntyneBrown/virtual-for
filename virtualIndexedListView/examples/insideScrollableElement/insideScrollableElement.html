@@ -6,10 +6,13 @@
 </head>
 <body data-ng-app="insideScrollableElementApp" data-ng-controller="appController as vm">
 
-    <div id="scrollableElement" style="height: 300px; width: 500px; overflow-y: scroll;">
+    <div id="scrollableElement" style="height: 500px; width: 500px; overflow-y: scroll;">
         
-        <div virtual-indexed-list-view
-             virtual-indexed-list-view-items='[
+        <h1 class="title">Movies</h1>
+
+        <div style="height: 300px; width: 300px;">
+            <div virtual-indexed-list-view
+                 virtual-indexed-list-view-items='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -31,13 +34,14 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-             virtual-indexed-list-view-item-name="movie"
-             virtual-indexed-list-view-item-height="75">
+                 virtual-indexed-list-view-item-name="movie"
+                 virtual-indexed-list-view-item-height="75">
 
-            <h1>{{ movie.name }} </h1>
+                <h1>{{ movie.name }} </h1>
 
-        </div>        
-    </div>
+            </div>
+        </div>
+</div>
 
 
 

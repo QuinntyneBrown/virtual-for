@@ -9,18 +9,18 @@ module VirtualIndexedListView {
 
         public createInstance = (options: IViewPortInstanceOptions) => {
             var instance = new ViewPort(this.$window);
-            instance.element = options.element;            
+            instance.scrollableParentElement = instance.getScrollableParent(options.element[0]);           
             return instance;
         }
 
-        private element: ng.IAugmentedJQuery;
+        private scrollableParentElement: ng.IAugmentedJQuery;
 
         private _scrollY: number;
 
         public get scrollY() {
 
-            if (this.element.css("overflowY") == "scroll")
-                return (<HTMLElement>this.element[0]).scrollTop;
+            if (this.scrollableParentElement)
+                return (<HTMLElement>this.scrollableParentElement[0]).scrollTop;
 
             return this.$window.pageYOffset;
         }
@@ -28,14 +28,26 @@ module VirtualIndexedListView {
         private _height: number;
 
         public get height() {
-            if (this.element.css("overflowY") == "scroll")
-                return (<HTMLElement>this.element[0]).offsetHeight;
+            if (this.scrollableParentElement)
+                return (<HTMLElement>this.scrollableParentElement[0]).offsetHeight;
 
             return this.$window.innerHeight;
         }
 
         public get bottom() {
             return this.scrollY + this.height;
+        }
+
+        public getScrollableParent = (hTMLElement: HTMLElement) => {
+
+            if (hTMLElement.tagName == "HTML")
+                return null;
+
+            if (angular.element(hTMLElement).css("overflowY") == "scroll")
+                return angular.element(hTMLElement);
+
+            if (hTMLElement.parentNode)
+                return this.getScrollableParent(<HTMLElement>hTMLElement.parentNode);
         }
     }
 

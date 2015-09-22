@@ -46,7 +46,7 @@ var VirtualIndexedListView;
                         containerElement.append(itemContent);
                     }
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Down) {
+                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === 1 /* Down */) {
                     var reachedBottom = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
@@ -71,7 +71,7 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedBottom && !allNodesHaveBeenMoved);
                 }
-                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Up) {
+                if (_this.getScrollDirections(options.scrollY, options.lastScrollY) === 0 /* Up */) {
                     var reachedTop = false;
                     var allNodesHaveBeenMoved = false;
                     var item = null;
@@ -96,7 +96,7 @@ var VirtualIndexedListView;
                         }
                     } while (!reachedTop && !allNodesHaveBeenMoved);
                 }
-                if (_this.hasRendered && _this.getScrollDirections(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.None) {
+                if (_this.hasRendered && _this.getScrollDirections(options.scrollY, options.lastScrollY) === 2 /* None */) {
                     var cachedItemsList = _this.computeCacheItemsList();
                     var top = cachedItemsList[0].top;
                     var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
@@ -160,13 +160,13 @@ var VirtualIndexedListView;
             this.cacheItemsItemList = [];
             this.getScrollDirections = function (scrollY, lastScrollY) {
                 if (lastScrollY && scrollY > lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.Down;
+                    return 1 /* Down */;
                 }
                 if (lastScrollY && scrollY < lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.Up;
+                    return 0 /* Up */;
                 }
                 if (lastScrollY && scrollY === lastScrollY) {
-                    return VirtualIndexedListView.ScrollingDirection.None;
+                    return 2 /* None */;
                 }
                 return null;
             };

@@ -70,14 +70,22 @@ var VirtualIndexedListView;
             this.$window = $window;
             this.createInstance = function (options) {
                 var instance = new ViewPort(_this.$window);
-                instance.element = options.element;
+                instance.scrollableParentElement = instance.getScrollableParent(options.element[0]);
                 return instance;
+            };
+            this.getScrollableParent = function (hTMLElement) {
+                if (hTMLElement.tagName == "HTML")
+                    return null;
+                if (angular.element(hTMLElement).css("overflowY") == "scroll")
+                    return angular.element(hTMLElement);
+                if (hTMLElement.parentNode)
+                    return _this.getScrollableParent(hTMLElement.parentNode);
             };
         }
         Object.defineProperty(ViewPort.prototype, "scrollY", {
             get: function () {
-                if (this.element.css("overflowY") == "scroll")
-                    return this.element[0].scrollTop;
+                if (this.scrollableParentElement)
+                    return this.scrollableParentElement[0].scrollTop;
                 return this.$window.pageYOffset;
             },
             enumerable: true,
@@ -85,8 +93,8 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(ViewPort.prototype, "height", {
             get: function () {
-                if (this.element.css("overflowY") == "scroll")
-                    return this.element[0].offsetHeight;
+                if (this.scrollableParentElement)
+                    return this.scrollableParentElement[0].offsetHeight;
                 return this.$window.innerHeight;
             },
             enumerable: true,
