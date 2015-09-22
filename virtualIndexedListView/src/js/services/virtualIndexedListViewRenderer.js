@@ -19,13 +19,17 @@ var VirtualIndexedListView;
                 instance.element = options.element;
                 instance.template = options.template;
                 instance.itemHeight = Number(options.itemHeight);
-                instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: _this.element });
+                instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: instance.element });
                 if (instance.numberOfRenderedItems > instance.items.length)
                     instance.numberOfRenderedItems = instance.items.length;
                 setInterval(function () {
-                    instance.render({ scrollY: instance.viewPort.scrollY, lastScrollY: instance.lastYScroll, viewPortHeight: instance.viewPort.height });
+                    instance.render({
+                        scrollY: instance.viewPort.scrollY,
+                        lastScrollY: instance.lastYScroll,
+                        viewPortHeight: instance.viewPort.height
+                    });
                     instance.lastYScroll = instance.viewPort.scrollY;
-                }, 200);
+                }, 10);
                 return instance;
             };
             this.render = function (options) {

@@ -1,15 +1,14 @@
 ﻿var basicApp = angular.module("basicApp", ["virtualIndexedListView"]);
 
 
-class AppController {
-    
+module Basic {
+
+    export class AppController {
+
+    }
 }
 
-basicApp.controller("appController", [AppController]);
+basicApp.controller("appController", [Basic.AppController]);
 
 
-class DataService {
-    constructor() {}
-}
 
-basicApp.service("dataServicer", [DataService]);

@@ -7,11 +7,14 @@ var VirtualIndexedListView;
             this.$window = $window;
             this.createInstance = function (options) {
                 var instance = new ViewPort(_this.$window);
+                instance.element = options.element;
                 return instance;
             };
         }
         Object.defineProperty(ViewPort.prototype, "scrollY", {
             get: function () {
+                if (this.element.css("overflowY") == "scroll")
+                    return this.element[0].scrollTop;
                 return this.$window.pageYOffset;
             },
             enumerable: true,
@@ -19,6 +22,8 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(ViewPort.prototype, "height", {
             get: function () {
+                if (this.element.css("overflowY") == "scroll")
+                    return this.element[0].offsetHeight;
                 return this.$window.innerHeight;
             },
             enumerable: true,

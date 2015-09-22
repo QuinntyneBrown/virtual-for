@@ -63,10 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\basic.ts" />
+    <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
     <TypeScriptCompile Include="src\enums\scrollingDirection.ts" />
     <TypeScriptCompile Include="src\functions\getY.ts" />
-    <TypeScriptCompile Include="src\functions\moveToY.ts" />
     <TypeScriptCompile Include="src\functions\transformY.ts" />
     <TypeScriptCompile Include="src\services\viewPort.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewManager.ts" />
@@ -74,7 +74,6 @@
     <TypeScriptCompile Include="src\functions\getHtml.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
     <TypeScriptCompile Include="test\getY.spec.ts" />
-    <TypeScriptCompile Include="test\moveToY.spec.ts" />
     <TypeScriptCompile Include="test\viewPort.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListViewManager.spec.ts" />
@@ -95,6 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="examples\basic\basic.css" />
+    <Content Include="examples\insideScrollableElement\insideScrollableElement.css" />
+    <Content Include="examples\insideScrollableElement\insideScrollableElement.html" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -114,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="examples\filter\" />
+    <Folder Include="examples\serverSidePaging\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,14 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Basic Example</title>
-    <link href="basic.css" rel="stylesheet" />
+    <title>Inside Scrollable Element Example</title>
+    <link href="insideScrollableElement.css" rel="stylesheet" />
 </head>
-<body data-ng-app="basicApp" data-ng-controller="appController as vm">
-    
-    
-    <div virtual-indexed-list-view
-         virtual-indexed-list-view-items='[
+<body data-ng-app="insideScrollableElementApp" data-ng-controller="appController as vm">
+
+    <div id="scrollableElement" style="height: 300px; width: 500px; overflow-y: scroll;">
+        
+        <div virtual-indexed-list-view
+             virtual-indexed-list-view-items='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -30,12 +31,14 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-         virtual-indexed-list-view-item-name="movie"
-         virtual-indexed-list-view-item-height="75">
+             virtual-indexed-list-view-item-name="movie"
+             virtual-indexed-list-view-item-height="75">
 
-        <h1>{{ movie.name }} </h1>
+            <h1>{{ movie.name }} </h1>
 
+        </div>        
     </div>
+
 
 
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
@@ -44,8 +47,8 @@
     <script src="../../node_modules/angular/angular.min.js"></script>
     <script src="../../node_modules/rx-angular/dist/rx.angular.min.js"></script>
     <script src="../../dist/virtualIndexedListView.js"></script>
+    <script src="insideScrollableElement.js"></script>
 
-    <script src="basic.js"></script>
 
 </body>
 </html>

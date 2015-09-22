@@ -2,18 +2,6 @@
 angular.module("virtualIndexedListView", ["rx"]);
 
 //# sourceMappingURL=virtualIndexedListView.module.js.map
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
-    (function (ScrollingDirection) {
-        ScrollingDirection[ScrollingDirection["Up"] = 0] = "Up";
-        ScrollingDirection[ScrollingDirection["Down"] = 1] = "Down";
-        ScrollingDirection[ScrollingDirection["None"] = 2] = "None";
-    })(VirtualIndexedListView.ScrollingDirection || (VirtualIndexedListView.ScrollingDirection = {}));
-    var ScrollingDirection = VirtualIndexedListView.ScrollingDirection;
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../enums/scrollingDirection.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView_1) {
@@ -61,6 +49,18 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../directives/virtualIndexedListView.js.map
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    (function (ScrollingDirection) {
+        ScrollingDirection[ScrollingDirection["Up"] = 0] = "Up";
+        ScrollingDirection[ScrollingDirection["Down"] = 1] = "Down";
+        ScrollingDirection[ScrollingDirection["None"] = 2] = "None";
+    })(VirtualIndexedListView.ScrollingDirection || (VirtualIndexedListView.ScrollingDirection = {}));
+    var ScrollingDirection = VirtualIndexedListView.ScrollingDirection;
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../enums/scrollingDirection.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
@@ -70,11 +70,14 @@ var VirtualIndexedListView;
             this.$window = $window;
             this.createInstance = function (options) {
                 var instance = new ViewPort(_this.$window);
+                instance.element = options.element;
                 return instance;
             };
         }
         Object.defineProperty(ViewPort.prototype, "scrollY", {
             get: function () {
+                if (this.element.css("overflowY") == "scroll")
+                    return this.element[0].scrollTop;
                 return this.$window.pageYOffset;
             },
             enumerable: true,
@@ -82,6 +85,8 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(ViewPort.prototype, "height", {
             get: function () {
+                if (this.element.css("overflowY") == "scroll")
+                    return this.element[0].offsetHeight;
                 return this.$window.innerHeight;
             },
             enumerable: true,
@@ -175,13 +180,17 @@ var VirtualIndexedListView;
                 instance.element = options.element;
                 instance.template = options.template;
                 instance.itemHeight = Number(options.itemHeight);
-                instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: _this.element });
+                instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: instance.element });
                 if (instance.numberOfRenderedItems > instance.items.length)
                     instance.numberOfRenderedItems = instance.items.length;
                 setInterval(function () {
-                    instance.render({ scrollY: instance.viewPort.scrollY, lastScrollY: instance.lastYScroll, viewPortHeight: instance.viewPort.height });
+                    instance.render({
+                        scrollY: instance.viewPort.scrollY,
+                        lastScrollY: instance.lastYScroll,
+                        viewPortHeight: instance.viewPort.height
+                    });
                     instance.lastYScroll = instance.viewPort.scrollY;
-                }, 200);
+                }, 10);
                 return instance;
             };
             this.render = function (options) {

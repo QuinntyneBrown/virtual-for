@@ -18,22 +18,25 @@ module VirtualIndexedListView {
             instance.element = options.element;
             instance.template = options.template;
             instance.itemHeight = Number(options.itemHeight);
-            instance.viewPort = (<IViewPort>this.$injector.get("virtualIndexedListView.viewPort")).createInstance({ element: this.element });
+            instance.viewPort = (<IViewPort>this.$injector.get("virtualIndexedListView.viewPort")).createInstance({ element: instance.element });
 
             if (instance.numberOfRenderedItems > instance.items.length)
                 instance.numberOfRenderedItems = instance.items.length;
 
             setInterval(() => {
-                instance.render({ scrollY: instance.viewPort.scrollY, lastScrollY: instance.lastYScroll, viewPortHeight: instance.viewPort.height });
+                instance.render({
+                    scrollY: instance.viewPort.scrollY,
+                    lastScrollY: instance.lastYScroll,
+                    viewPortHeight: instance.viewPort.height
+                });
                 instance.lastYScroll = instance.viewPort.scrollY;
-            }, 200);
+            }, 10);
 
             return instance;
         }
 
         public render = (options: IRenderOptions) => {
 
-            
             var containerElement: ng.IAugmentedJQuery;
 
             if (this.hasRendered === false) {
