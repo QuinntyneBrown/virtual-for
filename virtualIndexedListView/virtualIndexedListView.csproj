@@ -65,17 +65,24 @@
     <TypeScriptCompile Include="examples\basic\basic.ts" />
     <TypeScriptCompile Include="examples\filter\filter.ts" />
     <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
+    <TypeScriptCompile Include="examples\serverSidePaging\serverSidePaging.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
+    <TypeScriptCompile Include="src\enums\collectionType.ts" />
     <TypeScriptCompile Include="src\enums\scrollingDirection.ts" />
     <TypeScriptCompile Include="src\functions\getRenderedNodesComputedInfo.ts" />
     <TypeScriptCompile Include="src\functions\getScrollDirection.ts" />
     <TypeScriptCompile Include="src\functions\getY.ts" />
     <TypeScriptCompile Include="src\functions\transformY.ts" />
+    <TypeScriptCompile Include="src\services\collectionManager.ts" />
     <TypeScriptCompile Include="src\services\container.ts" />
+    <TypeScriptCompile Include="src\services\filterableCollectionManager.ts" />
+    <TypeScriptCompile Include="src\services\lazyLoadCollectionManager.ts" />
+    <TypeScriptCompile Include="src\services\scopeCollectionManager.ts" />
     <TypeScriptCompile Include="src\services\viewPort.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewRenderer.ts" />
     <TypeScriptCompile Include="src\functions\getHtml.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
+    <TypeScriptCompile Include="test\container.spec.ts" />
     <TypeScriptCompile Include="test\getY.spec.ts" />
     <TypeScriptCompile Include="test\viewPort.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
@@ -100,6 +107,8 @@
     <Content Include="examples\filter\filter.html" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.css" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.html" />
+    <Content Include="examples\serverSidePaging\serverSidePaging.css" />
+    <Content Include="examples\serverSidePaging\serverSidePaging.html" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -120,9 +129,7 @@
   <ItemGroup>
     <Content Include="tsd.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="examples\serverSidePaging\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

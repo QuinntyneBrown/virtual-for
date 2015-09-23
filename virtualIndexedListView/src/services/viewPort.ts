@@ -50,6 +50,15 @@ module VirtualIndexedListView {
             if (hTMLElement.parentNode)
                 return this.getScrollableParent(<HTMLElement>hTMLElement.parentNode);
         }
+
+        public scrollTo = (value: number) => {
+
+            if (this.scrollableParentElement) {
+                this.scrollableParentElement[0].scrollTop = value;
+            } else {
+                this.$window.scrollTo(value);
+            }
+        }
     }
 
     angular.module("virtualIndexedListView").service("virtualIndexedListView.viewPort", ["$window",ViewPort]);

@@ -19,6 +19,14 @@ var VirtualIndexedListView;
                 if (hTMLElement.parentNode)
                     return _this.getScrollableParent(hTMLElement.parentNode);
             };
+            this.scrollTo = function (value) {
+                if (_this.scrollableParentElement) {
+                    _this.scrollableParentElement[0].scrollTop = value;
+                }
+                else {
+                    _this.$window.scrollTo(value);
+                }
+            };
         }
         Object.defineProperty(ViewPort.prototype, "scrollY", {
             get: function () {

@@ -8,7 +8,6 @@ module VirtualIndexedListView {
         constructor(private $compile: ng.ICompileService,
             private $injector: ng.auto.IInjectorService,
             private $interval: ng.IIntervalService,
-            private $timeout: ng.ITimeoutService,
             private getRenderedNodesComputedInfo:any,
             private getScrollDirection:any,
             private getY: IGetY,
@@ -18,8 +17,7 @@ module VirtualIndexedListView {
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.$timeout, this.getRenderedNodesComputedInfo, this.getScrollDirection, this.getY, this.observeOnScope, this.transformY);
-            instance.items = options.items;
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$injector, this.$interval, this.getRenderedNodesComputedInfo, this.getScrollDirection, this.getY, this.observeOnScope, this.transformY);
             instance.itemName = options.itemName;
             instance.scope = options.scope;
             instance.element = options.element;
@@ -27,10 +25,28 @@ module VirtualIndexedListView {
             instance.itemHeight = Number(options.itemHeight);
             instance.viewPort = (<IViewPort>this.$injector.get("virtualIndexedListView.viewPort")).createInstance({ element: instance.element });
             instance.container = (<IContainer>this.$injector.get("virtualIndexedListView.container")).createInstance({ element: instance.element });
-            instance.container.setHeight(instance.items.length * instance.itemHeight);
 
-            if (instance.numberOfRenderedItems > instance.items.length)
-                instance.numberOfRenderedItems = instance.items.length;
+            if (options.filterFn && options.searchTermNameOnScope) {
+                instance.collectionManager = (<IFilterableCollectionManager>this.$injector.get("virtualIndexedListView.filterableCollectionManager")).createInstance({ items: options.items });
+            } else {
+                instance.collectionManager = (<ICollectionManager>this.$injector.get("virtualIndexedListView.collectionManager")).createInstance({ items: options.items });
+            }
+
+            instance.scope.$on(instance.scrollEventName, (criteria:any) => {
+                instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result:any) => {
+                    instance.viewPort.scrollTo(result.index * instance.itemHeight);
+                });
+            });
+
+            instance.collectionManager.subscribe({
+                callback: () => {
+                    instance.forceRender({
+                        viewPortHeight: instance.viewPort.height
+                    });
+                }
+            });
+
+            instance.container.setHeight(instance.collectionManager.numberOfItems * instance.itemHeight);
 
             instance.$interval(() => {
                 instance.render({
@@ -41,41 +57,7 @@ module VirtualIndexedListView {
                 instance.lastYScroll = instance.viewPort.scrollY;
             }, 10,null, false);
 
-            var timeoutPromise:any = null;
-
-            instance.observeOnScope(instance.scope, 'vm.filterTerm')
-                .map(function (data) {
-                    return data;
-                })
-                .subscribe(function (change) {
-                instance.filterTerm.observedChange = change;
-                instance.filterTerm.newValue = change.newValue;
-                instance.filterTerm.oldValue = change.oldValue;
-                instance.filterFn = (value: any) => {
-                    return value.name.indexOf(instance.filterTerm.newValue) > -1;
-                }
-
-                if (timeoutPromise)
-                    instance.$timeout.cancel(timeoutPromise);
-
-                timeoutPromise = instance.$timeout(() => {
-                        instance.render({ force: true, lastScrollY: 0, scrollY: 0, viewPortHeight: instance.viewPort.height });
-                }, 10, false);
-            });
-
-            instance.filterFn = instance.scope.filterFn;
-
             return instance;
-        }
-
-        public _filterTerm: any = {};
-
-        public get filterTerm() {
-            return this._filterTerm;
-        }
-
-        public set filterTerm(value: any) {
-            this._filterTerm = value;
         }
 
         public render = (options?: IRenderOptions) => {
@@ -119,21 +101,19 @@ module VirtualIndexedListView {
             if (!this.hasRendered)
                 return;
 
-            this.container.reInitialize({ height: this.items.length * this.itemHeight });
+            this.container.reInitialize({ height: this.collectionManager.numberOfItems * this.itemHeight });
 
             this.initialRender(options);
 
-            try {
-                this.scope.$digest();
-            } catch (error) {
-
-            }            
+            if (!this.scope.$$phase && !this.scope.$root.$$phase)
+                this.scope.$digest();     
+                 
         }
 
         public initialRender = (options: IRenderOptions) => {
             for (var i = 0; i < this.numberOfRenderedItems; i++) {
                 var childScope: any = this.scope.$new(true);
-                childScope[this.itemName] = this.items[i];
+                childScope[this.itemName] = this.collectionManager.items[i];
                 childScope.$$index = i;
                 var itemContent = this.$compile(angular.element(this.template))(childScope);
                 this.container.augmentedJQuery.append(itemContent);
@@ -158,7 +138,7 @@ module VirtualIndexedListView {
                     reachedBottom = true;
                 } else {
                     index = cachedItemsList[cachedItemsList.length - 1].index + 1;
-                    item = this.items[index];
+                    item = this.collectionManager.items[index];
                 }
 
                 if (cachedItemsList[0].bottom >= options.scrollY)
@@ -193,7 +173,7 @@ module VirtualIndexedListView {
                     reachedTop = true;
                 } else {
                     index = cachedItemsList[cachedItemsList.length - 1].index - 1;
-                    item = this.items[index];
+                    item = this.collectionManager.items[index];
                 }
 
                 if (cachedItemsList[0].top <= options.scrollY + options.viewPortHeight)
@@ -217,9 +197,8 @@ module VirtualIndexedListView {
             var top = cachedItemsList[0].top;
             var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
 
-
             if (top > options.scrollY) {
-                console.log("missing items on top");
+                this.renderUp(options);
             }
 
             if (bottom <= options.scrollY + options.viewPortHeight) {
@@ -227,37 +206,19 @@ module VirtualIndexedListView {
             }
         }
 
-        private viewPort: IViewPort;
-
         public hasRendered: boolean = false;
 
         public element: ng.IAugmentedJQuery;
 
         public template: string;
 
-        public get containerHeight() {
-            return this.items.length * this.itemHeight;
-        }
-
-        private _items: any[];
-
-        public get items() {
-
-            if (this.filterFn && this.filterTerm.newValue)
-                return this._items.filter(this.filterFn);
-
-            return this._items;
-        }
-
-        public set items(value: any[]) {
-            this._items = value;
-        }
-
-        public container: IContainer;
-
         public itemName: string;
 
-        public filterFn:any;
+        public name: string;
+
+        public get scrollEventName() {
+            return "virtualIndexedListView" + this.name;
+        }
 
         public scope: any;
 
@@ -265,25 +226,23 @@ module VirtualIndexedListView {
 
         public lastYScroll: number = 0;
 
-        private _numberOfRenderedItems;
-
         public get numberOfRenderedItems() {
-            if (!this._numberOfRenderedItems)
-                return Math.ceil(1380 / Number(this.itemHeight));
-
-            return this._numberOfRenderedItems;
+            var max = Math.ceil(1380 / Number(this.itemHeight));
+            if (this.collectionManager.numberOfItems < max)
+                return this.collectionManager.numberOfItems;
+            return max;
         }
 
-        public set numberOfRenderedItems(value:number) {
-            this._numberOfRenderedItems = value;
-        }
+        public collectionManager: ICollectionManager;
 
+        public container: IContainer;
+
+        private viewPort: IViewPort;
     }
 
     angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",
         "$injector",
         "$interval",
-        "$timeout",
         "virtualIndexedListView.getRenderedNodesComputedInfo",
         "virtualIndexedListView.getScrollDirection",
         "virtualIndexedListView.getY",

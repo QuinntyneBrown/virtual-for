@@ -22,7 +22,8 @@ var VirtualIndexedListView;
                             scope: scope,
                             items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
                             itemName: attributes["virtualIndexedListViewItemName"],
-                            itemHeight: attributes["virtualIndexedListViewItemHeight"]
+                            itemHeight: attributes["virtualIndexedListViewItemHeight"],
+                            name: attributes["virtualIndexedListViewItemName"]
                         }).render();
                     });
                 };
@@ -32,6 +33,7 @@ var VirtualIndexedListView;
                     clone[0].removeAttribute("virtual-indexed-list-view-item-name");
                     clone[0].removeAttribute("virtual-indexed-list-view-item-height");
                     clone[0].removeAttribute("virtual-indexed-list-view-items");
+                    clone[0].removeAttribute("virtual-indexed-list-view-name");
                 }
             };
         }

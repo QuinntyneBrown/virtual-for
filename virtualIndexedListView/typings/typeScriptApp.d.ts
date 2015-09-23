@@ -2,6 +2,51 @@
 
 declare module VirtualIndexedListView {
 
+    export interface IFilterableCollectionManager extends ICollectionManager {
+        
+    }
+
+    export interface IFilterableCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions {
+        scope: any;
+        searchTermNameOnScope: string;
+        filterFn:any;
+    }
+
+    export interface ISubscription {
+        id: number;
+        callback(options?: any): void;
+        isActive: boolean;
+    }
+
+    export interface ICollectionManagerInstanceOptions {
+        items?: any[];        
+    }
+
+    export interface ICollectionManager {
+        createInstance(options: ICollectionManagerInstanceOptions): ICollectionManager; 
+        numberOfItems: number;
+        items: any[];   
+        subscribe(options: ISubscribeOptions): number;
+        getIndexByCriteriaAsync(options:any):ng.IPromise<any>;
+    }
+
+    export interface ISubscribeOptions {
+        callback(options?:any): any;
+    }
+
+    export interface ISubscriptionCallbackFunction {
+        (options?: any):void;
+    }
+
+    export interface ISubscriptionCallbackFunctionOptions {
+        change:IChange;
+    }
+
+    export interface IChange {
+        oldValue: any;
+        newValue: any;
+    }
+
     export interface IContainer {
         height: number;
         bottom: number;
@@ -30,8 +75,8 @@ declare module VirtualIndexedListView {
     }
 
     export interface IRenderOptions {
-        scrollY: number;
-        lastScrollY: number;
+        scrollY?: number;
+        lastScrollY?: number;
         viewPortHeight: number;
         force?: boolean;
         items?:any[];
@@ -59,5 +104,6 @@ declare module VirtualIndexedListView {
         createInstance(options?:any):IViewPort;
         scrollY: number;
         height: number;
+        scrollTo(value: number):void;
     }
 }
