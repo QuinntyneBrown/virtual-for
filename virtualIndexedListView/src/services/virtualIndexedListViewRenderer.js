@@ -22,13 +22,20 @@ var VirtualIndexedListView;
                 instance.itemHeight = Number(options.itemHeight);
                 instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: instance.element });
                 instance.container = _this.$injector.get("virtualIndexedListView.container").createInstance({ element: instance.element });
+                instance.name = options.name;
                 if (options.filterFn && options.searchTermNameOnScope) {
                     instance.collectionManager = _this.$injector.get("virtualIndexedListView.filterableCollectionManager").createInstance({ items: options.items });
+                }
+                else if (options.dataService) {
+                    instance.collectionManager = _this.$injector.get("virtualIndexedListView.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
+                    instance.$interval(function () {
+                        instance.collectionManager.loadMore();
+                    }, 1000, null, false);
                 }
                 else {
                     instance.collectionManager = _this.$injector.get("virtualIndexedListView.collectionManager").createInstance({ items: options.items });
                 }
-                instance.scope.$on(instance.scrollEventName, function (criteria) {
+                instance.scope.$on(instance.scrollEventName, function (event, criteria) {
                     instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then(function (result) {
                         instance.viewPort.scrollTo(result.index * instance.itemHeight);
                     });
@@ -163,7 +170,7 @@ var VirtualIndexedListView;
         }
         Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "scrollEventName", {
             get: function () {
-                return "virtualIndexedListView" + this.name;
+                return "virtualIndexedListViewScroll" + this.name;
             },
             enumerable: true,
             configurable: true

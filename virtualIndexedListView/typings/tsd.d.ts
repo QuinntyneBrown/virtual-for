@@ -9,3 +9,4 @@
 /// <reference path="rx/rx.time-lite.d.ts" />
 /// <reference path="rx/rx.time.d.ts" />
 /// <reference path="rx-angular/rx.angular.d.ts" />
+/// <reference path="angular-ui-router/angular-ui-router.d.ts" />

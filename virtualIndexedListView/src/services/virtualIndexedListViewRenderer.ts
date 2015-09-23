@@ -25,15 +25,23 @@ module VirtualIndexedListView {
             instance.itemHeight = Number(options.itemHeight);
             instance.viewPort = (<IViewPort>this.$injector.get("virtualIndexedListView.viewPort")).createInstance({ element: instance.element });
             instance.container = (<IContainer>this.$injector.get("virtualIndexedListView.container")).createInstance({ element: instance.element });
+            instance.name = options.name;
 
             if (options.filterFn && options.searchTermNameOnScope) {
                 instance.collectionManager = (<IFilterableCollectionManager>this.$injector.get("virtualIndexedListView.filterableCollectionManager")).createInstance({ items: options.items });
+            } else if (options.dataService) {
+                instance.collectionManager = (<ILazyLoadCollectionManager>this.$injector.get("virtualIndexedListView.lazyLoadCollectionManager")).createInstance({ items: options.items, dataService: options.dataService });
+
+                instance.$interval(() => {
+                    (<ILazyLoadCollectionManager>instance.collectionManager).loadMore();
+                }, 1000, null, false);
+
             } else {
                 instance.collectionManager = (<ICollectionManager>this.$injector.get("virtualIndexedListView.collectionManager")).createInstance({ items: options.items });
             }
 
-            instance.scope.$on(instance.scrollEventName, (criteria:any) => {
-                instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result:any) => {
+            instance.scope.$on(instance.scrollEventName, (event:any, criteria:any) => {
+                instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result: any) => {
                     instance.viewPort.scrollTo(result.index * instance.itemHeight);
                 });
             });
@@ -217,7 +225,7 @@ module VirtualIndexedListView {
         public name: string;
 
         public get scrollEventName() {
-            return "virtualIndexedListView" + this.name;
+            return "virtualIndexedListViewScroll" + this.name;
         }
 
         public scope: any;

@@ -1,6 +1,6 @@
-var app = angular.module("serverSidePagingApp", ["virtualIndexedListView"]);
-var ServerSidePagingApp;
-(function (ServerSidePagingApp) {
+var app = angular.module("lazyLoadApp", ["virtualIndexedListView"]);
+var LazyLoad;
+(function (LazyLoad) {
     var AppController = (function () {
         function AppController() {
         }
@@ -14,7 +14,7 @@ var ServerSidePagingApp;
             this.$q = $q;
             this.search = function (options) {
                 var deferred = _this.$q.defer();
-                _this.$http({ method: "GET", url: "http://api.shomi.com/multisearch/search/", params: options.params }).then(function (results) {
+                _this.$http({ method: "GET", url: "http://api.shomi.com/tvseries/search", params: options.params }).then(function (results) {
                     deferred.resolve(results);
                 }).catch(function (error) {
                     deferred.reject(error);
@@ -25,5 +25,5 @@ var ServerSidePagingApp;
         return DataService;
     })();
     app.service("dataService", ["$http", "$q", DataService]);
-})(ServerSidePagingApp || (ServerSidePagingApp = {}));
-//# sourceMappingURL=serverSidePaging.js.map
+})(LazyLoad || (LazyLoad = {}));
+//# sourceMappingURL=lazyLoad.js.map

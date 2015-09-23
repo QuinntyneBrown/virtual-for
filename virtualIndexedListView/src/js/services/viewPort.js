@@ -24,7 +24,7 @@ var VirtualIndexedListView;
                     _this.scrollableParentElement[0].scrollTop = value;
                 }
                 else {
-                    _this.$window.scrollTo(value);
+                    _this.$window.scrollTo(0, value);
                 }
             };
         }

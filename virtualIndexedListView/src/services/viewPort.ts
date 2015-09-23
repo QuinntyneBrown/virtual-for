@@ -56,7 +56,7 @@ module VirtualIndexedListView {
             if (this.scrollableParentElement) {
                 this.scrollableParentElement[0].scrollTop = value;
             } else {
-                this.$window.scrollTo(value);
+                this.$window.scrollTo(0,value);
             }
         }
     }

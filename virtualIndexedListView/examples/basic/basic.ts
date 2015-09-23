@@ -4,10 +4,16 @@
 module Basic {
 
     export class AppController {
+        constructor(private $scope) {
 
+            setTimeout(() => {
+                $scope.$broadcast("virtualIndexedListViewScrollbasic", { key: "name", value: "Her" });
+            }, 1000);
+            
+        }
     }
 
 }
 
-basicApp.controller("appController", [Basic.AppController]);
+basicApp.controller("appController", ["$scope",Basic.AppController]);
 

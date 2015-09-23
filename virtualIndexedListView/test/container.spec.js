@@ -46,5 +46,4 @@ describe("container", function () {
         expect(childScopes[2].$destroy).toHaveBeenCalled();
     });
 });
-
 //# sourceMappingURL=container.spec.js.map

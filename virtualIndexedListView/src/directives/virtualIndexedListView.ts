@@ -34,7 +34,8 @@ module VirtualIndexedListView {
                         items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
                         itemName: attributes["virtualIndexedListViewItemName"],
                         itemHeight: attributes["virtualIndexedListViewItemHeight"],
-                        name: attributes["virtualIndexedListViewItemName"]
+                        name: attributes["virtualIndexedListViewName"],
+                        dataService: attributes["virtualIndexedListViewDataService"]
                     }).render();
                 });
 
@@ -48,6 +49,7 @@ module VirtualIndexedListView {
                 clone[0].removeAttribute("virtual-indexed-list-view-item-height");
                 clone[0].removeAttribute("virtual-indexed-list-view-items");
                 clone[0].removeAttribute("virtual-indexed-list-view-name");
+                clone[0].removeAttribute("virtual-indexed-list-view-data-service");
             }
         }
 

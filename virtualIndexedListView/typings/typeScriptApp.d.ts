@@ -2,6 +2,15 @@
 
 declare module VirtualIndexedListView {
 
+    export interface ILazyLoadCollectionManager extends ICollectionManager {
+        createInstance(options: ILazyLoadCollectionManagerInstanceOptions): ICollectionManager;
+        loadMore():any;
+    }
+
+    export interface ILazyLoadCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions {
+        dataService:string;
+    }
+
     export interface IFilterableCollectionManager extends ICollectionManager {
         
     }

@@ -13,7 +13,13 @@ var VirtualIndexedListView;
             };
             this.getIndexByCriteriaAsync = function (options) {
                 var deferred = _this.$q.defer();
-                deferred.resolve(true);
+                var index = null;
+                for (var i = 0; i < _this.items.length; i++) {
+                    if (_this.items[i][options.criteria.key] == options.criteria.value) {
+                        index = i;
+                    }
+                }
+                deferred.resolve({ index: index });
                 return deferred.promise;
             };
             this.subscriptions = [];

@@ -1,26 +1,22 @@
-﻿var app = angular.module("serverSidePagingApp", ["virtualIndexedListView"]); 
+﻿var app = angular.module("lazyLoadApp", ["virtualIndexedListView"]); 
 
 
-module ServerSidePagingApp {
+module LazyLoad {
     
     class AppController {
-        constructor() {
-            
-        }
+        constructor() { }
     }
 
     app.controller("appController", [AppController]);
 
     class DataService {
-        constructor(private $http:ng.IHttpService, private $q:ng.IQService) {
-
-        }
+        constructor(private $http:ng.IHttpService, private $q:ng.IQService) { }
 
         public search = (options: any) => {
 
             var deferred = this.$q.defer();
 
-            this.$http({ method: "GET", url: "http://api.shomi.com/multisearch/search/", params: options.params }).then((results) => {
+            this.$http({ method: "GET", url: "http://api.shomi.com/tvseries/search", params: options.params }).then((results) => {
                 deferred.resolve(results);
             }).catch((error) => {
                 deferred.reject(error);

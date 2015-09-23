@@ -62,10 +62,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="demo\demo.ts" />
     <TypeScriptCompile Include="examples\basic\basic.ts" />
     <TypeScriptCompile Include="examples\filter\filter.ts" />
     <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
-    <TypeScriptCompile Include="examples\serverSidePaging\serverSidePaging.ts" />
+    <TypeScriptCompile Include="examples\lazyLoad\lazyLoad.ts" />
+    <TypeScriptCompile Include="examples\table\table.ts" />
+    <TypeScriptCompile Include="examples\tabset\tabset.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
     <TypeScriptCompile Include="src\enums\collectionType.ts" />
     <TypeScriptCompile Include="src\enums\scrollingDirection.ts" />
@@ -98,17 +101,23 @@
     <TypeScriptCompile Include="typings\rx\rx.d.ts" />
     <TypeScriptCompile Include="typings\rx\rx.time-lite.d.ts" />
     <TypeScriptCompile Include="typings\rx\rx.time.d.ts" />
+    <TypeScriptCompile Include="typings\stateResolver\typeScriptApp.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
     <TypeScriptCompile Include="typings\typeScriptApp.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="demo\demo.css" />
+    <Content Include="demo\demo.html" />
     <Content Include="examples\basic\basic.css" />
     <Content Include="examples\filter\filter.css" />
     <Content Include="examples\filter\filter.html" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.css" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.html" />
-    <Content Include="examples\serverSidePaging\serverSidePaging.css" />
-    <Content Include="examples\serverSidePaging\serverSidePaging.html" />
+    <Content Include="examples\lazyLoad\lazyLoad.css" />
+    <Content Include="examples\lazyLoad\lazyLoad.html" />
+    <Content Include="examples\table\table.css" />
+    <Content Include="examples\table\table.html" />
+    <Content Include="examples\tabset\tabset.html" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -129,7 +138,9 @@
   <ItemGroup>
     <Content Include="tsd.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="examples\listDetail\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
