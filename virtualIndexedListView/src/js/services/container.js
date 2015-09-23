@@ -3,38 +3,43 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     var Container = (function () {
         function Container() {
+            var _this = this;
             this.createInstance = function (options) {
-                return new Container();
+                var instance = new Container();
+                var container = angular.element("<div class='container'></div>");
+                options.element.append(container);
+                instance.augmentedJQuery = options.element.find(".container");
+                return instance;
             };
-            this.reInitialize = function () {
+            this.reInitialize = function (options) {
+                for (var i = 0; i < _this.htmlElement.children.length; i++) {
+                    var oldScope = angular.element(_this.htmlElement.children[i]).scope();
+                    oldScope.$destroy();
+                }
+                _this.htmlElement.innerHTML = "";
+                _this.setHeight(options.height);
+            };
+            this.setHeight = function (value) {
+                _this.augmentedJQuery.css("height", value);
             };
         }
         Object.defineProperty(Container.prototype, "height", {
             get: function () {
-                return this._height;
-            },
-            set: function (value) {
-                this._height = value;
+                return this.htmlElement.offsetHeight;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Container.prototype, "bottom", {
             get: function () {
-                return this._bottom;
-            },
-            set: function (value) {
-                this._bottom = value;
+                return this.htmlElement.offsetHeight + this.htmlElement.offsetTop;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Container.prototype, "top", {
             get: function () {
-                return this._top;
-            },
-            set: function (value) {
-                this._top = value;
+                return this.htmlElement.offsetTop;
             },
             enumerable: true,
             configurable: true
@@ -51,10 +56,7 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(Container.prototype, "htmlElement", {
             get: function () {
-                return this._htmlElement;
-            },
-            set: function (value) {
-                this._htmlElement = value;
+                return this.augmentedJQuery[0];
             },
             enumerable: true,
             configurable: true

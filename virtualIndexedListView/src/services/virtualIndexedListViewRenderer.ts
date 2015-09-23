@@ -26,6 +26,8 @@ module VirtualIndexedListView {
             instance.template = options.template;
             instance.itemHeight = Number(options.itemHeight);
             instance.viewPort = (<IViewPort>this.$injector.get("virtualIndexedListView.viewPort")).createInstance({ element: instance.element });
+            instance.container = (<IContainer>this.$injector.get("virtualIndexedListView.container")).createInstance({ element: instance.element });
+            instance.container.setHeight(instance.items.length * instance.itemHeight);
 
             if (instance.numberOfRenderedItems > instance.items.length)
                 instance.numberOfRenderedItems = instance.items.length;
@@ -86,184 +88,143 @@ module VirtualIndexedListView {
                 };
             }
 
-            var containerElement: ng.IAugmentedJQuery;
-
             if (options.force ) {
-
-                var container = this.containerElement[0];
-
-                for (var i = 0; i < container.children.length; i++) {
-                    var oldScope = angular.element(container.children[i]).scope();
-                    oldScope.$destroy();
-                }
-
-                container.innerHTML = "";
-
-                angular.element(container).css("height", this.containerHeight);
-
-                for (var i = 0; i < this.numberOfRenderedItems; i++) {
-                    var childScope: any = this.scope.$new(true);
-                    childScope[this.itemName] = this.items[i];
-                    childScope.$$index = i;
-                    var itemContent = this.$compile(angular.element(this.template))(childScope);
-                    angular.element(container).append(itemContent);
-                }
-
-                try {
-                    this.scope.$digest();
-                } catch (error) {
-
-                }
-
-                this.hasRendered = true;
+                this.forceRender(options);
+                return;
             }
 
-
             if (this.hasRendered === false) {
-                containerElement = angular.element("<div class='container'></div>");
-                containerElement.css("height", this.containerHeight);
-
-                this.element.append(containerElement);
-
-                for (var i = 0; i < this.numberOfRenderedItems; i++) {
-                    var childScope:any = this.scope.$new(true);
-                    childScope[this.itemName] = this.items[i];
-                    childScope.$$index = i;
-                    var itemContent = this.$compile(angular.element(this.template))(childScope);
-                    containerElement.append(itemContent);
-                }
-
-                try {
-                    this.scope.$digest();
-                } catch (error) {
-                    
-                }
+                this.initialRender(options);
             }
 
             if (this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.Down) {
-
-                var reachedBottom = false;
-
-                var allNodesHaveBeenMoved = false;
-
-                var item = null;
-
-                var index = null;
-
-                do {
-
-                    var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
-                        
-                    if (cachedItemsList[cachedItemsList.length - 1].bottom >= this.containerBottom) {
-                        reachedBottom = true;
-                    } else {
-                        index = cachedItemsList[cachedItemsList.length - 1].index + 1;
-                        item = this.items[index];
-                    }
-
-                    if (cachedItemsList[0].bottom >= options.scrollY) 
-                        allNodesHaveBeenMoved = true;
-                    
-
-                    if (!reachedBottom && !allNodesHaveBeenMoved) {
-                        this.transformY(cachedItemsList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(cachedItemsList[0].node));
-                        var scope: any = angular.element(cachedItemsList[0].node).scope();
-                        scope[this.itemName] = item;
-                        scope.$$index = index;
-                        scope.$digest();
-                    }
-
-                } while (!reachedBottom && !allNodesHaveBeenMoved)
-                
+                this.renderDown(options);
+                return;
             }
 
             if (this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.Up) {
-
-                var reachedTop = false;
-
-                var allNodesHaveBeenMoved = false;
-
-                var item = null;
-
-                var index = null;
-
-                do {
-
-                    var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: true }));
-
-                    if (cachedItemsList[cachedItemsList.length - 1].top <= 0) {
-                        reachedTop = true;
-                    } else {
-                        index = cachedItemsList[cachedItemsList.length - 1].index - 1;
-                        item = this.items[index];
-                    }
-
-                    if (cachedItemsList[0].top <= options.scrollY + options.viewPortHeight)
-                        allNodesHaveBeenMoved = true;
-
-                    if (!reachedTop && !allNodesHaveBeenMoved) {
-                        this.transformY(cachedItemsList[0].node, this.getY(cachedItemsList[0].node) - (this.numberOfRenderedItems * this.itemHeight));
-                        var scope: any = angular.element(cachedItemsList[0].node).scope();
-                        scope[this.itemName] = item;
-                        scope.$$index = index;
-                        scope.$digest();
-                    }
-
-                } while (!reachedTop && !allNodesHaveBeenMoved)
+                this.renderUp(options);
+                return;
             }
 
-            if (this.hasRendered && this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.None) {
-
-                var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
-
-                var top = cachedItemsList[0].top;
-                var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
-
-
-                if (top > options.scrollY) {
-                    console.log("missing items on top");
-                }
-
-                if (bottom <= options.scrollY + options.viewPortHeight) {
-                    console.log("missing items on bottom");
-                    var reachedBottom = false;
-
-                    var allNodesHaveBeenMoved = false;
-
-                    var item = null;
-
-                    var index = null;
-
-                    do {
-
-                        var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.renderedNodes, itemHeight: this.itemHeight, desc: false }));
-
-                        if (cachedItemsList[cachedItemsList.length - 1].bottom >= (this.items.length * this.itemHeight)) {
-                            reachedBottom = true;
-                        } else {
-                            index = cachedItemsList[cachedItemsList.length - 1].index + 1;
-                            item = this.items[index];
-                        }
-
-                        if (cachedItemsList[0].bottom >= options.scrollY)
-                            allNodesHaveBeenMoved = true;
-
-
-                        if (!reachedBottom && !allNodesHaveBeenMoved) {
-                            this.transformY(cachedItemsList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(cachedItemsList[0].node));
-                            var scope: any = angular.element(cachedItemsList[0].node).scope();
-                            scope[this.itemName] = item;
-                            scope.$$index = index;
-                            scope.$digest();
-                        }
-
-                    } while (!reachedBottom && !allNodesHaveBeenMoved)
-                }
+            if (this.getScrollDirection(options.scrollY, options.lastScrollY) === ScrollingDirection.None) {
+                this.stabilizeRender(options);
+                return;
             }
 
+        }
 
+        public forceRender = (options: IRenderOptions) => {
+
+            if (!this.hasRendered)
+                return;
+
+            this.container.reInitialize({ height: this.items.length * this.itemHeight });
+
+            this.initialRender(options);
+
+            try {
+                this.scope.$digest();
+            } catch (error) {
+
+            }            
+        }
+
+        public initialRender = (options: IRenderOptions) => {
+            for (var i = 0; i < this.numberOfRenderedItems; i++) {
+                var childScope: any = this.scope.$new(true);
+                childScope[this.itemName] = this.items[i];
+                childScope.$$index = i;
+                var itemContent = this.$compile(angular.element(this.template))(childScope);
+                this.container.augmentedJQuery.append(itemContent);
+            }
             this.hasRendered = true;
+        }
 
+        public renderDown = (options: IRenderOptions) => {
+            var reachedBottom = false;
+
+            var allNodesHaveBeenMoved = false;
+
+            var item = null;
+
+            var index = null;
+
+            do {
+
+                var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.container.htmlElement.children, itemHeight: this.itemHeight, desc: false }));
+
+                if (cachedItemsList[cachedItemsList.length - 1].bottom >= this.container.bottom) {
+                    reachedBottom = true;
+                } else {
+                    index = cachedItemsList[cachedItemsList.length - 1].index + 1;
+                    item = this.items[index];
+                }
+
+                if (cachedItemsList[0].bottom >= options.scrollY)
+                    allNodesHaveBeenMoved = true;
+
+
+                if (!reachedBottom && !allNodesHaveBeenMoved) {
+                    this.transformY(cachedItemsList[0].node, (this.numberOfRenderedItems * this.itemHeight) + this.getY(cachedItemsList[0].node));
+                    var scope: any = angular.element(cachedItemsList[0].node).scope();
+                    scope[this.itemName] = item;
+                    scope.$$index = index;
+                    scope.$digest();
+                }
+
+            } while (!reachedBottom && !allNodesHaveBeenMoved)
+        }
+
+        public renderUp = (options: IRenderOptions) => {
+            var reachedTop = false;
+
+            var allNodesHaveBeenMoved = false;
+
+            var item = null;
+
+            var index = null;
+
+            do {
+
+                var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.container.htmlElement.children, itemHeight: this.itemHeight, desc: true }));
+
+                if (cachedItemsList[cachedItemsList.length - 1].top <= 0) {
+                    reachedTop = true;
+                } else {
+                    index = cachedItemsList[cachedItemsList.length - 1].index - 1;
+                    item = this.items[index];
+                }
+
+                if (cachedItemsList[0].top <= options.scrollY + options.viewPortHeight)
+                    allNodesHaveBeenMoved = true;
+
+                if (!reachedTop && !allNodesHaveBeenMoved) {
+                    this.transformY(cachedItemsList[0].node, this.getY(cachedItemsList[0].node) - (this.numberOfRenderedItems * this.itemHeight));
+                    var scope: any = angular.element(cachedItemsList[0].node).scope();
+                    scope[this.itemName] = item;
+                    scope.$$index = index;
+                    scope.$digest();
+                }
+
+            } while (!reachedTop && !allNodesHaveBeenMoved)            
+        }
+
+        public stabilizeRender = (options: IRenderOptions) => {
+
+            var cachedItemsList = (<any[]>this.getRenderedNodesComputedInfo({ getY: this.getY, renderedNodes: this.container.htmlElement.children, itemHeight: this.itemHeight, desc: false }));
+
+            var top = cachedItemsList[0].top;
+            var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
+
+
+            if (top > options.scrollY) {
+                console.log("missing items on top");
+            }
+
+            if (bottom <= options.scrollY + options.viewPortHeight) {
+                this.renderDown(options);
+            }
         }
 
         private viewPort: IViewPort;
@@ -292,6 +253,8 @@ module VirtualIndexedListView {
             this._items = value;
         }
 
+        public container: IContainer;
+
         public itemName: string;
 
         public filterFn:any;
@@ -315,30 +278,6 @@ module VirtualIndexedListView {
             this._numberOfRenderedItems = value;
         }
 
-        private _containerElement: ng.IAugmentedJQuery;
-
-        public get containerElement() {
-            if (!this._containerElement)
-                return this.element.find(".container");
-
-            return this._containerElement;
-        }
-
-        public set containerElement(value: ng.IAugmentedJQuery) {
-            this._containerElement = value;
-        }
-
-        public get containerBottom() {
-            return this.containerElement[0].offsetHeight + this.containerElement[0].offsetTop;
-        }
-
-        public get containerTop() {
-            return this.containerElement[0].offsetTop;
-        }
-
-        public get renderedNodes(): Array<HTMLElement> {            
-            return <any>this.containerElement[0].children;
-        }
     }
 
     angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",

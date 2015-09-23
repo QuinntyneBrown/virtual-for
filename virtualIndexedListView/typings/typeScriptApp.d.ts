@@ -8,11 +8,13 @@ declare module VirtualIndexedListView {
         top: number;
         augmentedJQuery: ng.IAugmentedJQuery;
         htmlElement: HTMLElement;
-        reInitialize():void;
+        setHeight(value:number):void;
+        reInitialize(options:any): void;
+        createInstance(options:IContainerInstanceOptions):IContainer;
     }
 
     export interface IContainerInstanceOptions {
-        
+        element: ng.IAugmentedJQuery;
     }
 
     export interface IMoveToY {

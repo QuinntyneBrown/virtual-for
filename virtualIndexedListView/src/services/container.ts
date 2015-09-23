@@ -4,45 +4,46 @@ module VirtualIndexedListView {
 
     class Container implements IContainer {
         constructor() {
-            
+
         }
 
         public createInstance = (options: IContainerInstanceOptions) => {
-            return new Container();
+            var instance = new Container();
+
+            var container = angular.element("<div class='container'></div>");
+
+            options.element.append(container);
+
+            instance.augmentedJQuery = options.element.find(".container");
+
+            return instance;
         }
 
-        public reInitialize = () => {
-            
-        }
+        public reInitialize = (options: any) => {
+            for(var i = 0; i < this.htmlElement.children.length; i++) {
+                var oldScope = angular.element(this.htmlElement.children[i]).scope();
+                oldScope.$destroy();
+            }
 
-        private _height: number;
+            this.htmlElement.innerHTML = "";
+
+            this.setHeight(options.height);
+        }
 
         public get height() {
-            return this._height;
+            return this.htmlElement.offsetHeight;
         }
 
-        public set height(value: number) {
-            this._height = value;
+        public setHeight = (value: number) => {
+            this.augmentedJQuery.css("height", value);
         }
-
-        private _bottom: number;
 
         public get bottom() {
-            return this._bottom;
+            return this.htmlElement.offsetHeight + this.htmlElement.offsetTop;
         }
-
-        public set bottom(value: number) {
-            this._bottom = value;
-        }
-
-        private _top: number;
 
         public get top() {
-            return this._top;
-        }
-
-        public set top(value: number) {
-            this._top = value;
+            return this.htmlElement.offsetTop;
         }
 
         private _augmentedJQuery: ng.IAugmentedJQuery;
@@ -55,14 +56,8 @@ module VirtualIndexedListView {
             this._augmentedJQuery = value;
         }
 
-        private _htmlElement: HTMLElement;
-
         public get htmlElement() {
-            return this._htmlElement;
-        }
-
-        public set htmlElement(value: HTMLElement) {
-            this._htmlElement = value;
+            return this.augmentedJQuery[0];
         }
 
     }
