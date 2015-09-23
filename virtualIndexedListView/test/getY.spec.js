@@ -12,4 +12,5 @@ describe("getY", function () {
         expect(getY).toBeDefined();
     });
 });
+
 //# sourceMappingURL=getY.spec.js.map
