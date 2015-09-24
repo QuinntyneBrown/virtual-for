@@ -67,6 +67,12 @@
     <TypeScriptCompile Include="examples\filter\filter.ts" />
     <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
     <TypeScriptCompile Include="examples\lazyLoad\lazyLoad.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\controllers\defaultController.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\controllers\mobileListDetailVController.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\directives\appBar.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\directives\navBar.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\listDetail.module.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\services\dataService.ts" />
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
@@ -90,6 +96,7 @@
     <TypeScriptCompile Include="test\viewPort.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListView.spec.ts" />
     <TypeScriptCompile Include="test\virtualIndexedListViewRenderer.spec.ts" />
+    <TypeScriptCompile Include="typings\angular-ui-router\angular-ui-router.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular-mocks.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="typings\es6-promise\es6-promise.d.ts" />
@@ -115,9 +122,15 @@
     <Content Include="examples\insideScrollableElement\insideScrollableElement.html" />
     <Content Include="examples\lazyLoad\lazyLoad.css" />
     <Content Include="examples\lazyLoad\lazyLoad.html" />
+    <Content Include="examples\listDetail\app\directives\appBar.html" />
+    <Content Include="examples\listDetail\app\directives\navBar.html" />
+    <Content Include="examples\listDetail\app\views\default.html" />
+    <Content Include="examples\listDetail\listDetail.css" />
+    <Content Include="examples\listDetail\listDetail.html" />
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />
+    <Content Include="git_modules\stateResolver\stateResolver.min.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -139,7 +152,7 @@
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="examples\listDetail\" />
+    <Folder Include="examples\listDetail\app\views\partials\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

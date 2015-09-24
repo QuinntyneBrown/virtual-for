@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>List Detail Example</title>
+    <link href="listDetail.css" rel="stylesheet" />
+</head>
+<body data-ng-app="listDetailApp" data-ng-strict-di>
+
+    <nav-bar></nav-bar>
+
+    <div ui-view>
+
+    </div>
+    
+
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
+    <script src="../../node_modules/rx/dist/rx.all.compat.min.js"></script>
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="../../node_modules/rx-angular/dist/rx.angular.min.js"></script>
+    <script src="../../node_modules/angular-ui-router/build/angular-ui-router.min.js"></script>
+
+    <script src="../../git_modules/stateResolver/stateResolver.min.js"></script>
+
+    <script src="../../dist/virtualIndexedListView.js"></script>
+
+    <script src="app/listDetail.module.js"></script>
+
+
+    <!-- controllers -->
+    <script src="app/controllers/defaultController.js"></script>
+    <script src="app/controllers/mobileListDetailVController.js"></script>
+
+    <!-- services  -->
+    <script src="app/services/dataService.js"></script>
+
+    <!-- directives -->
+    <script src="app/directives/appBar.js"></script>
+    <script src="app/directives/navBar.js"></script>
+
+</body>
+</html>
