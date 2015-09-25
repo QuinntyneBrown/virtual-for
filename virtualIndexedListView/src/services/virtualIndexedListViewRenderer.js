@@ -3,7 +3,7 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $interval, getScrollDirection, getY, injector, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $interval, getScrollDirection, getY, injector, transformY, virtualNodes) {
             var _this = this;
             this.$compile = $compile;
             this.$interval = $interval;
@@ -11,8 +11,9 @@ var VirtualIndexedListView;
             this.getY = getY;
             this.injector = injector;
             this.transformY = transformY;
+            this.virtualNodes = virtualNodes;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$interval, _this.getScrollDirection, _this.getY, _this.injector, _this.transformY);
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$interval, _this.getScrollDirection, _this.getY, _this.injector, _this.transformY, _this.virtualNodes);
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
                 instance.element = options.element;
@@ -23,7 +24,7 @@ var VirtualIndexedListView;
                 instance.container = _this.injector.get({ interface: "IContainer", element: instance.element });
                 instance.collectionManager = _this.injector.get({ interface: "ICollectionManager", element: instance.element, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm, items: options.items, dataService: options.dataService });
                 instance.renderedNodes = _this.injector.get({ interface: "IRenderedNodes", container: instance.container });
-                if (instance.collectionManager.type == 3 /* lazyLoad */) {
+                if (instance.collectionManager.type == VirtualIndexedListView.collectionType.lazyLoad) {
                     instance.$interval(function () {
                         instance.collectionManager.loadMore();
                     }, 1000, null, false);
@@ -49,6 +50,14 @@ var VirtualIndexedListView;
                     });
                     instance.lastYScroll = instance.viewPort.scrollY;
                 }, 10, null, false);
+                instance.map = instance.virtualNodes.createInstance({
+                    items: instance.collectionManager.numberOfItems,
+                    numberOfRenderedItems: instance.numberOfRenderedItems,
+                    itemHeight: instance.itemHeight
+                });
+                for (var i = 0; i < instance.map.length; i++) {
+                    console.log(JSON.stringify(instance.map[i]));
+                }
                 return instance;
             };
             this.render = function (options) {
@@ -66,15 +75,15 @@ var VirtualIndexedListView;
                 if (_this.hasRendered === false) {
                     _this.initialRender(options);
                 }
-                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === 1 /* Down */) {
+                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Down) {
                     _this.renderDown(options);
                     return;
                 }
-                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === 0 /* Up */) {
+                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.Up) {
                     _this.renderUp(options);
                     return;
                 }
-                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === 2 /* None */) {
+                if (_this.getScrollDirection(options.scrollY, options.lastScrollY) === VirtualIndexedListView.ScrollingDirection.None) {
                     _this.stabilizeRender(options);
                     return;
                 }
@@ -98,6 +107,18 @@ var VirtualIndexedListView;
                 _this.hasRendered = true;
             };
             this.renderDown = function (options) {
+                //for (var i = 0; i < this.container.htmlElement.children.length; i++) {
+                //    for (var m = 0; m < this.map.length; m++) {
+                //        if (this.viewPort.scrollY >= this.map[m].minScrollYThreshold && this.viewPort.scrollY < this.map[m].maxScrollYThreshold && this.map[m].index == i) {
+                //            this.moveAndUpdateScope({
+                //                node: this.container.htmlElement.children[i],
+                //                position: this.map[m].nextTransform,
+                //                index: this.map[m].nextIndex,
+                //                item: this.collectionManager.items[this.map[m].nextIndex]
+                //            });
+                //        }
+                //    }
+                //}
                 var reachedBottom = false;
                 var allNodesHaveBeenMoved = false;
                 do {
@@ -145,15 +166,15 @@ var VirtualIndexedListView;
                 } while (!reachedTop && !allNodesHaveBeenMoved);
             };
             this.stabilizeRender = function (options) {
-                var headAndTail = _this.renderedNodes.getHeadAndTail();
-                var top = headAndTail.head.top;
-                var bottom = headAndTail.tail.bottom;
-                if (top > options.scrollY) {
-                    _this.renderUp(options);
-                }
-                if (bottom <= options.scrollY + options.viewPortHeight) {
-                    _this.renderDown(options);
-                }
+                //var headAndTail = this.renderedNodes.getHeadAndTail();
+                //var top = headAndTail.head.top;
+                //var bottom = headAndTail.tail.bottom;
+                //if (top > options.scrollY) {
+                //    this.renderUp(options);
+                //}
+                //if (bottom <= options.scrollY + options.viewPortHeight) {
+                //    this.renderDown(options);
+                //}
             };
             this.hasRendered = false;
             this.lastYScroll = 0;
@@ -177,6 +198,13 @@ var VirtualIndexedListView;
         });
         return VirtualIndexedListViewRenderer;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile", "$interval", "virtualIndexedListView.getScrollDirection", "virtualIndexedListView.getY", "virtualIndexedListView.injector", "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",
+        "$interval",
+        "virtualIndexedListView.getScrollDirection",
+        "virtualIndexedListView.getY",
+        "virtualIndexedListView.injector",
+        "virtualIndexedListView.transformY",
+        "virtualIndexedListView.virtualNodes",
+        VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 //# sourceMappingURL=virtualIndexedListViewRenderer.js.map

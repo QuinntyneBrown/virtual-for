@@ -4,9 +4,6 @@ var Basic;
     var AppController = (function () {
         function AppController($scope) {
             this.$scope = $scope;
-            setTimeout(function () {
-                $scope.$broadcast("virtualIndexedListViewScrollbasic", { key: "name", value: "Her" });
-            }, 1000);
         }
         return AppController;
     })();

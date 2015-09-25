@@ -94,6 +94,7 @@
     <TypeScriptCompile Include="src\services\viewPort.ts" />
     <TypeScriptCompile Include="src\services\virtualIndexedListViewRenderer.ts" />
     <TypeScriptCompile Include="src\functions\getHtml.ts" />
+    <TypeScriptCompile Include="src\services\virtualNodes.ts" />
     <TypeScriptCompile Include="src\virtualIndexedListView.module.ts" />
     <TypeScriptCompile Include="test\container.spec.ts" />
     <TypeScriptCompile Include="test\getY.spec.ts" />

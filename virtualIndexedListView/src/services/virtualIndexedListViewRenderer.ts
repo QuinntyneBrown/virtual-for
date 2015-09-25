@@ -10,12 +10,13 @@ module VirtualIndexedListView {
             private getScrollDirection:any,
             private getY: IGetY,
             private injector: IInjector,
-            private transformY: ITransformY) {
+            private transformY: ITransformY,
+            private virtualNodes: any) {
 
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$interval, this.getScrollDirection, this.getY, this.injector, this.transformY);
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$interval, this.getScrollDirection, this.getY, this.injector, this.transformY, this.virtualNodes);
             instance.itemName = options.itemName;
             instance.scope = options.scope;
             instance.element = options.element;
@@ -59,10 +60,24 @@ module VirtualIndexedListView {
                 instance.lastYScroll = instance.viewPort.scrollY;
             }, 10,null, false);
 
+
+            instance.map = instance.virtualNodes.createInstance({
+                items: instance.collectionManager.numberOfItems,
+                numberOfRenderedItems: instance.numberOfRenderedItems,
+                itemHeight: instance.itemHeight
+            });
+
+            for (var i = 0; i < instance.map.length; i++) {
+                console.log(JSON.stringify(instance.map[i]));
+            }
             return instance;
         }
 
+        public map: any[];
+
         public render = (options?: IRenderOptions) => {
+
+            
 
             if (!options) {
                 options = {
@@ -123,6 +138,23 @@ module VirtualIndexedListView {
         }
 
         public renderDown = (options: IRenderOptions) => {
+
+            //for (var i = 0; i < this.container.htmlElement.children.length; i++) {
+
+            //    for (var m = 0; m < this.map.length; m++) {
+            //        if (this.viewPort.scrollY >= this.map[m].minScrollYThreshold && this.viewPort.scrollY < this.map[m].maxScrollYThreshold && this.map[m].index == i) {
+
+            //            this.moveAndUpdateScope({
+            //                node: this.container.htmlElement.children[i],
+            //                position: this.map[m].nextTransform,
+            //                index: this.map[m].nextIndex,
+            //                item: this.collectionManager.items[this.map[m].nextIndex]
+            //            });
+
+            //        }
+            //    }
+            //}
+
             var reachedBottom = false;
             var allNodesHaveBeenMoved = false;
 
@@ -183,17 +215,17 @@ module VirtualIndexedListView {
         }
 
         public stabilizeRender = (options: IRenderOptions) => {
-            var headAndTail = this.renderedNodes.getHeadAndTail();
-            var top = headAndTail.head.top;
-            var bottom = headAndTail.tail.bottom;
+            //var headAndTail = this.renderedNodes.getHeadAndTail();
+            //var top = headAndTail.head.top;
+            //var bottom = headAndTail.tail.bottom;
 
-            if (top > options.scrollY) {
-                this.renderUp(options);
-            }
+            //if (top > options.scrollY) {
+            //    this.renderUp(options);
+            //}
 
-            if (bottom <= options.scrollY + options.viewPortHeight) {
-                this.renderDown(options);
-            }
+            //if (bottom <= options.scrollY + options.viewPortHeight) {
+            //    this.renderDown(options);
+            //}
         }
 
         public hasRendered: boolean = false;
@@ -237,5 +269,7 @@ module VirtualIndexedListView {
         "virtualIndexedListView.getScrollDirection",
         "virtualIndexedListView.getY",
         "virtualIndexedListView.injector",
-        "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
+        "virtualIndexedListView.transformY",
+        "virtualIndexedListView.virtualNodes",
+        VirtualIndexedListViewRenderer]);
 } 
