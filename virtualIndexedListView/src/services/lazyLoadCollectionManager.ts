@@ -7,6 +7,8 @@ module VirtualIndexedListView {
             
         }
 
+        public type: collectionType = collectionType.lazyLoad;
+
         public createInstance = (options: ILazyLoadCollectionManagerInstanceOptions) => {            
             var instance = new LazyLoadCollectionManager(this.$injector,this.$q);
             instance.items = options.items;

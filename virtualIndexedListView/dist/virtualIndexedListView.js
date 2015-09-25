@@ -1,5 +1,5 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
-angular.module("virtualIndexedListView", ["rx"]);
+angular.module("virtualIndexedListView", []);
 
 //# sourceMappingURL=virtualIndexedListView.module.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
@@ -28,7 +28,9 @@ var VirtualIndexedListView;
                             itemName: attributes["virtualIndexedListViewItemName"],
                             itemHeight: attributes["virtualIndexedListViewItemHeight"],
                             name: attributes["virtualIndexedListViewName"],
-                            dataService: attributes["virtualIndexedListViewDataService"]
+                            dataService: attributes["virtualIndexedListViewDataService"],
+                            searchTermNameOnScope: attributes["virtualIndexedListViewSearchTermNameOnScope"],
+                            filterFnNameOnVm: attributes["virtualIndexedListViewFilterFnNameOnVm"]
                         }).render();
                     });
                 };
@@ -40,6 +42,8 @@ var VirtualIndexedListView;
                     clone[0].removeAttribute("virtual-indexed-list-view-items");
                     clone[0].removeAttribute("virtual-indexed-list-view-name");
                     clone[0].removeAttribute("virtual-indexed-list-view-data-service");
+                    clone[0].removeAttribute("virtual-indexed-list-view-search-term-name-on-scope");
+                    clone[0].removeAttribute("virtual-indexed-list-view-filter-fn-name-on-vm");
                 }
             };
         }
@@ -103,39 +107,6 @@ var VirtualIndexedListView;
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
-    var getRenderedNodesComputedInfo = function (options) {
-        var computedInfo = [];
-        for (var i = 0; i < options.renderedNodes.length; i++) {
-            var y = options.getY(options.renderedNodes[i]);
-            var offsetTop = options.renderedNodes[i].offsetTop;
-            var itemHeight = options.itemHeight;
-            computedInfo.push({
-                top: y + offsetTop,
-                bottom: y + offsetTop + itemHeight,
-                index: angular.element(options.renderedNodes[i]).scope().$$index,
-                node: options.renderedNodes[i]
-            });
-        }
-        if (options.desc) {
-            computedInfo.sort(function (a, b) {
-                return b.top - a.top;
-            });
-        }
-        else {
-            computedInfo.sort(function (a, b) {
-                return a.top - b.top;
-            });
-        }
-        return computedInfo;
-    };
-    angular.module("virtualIndexedListView").value("virtualIndexedListView.getRenderedNodesComputedInfo", getRenderedNodesComputedInfo);
-})(VirtualIndexedListView || (VirtualIndexedListView = {}));
-
-//# sourceMappingURL=../functions/getRenderedNodesComputedInfo.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualIndexedListView;
-(function (VirtualIndexedListView) {
-    "use strict";
     var getScrollDirection = function (scrollY, lastScrollY) {
         if (lastScrollY && scrollY > lastScrollY) {
             return VirtualIndexedListView.ScrollingDirection.Down;
@@ -155,6 +126,20 @@ var VirtualIndexedListView;
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
+    VirtualIndexedListView.getX = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none") {
+            return 0;
+        }
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[6];
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.getX", VirtualIndexedListView.getX);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/getX.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
     VirtualIndexedListView.getY = function (element) {
         var transform = angular.element(element).css("transform");
         if (transform === "none") {
@@ -166,6 +151,52 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../functions/getY.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    "use strict";
+    var Injector = (function () {
+        function Injector($injector) {
+            var _this = this;
+            this.$injector = $injector;
+            this.get = function (options) {
+                switch (options.interface) {
+                    case "ICollectionManager":
+                        if (options.filterFnNameOnVm && options.searchTermNameOnScope) {
+                            return _this.$injector.get("virtualIndexedListView.filterableCollectionManager").createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });
+                        }
+                        else if (options.dataService) {
+                            return _this.$injector.get("virtualIndexedListView.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
+                        }
+                        else {
+                            return _this.$injector.get("virtualIndexedListView.collectionManager").createInstance({ items: options.items });
+                        }
+                    case "IViewPort":
+                        return _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: options.element });
+                    case "IContainer":
+                        return _this.$injector.get("virtualIndexedListView.container").createInstance({ element: options.element });
+                    case "IRenderedNodes":
+                        return _this.$injector.get("virtualIndexedListView.renderedNodes").createInstance({ container: options.container });
+                }
+            };
+        }
+        return Injector;
+    })();
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.injector", ["$injector", Injector]);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/injector.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    VirtualIndexedListView.safeDigest = function (options) {
+        if (!options.scope.$$phase && !options.scope.$root.$$phase)
+            options.scope.$digest();
+    };
+    angular.module("virtualIndexedListView").value("virtualIndexedListView.safeDigest", VirtualIndexedListView.safeDigest);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../functions/safeDigest.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
@@ -195,6 +226,7 @@ var VirtualIndexedListView;
                 instance.numberOfItems = options.items.length;
                 return instance;
             };
+            this.type = VirtualIndexedListView.collectionType.collection;
             this.getIndexByCriteriaAsync = function (options) {
                 var deferred = _this.$q.defer();
                 var index = null;
@@ -246,10 +278,11 @@ var VirtualIndexedListView;
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     var Container = (function () {
-        function Container() {
+        function Container(getY) {
             var _this = this;
+            this.getY = getY;
             this.createInstance = function (options) {
-                var instance = new Container();
+                var instance = new Container(_this.getY);
                 var container = angular.element("<div class='container'></div>");
                 options.element.append(container);
                 instance.augmentedJQuery = options.element.find(".container");
@@ -265,6 +298,14 @@ var VirtualIndexedListView;
             };
             this.setHeight = function (value) {
                 _this.augmentedJQuery.css("height", value);
+            };
+            this.isNodeAtBottom = function (options) {
+                var nodeBottom = _this.getY(options.node) + options.node.offsetTop + options.node.offsetTop;
+                return nodeBottom === _this.height;
+            };
+            this.isNodeAtTop = function (options) {
+                var nodeTop = _this.getY(options.node) + options.node.offsetTop;
+                return nodeTop === _this.top;
             };
         }
         Object.defineProperty(Container.prototype, "height", {
@@ -307,47 +348,41 @@ var VirtualIndexedListView;
         });
         return Container;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", [Container]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", ["virtualIndexedListView.getY", Container]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/container.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
+/// <reference path="../enums/collectiontype.ts" />
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     var FilterableCollectionManager = (function () {
-        function FilterableCollectionManager($q, $timeout, observeOnScope) {
+        function FilterableCollectionManager($q, $timeout) {
             var _this = this;
             this.$q = $q;
             this.$timeout = $timeout;
-            this.observeOnScope = observeOnScope;
             this.createInstance = function (options) {
-                var instance = new FilterableCollectionManager(_this.$q, _this.$timeout, _this.observeOnScope);
+                var instance = new FilterableCollectionManager(_this.$q, _this.$timeout);
                 instance.items = options.items;
                 instance.numberOfItems = options.items.length;
-                var timeoutPromise = null;
-                instance.observeOnScope(options.scope, options.searchTermNameOnScope)
-                    .map(function (data) {
-                    return data;
-                })
-                    .subscribe(function (change) {
-                    if (change.oldValue != change.newValue) {
-                        options.filterFn = function (value) {
-                            return value.name.indexOf(change.newValue) > -1;
-                        };
-                        if (timeoutPromise)
-                            instance.$timeout.cancel(timeoutPromise);
-                        timeoutPromise = instance.$timeout(function () {
-                            for (var i = 0; i < instance.subscriptions.length; i++) {
-                                instance.subscriptions[i].callback();
-                            }
-                        }, 10, false);
+                instance.filterFn = options.scope["vm"][options.filterFnNameOnVm];
+                options.scope.$watch(options.searchTermNameOnScope, function (searchTerm) {
+                    instance.searchTerm = searchTerm;
+                    for (var i = 0; i < instance.subscriptions.length; i++) {
+                        instance.subscriptions[i].callback();
                     }
                 });
                 return instance;
             };
             this.getIndexByCriteriaAsync = function (options) {
                 var deferred = _this.$q.defer();
-                deferred.resolve(true);
+                var index = null;
+                for (var i = 0; i < _this.items.length; i++) {
+                    if (_this.items[i][options.criteria.key] == options.criteria.value) {
+                        index = i;
+                    }
+                }
+                deferred.resolve({ index: index });
                 return deferred.promise;
             };
             this.subscriptions = [];
@@ -359,6 +394,7 @@ var VirtualIndexedListView;
                 });
                 return _this.subscriptions.length;
             };
+            this.type = VirtualIndexedListView.collectionType.filterable;
         }
         Object.defineProperty(FilterableCollectionManager.prototype, "numberOfItems", {
             get: function () {
@@ -372,6 +408,12 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(FilterableCollectionManager.prototype, "items", {
             get: function () {
+                var _this = this;
+                if (this.searchTerm && this.searchTerm != "") {
+                    return this._items.filter(function (item) {
+                        return _this.filterFn(item, _this.searchTerm);
+                    });
+                }
                 return this._items;
             },
             set: function (value) {
@@ -382,7 +424,61 @@ var VirtualIndexedListView;
         });
         return FilterableCollectionManager;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListView.filterableCollectionManager", ["$q", "$timeout", "observeOnScope", FilterableCollectionManager]);
+    //class FilterableCollectionManager implements IFilterableCollectionManager {
+    //    constructor(private $q:ng.IQService, private $timeout:ng.ITimeoutService,private observeOnScope: any) { }
+    //    public createInstance = (options: IFilterableCollectionManagerInstanceOptions) => {
+    //        var instance = new FilterableCollectionManager(this.$q,this.$timeout, this.observeOnScope);
+    //        instance.items = options.items;
+    //        instance.numberOfItems = options.items.length;
+    //        var timeoutPromise = null;
+    //        instance.observeOnScope(options.scope, options.searchTermNameOnScope)
+    //            .map(function (data) {
+    //                return data;
+    //            })
+    //            .subscribe(function (change) {
+    //            if (change.oldValue != change.newValue) {
+    //                if (timeoutPromise)
+    //                    instance.$timeout.cancel(timeoutPromise);
+    //                timeoutPromise = instance.$timeout(() => {
+    //                    for (var i = 0; i < instance.subscriptions.length; i++) {
+    //                        instance.subscriptions[i].callback();
+    //                    }
+    //                }, 10, false);
+    //            }
+    //        });
+    //        return instance;
+    //    }
+    //    public getIndexByCriteriaAsync = (options: any) => {
+    //        var deferred = this.$q.defer();
+    //        deferred.resolve(true);
+    //        return deferred.promise;
+    //    } 
+    //    public scope: any;
+    //    private _numberOfItems: number;
+    //    public get numberOfItems() {
+    //        return this._numberOfItems;
+    //    }
+    //    public set numberOfItems(value: number) {
+    //        this._numberOfItems = value;
+    //    }
+    //    private _items: any[];
+    //    public get items() {
+    //        return this._items;
+    //    }
+    //    public set items(value: any[]) {
+    //        this._items = value;
+    //    }
+    //    public subscriptions: ISubscription[] = [];
+    //    public subscribe = (options: ISubscribeOptions) => {
+    //        this.subscriptions.push({
+    //            callback: options.callback,
+    //            id: this.subscriptions.length + 1,
+    //            isActive: true
+    //        });
+    //        return this.subscriptions.length;
+    //    }
+    //}
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.filterableCollectionManager", ["$q", "$timeout", FilterableCollectionManager]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/filterableCollectionManager.js.map
@@ -394,6 +490,7 @@ var VirtualIndexedListView;
             var _this = this;
             this.$injector = $injector;
             this.$q = $q;
+            this.type = VirtualIndexedListView.collectionType.lazyLoad;
             this.createInstance = function (options) {
                 var instance = new LazyLoadCollectionManager(_this.$injector, _this.$q);
                 instance.items = options.items;
@@ -505,6 +602,160 @@ var VirtualIndexedListView;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/lazyLoadCollectionManager.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    var RenderedNode = (function () {
+        function RenderedNode(getX, getY) {
+            var _this = this;
+            this.getX = getX;
+            this.getY = getY;
+            this.createInstance = function (options) {
+                var instance = new RenderedNode(_this.getX, _this.getY);
+                instance.node = options.node;
+                return instance;
+            };
+        }
+        Object.defineProperty(RenderedNode.prototype, "left", {
+            get: function () {
+                return this.getX(this.node) + this.node.offsetLeft;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNode.prototype, "right", {
+            get: function () {
+                return this.getX(this.node) + this.node.offsetLeft + this.node.offsetWidth;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNode.prototype, "top", {
+            get: function () {
+                return this.getY(this.node) + this.node.offsetTop;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNode.prototype, "bottom", {
+            get: function () {
+                return this.getY(this.node) + this.node.offsetHeight + this.node.offsetTop;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNode.prototype, "scope", {
+            get: function () {
+                return angular.element(this.node).scope();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNode.prototype, "$$index", {
+            get: function () {
+                return this.scope.$$index;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return RenderedNode;
+    })();
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.renderedNode", ["virtualIndexedListView.getX", "virtualIndexedListView.getY", RenderedNode]);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../services/renderedNode.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualIndexedListView;
+(function (VirtualIndexedListView) {
+    var RenderedNodes = (function () {
+        function RenderedNodes(getX, getY) {
+            var _this = this;
+            this.getX = getX;
+            this.getY = getY;
+            this.createInstance = function (options) {
+                var instance = new RenderedNodes(_this.getX, _this.getY);
+                instance.container = options.container;
+                return instance;
+            };
+            this.getAll = function (options) {
+                var direction;
+                switch (options.orientation) {
+                    case "horizontal":
+                        direction = "left";
+                        break;
+                    default:
+                        direction = "top";
+                        break;
+                }
+                switch (options.order) {
+                    case "desc":
+                        return _this.map.sort(function (a, b) {
+                            return b[direction] - a[direction];
+                        });
+                    case "asc":
+                        return _this.map.sort(function (a, b) {
+                            return a[direction] - b[direction];
+                        });
+                }
+            };
+            this.getHead = function () {
+                var map = _this.getAll({ order: "asc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return map[0];
+            };
+            this.getTail = function () {
+                var map = _this.getAll({ order: "desc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return map[0];
+            };
+            this.getHeadAndTail = function () {
+                var map = _this.getAll({ order: "asc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return {
+                    head: map[0],
+                    tail: map[map.length - 1]
+                };
+            };
+        }
+        Object.defineProperty(RenderedNodes.prototype, "nodes", {
+            get: function () {
+                return this.container.htmlElement.childNodes;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNodes.prototype, "map", {
+            get: function () {
+                var map = [];
+                var nodes = this.nodes;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    map.push({
+                        top: this.getY(node) + node.offsetTop,
+                        left: this.getX(node) + node.offsetLeft,
+                        right: this.getX(node) + node.offsetLeft + node.offsetWidth,
+                        bottom: this.getY(node) + node.offsetTop + node.offsetHeight,
+                        index: angular.element(node).scope().$$index,
+                        node: node
+                    });
+                }
+                return map;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return RenderedNodes;
+    })();
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.renderedNodes", ["virtualIndexedListView.getX", "virtualIndexedListView.getY", RenderedNodes]);
+})(VirtualIndexedListView || (VirtualIndexedListView = {}));
+
+//# sourceMappingURL=../services/renderedNodes.js.map
 
 
 //# sourceMappingURL=../services/scopeCollectionManager.js.map
@@ -574,37 +825,30 @@ var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     "use strict";
     var VirtualIndexedListViewRenderer = (function () {
-        function VirtualIndexedListViewRenderer($compile, $injector, $interval, getRenderedNodesComputedInfo, getScrollDirection, getY, observeOnScope, transformY) {
+        function VirtualIndexedListViewRenderer($compile, $interval, getScrollDirection, getY, injector, transformY) {
             var _this = this;
             this.$compile = $compile;
-            this.$injector = $injector;
             this.$interval = $interval;
-            this.getRenderedNodesComputedInfo = getRenderedNodesComputedInfo;
             this.getScrollDirection = getScrollDirection;
             this.getY = getY;
-            this.observeOnScope = observeOnScope;
+            this.injector = injector;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$injector, _this.$interval, _this.getRenderedNodesComputedInfo, _this.getScrollDirection, _this.getY, _this.observeOnScope, _this.transformY);
+                var instance = new VirtualIndexedListViewRenderer(_this.$compile, _this.$interval, _this.getScrollDirection, _this.getY, _this.injector, _this.transformY);
                 instance.itemName = options.itemName;
                 instance.scope = options.scope;
                 instance.element = options.element;
                 instance.template = options.template;
                 instance.itemHeight = Number(options.itemHeight);
-                instance.viewPort = _this.$injector.get("virtualIndexedListView.viewPort").createInstance({ element: instance.element });
-                instance.container = _this.$injector.get("virtualIndexedListView.container").createInstance({ element: instance.element });
                 instance.name = options.name;
-                if (options.filterFn && options.searchTermNameOnScope) {
-                    instance.collectionManager = _this.$injector.get("virtualIndexedListView.filterableCollectionManager").createInstance({ items: options.items });
-                }
-                else if (options.dataService) {
-                    instance.collectionManager = _this.$injector.get("virtualIndexedListView.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
+                instance.viewPort = _this.injector.get({ interface: "IViewPort", element: instance.element });
+                instance.container = _this.injector.get({ interface: "IContainer", element: instance.element });
+                instance.collectionManager = _this.injector.get({ interface: "ICollectionManager", element: instance.element, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm, items: options.items, dataService: options.dataService });
+                instance.renderedNodes = _this.injector.get({ interface: "IRenderedNodes", container: instance.container });
+                if (instance.collectionManager.type == VirtualIndexedListView.collectionType.lazyLoad) {
                     instance.$interval(function () {
                         instance.collectionManager.loadMore();
                     }, 1000, null, false);
-                }
-                else {
-                    instance.collectionManager = _this.$injector.get("virtualIndexedListView.collectionManager").createInstance({ items: options.items });
                 }
                 instance.scope.$on(instance.scrollEventName, function (event, criteria) {
                     instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then(function (result) {
@@ -678,57 +922,54 @@ var VirtualIndexedListView;
             this.renderDown = function (options) {
                 var reachedBottom = false;
                 var allNodesHaveBeenMoved = false;
-                var item = null;
-                var index = null;
                 do {
-                    var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.container.htmlElement.children, itemHeight: _this.itemHeight, desc: false });
-                    if (cachedItemsList[cachedItemsList.length - 1].bottom >= _this.container.bottom) {
+                    var headAndTail = _this.renderedNodes.getHeadAndTail();
+                    var tail = headAndTail.tail;
+                    var head = headAndTail.head;
+                    if (tail.bottom >= _this.container.bottom)
                         reachedBottom = true;
-                    }
-                    else {
-                        index = cachedItemsList[cachedItemsList.length - 1].index + 1;
-                        item = _this.collectionManager.items[index];
-                    }
-                    if (cachedItemsList[0].bottom >= options.scrollY)
+                    if (head.bottom >= options.scrollY)
                         allNodesHaveBeenMoved = true;
-                    if (!reachedBottom && !allNodesHaveBeenMoved) {
-                        _this.transformY(cachedItemsList[0].node, (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(cachedItemsList[0].node));
-                        var scope = angular.element(cachedItemsList[0].node).scope();
-                        scope[_this.itemName] = item;
-                        scope.$$index = index;
-                        scope.$digest();
-                    }
+                    if (!reachedBottom && !allNodesHaveBeenMoved)
+                        _this.moveAndUpdateScope({
+                            node: head.node,
+                            position: (_this.numberOfRenderedItems * _this.itemHeight) + _this.getY(head.node),
+                            index: tail.index + 1,
+                            item: _this.collectionManager.items[tail.index + 1]
+                        });
                 } while (!reachedBottom && !allNodesHaveBeenMoved);
+            };
+            this.moveAndUpdateScope = function (options) {
+                _this.transformY(options.node, options.position);
+                var scope = angular.element(options.node).scope();
+                scope[_this.itemName] = options.item;
+                scope.$$index = options.index;
+                scope.$digest();
             };
             this.renderUp = function (options) {
                 var reachedTop = false;
                 var allNodesHaveBeenMoved = false;
-                var item = null;
-                var index = null;
                 do {
-                    var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.container.htmlElement.children, itemHeight: _this.itemHeight, desc: true });
-                    if (cachedItemsList[cachedItemsList.length - 1].top <= 0) {
+                    var headAndTail = _this.renderedNodes.getHeadAndTail();
+                    var tail = headAndTail.tail;
+                    var head = headAndTail.head;
+                    if (tail.bottom <= _this.container.htmlElement.offsetTop + (_this.itemHeight * _this.numberOfRenderedItems))
                         reachedTop = true;
-                    }
-                    else {
-                        index = cachedItemsList[cachedItemsList.length - 1].index - 1;
-                        item = _this.collectionManager.items[index];
-                    }
-                    if (cachedItemsList[0].top <= options.scrollY + options.viewPortHeight)
+                    if (tail.top <= (_this.viewPort.scrollY + _this.viewPort.height))
                         allNodesHaveBeenMoved = true;
-                    if (!reachedTop && !allNodesHaveBeenMoved) {
-                        _this.transformY(cachedItemsList[0].node, _this.getY(cachedItemsList[0].node) - (_this.numberOfRenderedItems * _this.itemHeight));
-                        var scope = angular.element(cachedItemsList[0].node).scope();
-                        scope[_this.itemName] = item;
-                        scope.$$index = index;
-                        scope.$digest();
-                    }
+                    if (!reachedTop && !allNodesHaveBeenMoved)
+                        _this.moveAndUpdateScope({
+                            node: tail.node,
+                            position: _this.getY(tail.node) - (_this.numberOfRenderedItems * _this.itemHeight),
+                            index: head.index - 1,
+                            item: _this.collectionManager.items[head.index - 1]
+                        });
                 } while (!reachedTop && !allNodesHaveBeenMoved);
             };
             this.stabilizeRender = function (options) {
-                var cachedItemsList = _this.getRenderedNodesComputedInfo({ getY: _this.getY, renderedNodes: _this.container.htmlElement.children, itemHeight: _this.itemHeight, desc: false });
-                var top = cachedItemsList[0].top;
-                var bottom = cachedItemsList[cachedItemsList.length - 1].bottom;
+                var headAndTail = _this.renderedNodes.getHeadAndTail();
+                var top = headAndTail.head.top;
+                var bottom = headAndTail.tail.bottom;
                 if (top > options.scrollY) {
                     _this.renderUp(options);
                 }
@@ -748,7 +989,7 @@ var VirtualIndexedListView;
         });
         Object.defineProperty(VirtualIndexedListViewRenderer.prototype, "numberOfRenderedItems", {
             get: function () {
-                var max = Math.ceil(1380 / Number(this.itemHeight));
+                var max = Math.ceil((this.viewPort.height + this.container.htmlElement.offsetTop) / Number(this.itemHeight));
                 if (this.collectionManager.numberOfItems < max)
                     return this.collectionManager.numberOfItems;
                 return max;
@@ -759,12 +1000,10 @@ var VirtualIndexedListView;
         return VirtualIndexedListViewRenderer;
     })();
     angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",
-        "$injector",
         "$interval",
-        "virtualIndexedListView.getRenderedNodesComputedInfo",
         "virtualIndexedListView.getScrollDirection",
         "virtualIndexedListView.getY",
-        "observeOnScope",
+        "virtualIndexedListView.injector",
         "virtualIndexedListView.transformY", VirtualIndexedListViewRenderer]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 

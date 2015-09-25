@@ -11,6 +11,7 @@ var VirtualIndexedListView;
                 instance.numberOfItems = options.items.length;
                 return instance;
             };
+            this.type = VirtualIndexedListView.collectionType.collection;
             this.getIndexByCriteriaAsync = function (options) {
                 var deferred = _this.$q.defer();
                 var index = null;

@@ -1,6 +1,33 @@
 ﻿/// <reference path="tsd.d.ts" />
+/// <reference path="../src/enums/collectiontype.ts" />
 
 declare module VirtualIndexedListView {
+
+    export interface IRenderedNodes {
+        createInstance(options: any): IRenderedNodes;
+        getAll(options: any): any;
+        getTail(): any;
+        getHead(): any;
+        getHeadAndTail();
+    }
+
+    export interface IRenderedNode {
+        right: number;
+        left: number;
+        top: number;
+        bottom: number;
+        scope: any;
+        $$index: number;
+        node: HTMLElement;
+    }
+
+    export interface IRenderedNodesInstanceOptions {
+        container: IContainer;
+    }
+
+    export interface IInjector {
+        get(options:any):any;
+    }
 
     export interface ILazyLoadCollectionManager extends ICollectionManager {
         createInstance(options: ILazyLoadCollectionManagerInstanceOptions): ICollectionManager;
@@ -12,13 +39,13 @@ declare module VirtualIndexedListView {
     }
 
     export interface IFilterableCollectionManager extends ICollectionManager {
-        
+        createInstance(options: IFilterableCollectionManagerInstanceOptions): IFilterableCollectionManager;
     }
 
     export interface IFilterableCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions {
         scope: any;
-        searchTermNameOnScope: string;
-        filterFn:any;
+        searchTermNameOnScope: any;
+        filterFnNameOnVm:any;
     }
 
     export interface ISubscription {
@@ -36,7 +63,8 @@ declare module VirtualIndexedListView {
         numberOfItems: number;
         items: any[];   
         subscribe(options: ISubscribeOptions): number;
-        getIndexByCriteriaAsync(options:any):ng.IPromise<any>;
+        getIndexByCriteriaAsync(options: any): ng.IPromise<any>;
+        type: collectionType;
     }
 
     export interface ISubscribeOptions {
@@ -80,6 +108,10 @@ declare module VirtualIndexedListView {
     }
 
     export interface IGetY {
+        (element: HTMLElement): number;
+    }
+
+    export interface IGetX {
         (element: HTMLElement): number;
     }
 

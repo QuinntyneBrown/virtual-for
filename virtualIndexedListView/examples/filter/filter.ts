@@ -6,6 +6,10 @@ module Filter {
     export class AppController {
 
         public filterTerm: string;
+
+        public filterFn = (item: any, searchTerm: string) => {
+            return item.name.indexOf(searchTerm) > -1;
+        }
     }
 
 }

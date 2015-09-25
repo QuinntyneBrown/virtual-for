@@ -6,6 +6,7 @@ var VirtualIndexedListView;
             var _this = this;
             this.$injector = $injector;
             this.$q = $q;
+            this.type = 3 /* lazyLoad */;
             this.createInstance = function (options) {
                 var instance = new LazyLoadCollectionManager(_this.$injector, _this.$q);
                 instance.items = options.items;

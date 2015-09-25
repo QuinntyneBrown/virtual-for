@@ -9,4 +9,4 @@ var VirtualIndexedListView;
     })(VirtualIndexedListView.collectionType || (VirtualIndexedListView.collectionType = {}));
     var collectionType = VirtualIndexedListView.collectionType;
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
-//# sourceMappingURL=collectionType.js.map
+//# sourceMappingURL=collectiontype.js.map

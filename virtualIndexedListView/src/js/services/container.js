@@ -2,10 +2,11 @@
 var VirtualIndexedListView;
 (function (VirtualIndexedListView) {
     var Container = (function () {
-        function Container() {
+        function Container(getY) {
             var _this = this;
+            this.getY = getY;
             this.createInstance = function (options) {
-                var instance = new Container();
+                var instance = new Container(_this.getY);
                 var container = angular.element("<div class='container'></div>");
                 options.element.append(container);
                 instance.augmentedJQuery = options.element.find(".container");
@@ -21,6 +22,14 @@ var VirtualIndexedListView;
             };
             this.setHeight = function (value) {
                 _this.augmentedJQuery.css("height", value);
+            };
+            this.isNodeAtBottom = function (options) {
+                var nodeBottom = _this.getY(options.node) + options.node.offsetTop + options.node.offsetTop;
+                return nodeBottom === _this.height;
+            };
+            this.isNodeAtTop = function (options) {
+                var nodeTop = _this.getY(options.node) + options.node.offsetTop;
+                return nodeTop === _this.top;
             };
         }
         Object.defineProperty(Container.prototype, "height", {
@@ -63,7 +72,7 @@ var VirtualIndexedListView;
         });
         return Container;
     })();
-    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", [Container]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", ["virtualIndexedListView.getY", Container]);
 })(VirtualIndexedListView || (VirtualIndexedListView = {}));
 
 //# sourceMappingURL=../services/container.js.map

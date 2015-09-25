@@ -42,7 +42,9 @@
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
                  virtual-indexed-list-view-item-name="movie"
-                 virtual-indexed-list-view-item-height="75">
+                 virtual-indexed-list-view-item-height="75"
+                 virtual-indexed-list-view-search-term-name-on-scope="vm.filterTerm"
+                 virtual-indexed-list-view-filter-fn-name-on-vm="filterFn">
 
                 <h1>{{ movie.name }} </h1>
 

@@ -3,19 +3,15 @@
 module VirtualIndexedListView {
 
     class Container implements IContainer {
-        constructor() {
+        constructor(private getY: IGetY) {
 
         }
 
         public createInstance = (options: IContainerInstanceOptions) => {
-            var instance = new Container();
-
+            var instance = new Container(this.getY);
             var container = angular.element("<div class='container'></div>");
-
             options.element.append(container);
-
             instance.augmentedJQuery = options.element.find(".container");
-
             return instance;
         }
 
@@ -24,9 +20,7 @@ module VirtualIndexedListView {
                 var oldScope = angular.element(this.htmlElement.children[i]).scope();
                 oldScope.$destroy();
             }
-
             this.htmlElement.innerHTML = "";
-
             this.setHeight(options.height);
         }
 
@@ -60,7 +54,17 @@ module VirtualIndexedListView {
             return this.augmentedJQuery[0];
         }
 
+        public isNodeAtBottom = (options: any) => {
+            var nodeBottom = this.getY(options.node) + options.node.offsetTop + options.node.offsetTop;
+            return nodeBottom === this.height;
+        }
+
+        public isNodeAtTop = (options: any) => {
+            var nodeTop = this.getY(options.node) + options.node.offsetTop;
+            return nodeTop === this.top;
+        }
+
     }
 
-    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", [Container]);
+    angular.module("virtualIndexedListView").service("virtualIndexedListView.container", ["virtualIndexedListView.getY",Container]);
 } 

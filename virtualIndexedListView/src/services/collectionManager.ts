@@ -14,6 +14,8 @@ module VirtualIndexedListView {
             return instance;
         }
 
+        public type: collectionType = collectionType.collection;
+
         public getIndexByCriteriaAsync = (options: any) => {
 
             var deferred = this.$q.defer();

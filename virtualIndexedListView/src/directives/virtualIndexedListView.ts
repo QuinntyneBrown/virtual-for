@@ -35,7 +35,9 @@ module VirtualIndexedListView {
                         itemName: attributes["virtualIndexedListViewItemName"],
                         itemHeight: attributes["virtualIndexedListViewItemHeight"],
                         name: attributes["virtualIndexedListViewName"],
-                        dataService: attributes["virtualIndexedListViewDataService"]
+                        dataService: attributes["virtualIndexedListViewDataService"],
+                        searchTermNameOnScope: attributes["virtualIndexedListViewSearchTermNameOnScope"],
+                        filterFnNameOnVm: attributes["virtualIndexedListViewFilterFnNameOnVm"]
                     }).render();
                 });
 
@@ -50,6 +52,8 @@ module VirtualIndexedListView {
                 clone[0].removeAttribute("virtual-indexed-list-view-items");
                 clone[0].removeAttribute("virtual-indexed-list-view-name");
                 clone[0].removeAttribute("virtual-indexed-list-view-data-service");
+                clone[0].removeAttribute("virtual-indexed-list-view-search-term-name-on-scope");
+                clone[0].removeAttribute("virtual-indexed-list-view-filter-fn-name-on-vm");
             }
         }
 
