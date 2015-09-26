@@ -1,4 +1,6 @@
-﻿/// <reference path="../../../../typings/typescriptapp.d.ts" />
+﻿
+/// <reference path="../../../../typings/typescriptapp.d.ts" />
+
 
 module ListDetail {
 

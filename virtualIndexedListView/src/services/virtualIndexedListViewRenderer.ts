@@ -43,6 +43,8 @@ module VirtualIndexedListView {
                 instance.lastYScroll = instance.viewPort.scrollY;
             }, 10,null, false);
 
+            instance.$interval(instance.onResize, 10, null, false);
+
             return instance;
         }
 
@@ -90,10 +92,17 @@ module VirtualIndexedListView {
                     allNodesHaveBeenMoved = true;
 
                 if (!reachedBottom && !allNodesHaveBeenMoved) {
+                    var headY: number = this.getY(head.node);
+                    var tailY: number = this.getY(tail.node);
+
+                    var currentY = this.container.top + headY + head.node.offsetTop;
+                    var desiredY = this.container.top + tailY + tail.node.offsetTop + this.itemHeight;
+                    var delta = (desiredY - currentY) + headY;
+
                     var index = (<any>angular.element(tail.node).scope()).$$index;
                     this.moveAndUpdateScope({
                         node: head.node,
-                        position: (this.numberOfRenderedItems * this.itemHeight) + this.getY(head.node),
+                        position: delta,
                         index: index + 1,
                         item: this.collectionManager.items[index + 1]
                     });
@@ -129,10 +138,17 @@ module VirtualIndexedListView {
                     allNodesHaveBeenMoved = true;
 
                 if (!reachedTop && !allNodesHaveBeenMoved) {                    
+                    var headY: number = this.getY(head.node);
+                    var tailY: number = this.getY(tail.node);
+
+                    var currentY = this.container.top + tailY + tail.node.offsetTop;
+                    var desiredY = this.container.top + headY + head.node.offsetTop - this.itemHeight;
+                    var delta = (desiredY - currentY) + tailY;
+
                     var index = (<any>angular.element(head.node).scope()).$$index;
                     this.moveAndUpdateScope({
                         node: tail.node,
-                        position: this.getY(tail.node) - (this.numberOfRenderedItems * this.itemHeight),
+                        position: delta,
                         index: index - 1,
                         item: this.collectionManager.items[index - 1]
                     });
@@ -149,6 +165,33 @@ module VirtualIndexedListView {
             if (headAndTail.head.top > options.scrollY) this.renderUp(options);
             if (headAndTail.tail.bottom <= options.scrollY + this.viewPort.height) this.renderDown(options);
         }
+
+        public onResize = () => {
+            if (!this.maxViewPortHeight) this.maxViewPortHeight = this.viewPort.height;
+            if (this.maxViewPortHeight && this.maxViewPortHeight < this.viewPort.height) {
+                this.maxViewPortHeight = this.viewPort.height;
+
+                var renderedNodesLength = this.renderedNodes.getAll({ order: "asc" }).length;
+
+                while (this.numberOfRenderedItems > renderedNodesLength) {                    
+                    var tail = this.renderedNodes.getHeadAndTail().tail;
+                    var index = (<any>angular.element(tail.node).scope()).$$index + 1;
+                    var childScope: any = this.scope.$new(true);
+                    childScope[this.itemName] = this.collectionManager.items[index];
+                    childScope.$$index = index;
+                    var itemContent = this.$compile(angular.element(this.template))(childScope);
+                    this.container.augmentedJQuery.append(itemContent);
+                    var children = this.container.htmlElement.children;
+                    var element = <HTMLElement>children[children.length - 1];
+                    this.transformY(element, (this.getY(tail.node)));
+                    renderedNodesLength++;
+                }
+
+                this.safeDigest(this.scope);
+            }
+        }
+
+        public maxViewPortHeight: number;
 
         public get numberOfRenderedItems() {
             var max = Math.ceil((this.viewPort.height + this.container.htmlElement.offsetTop) / Number(this.itemHeight));
