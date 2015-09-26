@@ -10,13 +10,13 @@ module VirtualIndexedListView {
             private getScrollDirection:any,
             private getY: IGetY,
             private injector: IInjector,
-            private transformY: ITransformY,
-            private virtualNodes: any) {
+            private safeDigest: ISafeDigestFn,
+            private transformY: ITransformY) {
 
         }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$interval, this.getScrollDirection, this.getY, this.injector, this.transformY, this.virtualNodes);
+            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$interval, this.getScrollDirection, this.getY, this.injector, this.safeDigest, this.transformY);
             instance.itemName = options.itemName;
             instance.scope = options.scope;
             instance.element = options.element;
@@ -29,7 +29,7 @@ module VirtualIndexedListView {
             instance.collectionManager = this.injector.get({ interface: "ICollectionManager", element: instance.element, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm, items: options.items, dataService: options.dataService });
             instance.renderedNodes = this.injector.get({ interface: "IRenderedNodes", container: instance.container });
 
-            if (instance.collectionManager.type == collectionType.lazyLoad) {
+            if (instance.collectionManager instanceof LazyLoadCollectionManager) {
                 instance.$interval(() => {
                     (<ILazyLoadCollectionManager>instance.collectionManager).loadMore();
                 }, 1000, null, false);
@@ -60,24 +60,10 @@ module VirtualIndexedListView {
                 instance.lastYScroll = instance.viewPort.scrollY;
             }, 10,null, false);
 
-
-            instance.map = instance.virtualNodes.createInstance({
-                items: instance.collectionManager.numberOfItems,
-                numberOfRenderedItems: instance.numberOfRenderedItems,
-                itemHeight: instance.itemHeight
-            });
-
-            for (var i = 0; i < instance.map.length; i++) {
-                console.log(JSON.stringify(instance.map[i]));
-            }
             return instance;
         }
 
-        public map: any[];
-
         public render = (options?: IRenderOptions) => {
-
-            
 
             if (!options) {
                 options = {
@@ -87,7 +73,7 @@ module VirtualIndexedListView {
                 };
             }
 
-            if (options.force ) {
+            if (options.force) {
                 this.forceRender(options);
                 return;
             }
@@ -114,16 +100,10 @@ module VirtualIndexedListView {
         }
 
         public forceRender = (options: IRenderOptions) => {
-
-            if (!this.hasRendered)
-                return;
-
+            if (!this.hasRendered) return;
             this.container.reInitialize({ height: this.collectionManager.numberOfItems * this.itemHeight });
             this.initialRender(options);
-
-            if (!this.scope.$$phase && !this.scope.$root.$$phase)
-                this.scope.$digest();     
-                 
+            this.safeDigest(this.scope);                   
         }
 
         public initialRender = (options: IRenderOptions) => {
@@ -139,24 +119,9 @@ module VirtualIndexedListView {
 
         public renderDown = (options: IRenderOptions) => {
 
-            //for (var i = 0; i < this.container.htmlElement.children.length; i++) {
-
-            //    for (var m = 0; m < this.map.length; m++) {
-            //        if (this.viewPort.scrollY >= this.map[m].minScrollYThreshold && this.viewPort.scrollY < this.map[m].maxScrollYThreshold && this.map[m].index == i) {
-
-            //            this.moveAndUpdateScope({
-            //                node: this.container.htmlElement.children[i],
-            //                position: this.map[m].nextTransform,
-            //                index: this.map[m].nextIndex,
-            //                item: this.collectionManager.items[this.map[m].nextIndex]
-            //            });
-
-            //        }
-            //    }
-            //}
-
             var reachedBottom = false;
             var allNodesHaveBeenMoved = false;
+            var digestNeeded = false;
 
             do {
                 var headAndTail = this.renderedNodes.getHeadAndTail();
@@ -169,15 +134,23 @@ module VirtualIndexedListView {
                 if (head.bottom >= options.scrollY)
                     allNodesHaveBeenMoved = true;
 
-                if (!reachedBottom && !allNodesHaveBeenMoved)
+                if (!reachedBottom && !allNodesHaveBeenMoved) {
+
+                    var index = (<any>angular.element(tail.node).scope()).$$index;
+
                     this.moveAndUpdateScope({
                         node: head.node,
                         position: (this.numberOfRenderedItems * this.itemHeight) + this.getY(head.node),
-                        index: tail.index + 1,
-                        item: this.collectionManager.items[tail.index + 1]
+                        index: index + 1,
+                        item: this.collectionManager.items[index + 1]
                     });
 
+                    digestNeeded = true;
+                }
+
             } while (!reachedBottom && !allNodesHaveBeenMoved)
+
+            if (digestNeeded) this.safeDigest(this.scope);
         }
 
         public moveAndUpdateScope = (options:any) => {
@@ -185,12 +158,12 @@ module VirtualIndexedListView {
             var scope: any = angular.element(options.node).scope();
             scope[this.itemName] = options.item;
             scope.$$index = options.index;
-            scope.$digest();
         }
 
         public renderUp = (options: IRenderOptions) => {
             var reachedTop = false;
             var allNodesHaveBeenMoved = false;
+            var digestNeeded = false;
 
             do {
                 var headAndTail = this.renderedNodes.getHeadAndTail();
@@ -203,29 +176,34 @@ module VirtualIndexedListView {
                 if (tail.top <= (this.viewPort.scrollY + this.viewPort.height))
                     allNodesHaveBeenMoved = true;
 
-                if (!reachedTop && !allNodesHaveBeenMoved)
+                if (!reachedTop && !allNodesHaveBeenMoved) {                    
+                    var index = (<any>angular.element(head.node).scope()).$$index;
                     this.moveAndUpdateScope({
                         node: tail.node,
                         position: this.getY(tail.node) - (this.numberOfRenderedItems * this.itemHeight),
-                        index: head.index - 1,
-                        item: this.collectionManager.items[head.index - 1]
+                        index: index - 1,
+                        item: this.collectionManager.items[index - 1]
                     });
+                    digestNeeded = true;
+                }
 
-            } while (!reachedTop && !allNodesHaveBeenMoved)       
+            } while (!reachedTop && !allNodesHaveBeenMoved)
+
+            if (digestNeeded) this.safeDigest(this.scope);
         }
 
         public stabilizeRender = (options: IRenderOptions) => {
-            //var headAndTail = this.renderedNodes.getHeadAndTail();
-            //var top = headAndTail.head.top;
-            //var bottom = headAndTail.tail.bottom;
+            var headAndTail = this.renderedNodes.getHeadAndTail();
+            var top = headAndTail.head.top;
+            var bottom = headAndTail.tail.bottom;
 
-            //if (top > options.scrollY) {
-            //    this.renderUp(options);
-            //}
+            if (top > options.scrollY) {
+                this.renderUp(options);
+            }
 
-            //if (bottom <= options.scrollY + options.viewPortHeight) {
-            //    this.renderDown(options);
-            //}
+            if (bottom <= options.scrollY + options.viewPortHeight) {
+                this.renderDown(options);
+            }
         }
 
         public hasRendered: boolean = false;
@@ -238,9 +216,7 @@ module VirtualIndexedListView {
 
         public name: string;
 
-        public get scrollEventName() {
-            return "virtualIndexedListViewScroll" + this.name;
-        }
+        public get scrollEventName() { return "virtualIndexedListViewScroll" + this.name; }
 
         public scope: any;
 
@@ -262,6 +238,7 @@ module VirtualIndexedListView {
         private viewPort: IViewPort;
 
         private renderedNodes: IRenderedNodes;
+
     }
 
     angular.module("virtualIndexedListView").service("virtualIndexedListViewRenderer", ["$compile",
@@ -269,7 +246,7 @@ module VirtualIndexedListView {
         "virtualIndexedListView.getScrollDirection",
         "virtualIndexedListView.getY",
         "virtualIndexedListView.injector",
+        "virtualIndexedListView.safeDigest",
         "virtualIndexedListView.transformY",
-        "virtualIndexedListView.virtualNodes",
         VirtualIndexedListViewRenderer]);
 } 

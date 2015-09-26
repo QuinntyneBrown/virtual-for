@@ -3,9 +3,8 @@
 module VirtualIndexedListView {
 
     class Container implements IContainer {
-        constructor(private getY: IGetY) {
 
-        }
+        constructor(private getY: IGetY) { }
 
         public createInstance = (options: IContainerInstanceOptions) => {
             var instance = new Container(this.getY);

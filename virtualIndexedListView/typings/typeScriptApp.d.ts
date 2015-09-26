@@ -1,7 +1,28 @@
 ﻿/// <reference path="tsd.d.ts" />
-/// <reference path="../src/enums/collectiontype.ts" />
 
 declare module VirtualIndexedListView {
+
+    export interface ISafeDigestFn {
+        (scope: ng.IScope)
+    }
+
+    export interface IVirtualNodesInstanceOptions {
+        numberOfRenderedItems:number;
+        items: Array<any>;
+        numberOfItems: number;
+        itemHeight:number;
+    }
+
+    export interface IVirtualNodes {
+        createInstance(options: IVirtualNodesInstanceOptions): IVirtualNodes;
+        getYByRenderedIndexAndScrollY(options: any): number;
+        map: Array<any>;
+        pages: number;
+        numberOfRenderedItems: number;
+        numberOfItems: number;
+        getPageIndex(options:any);
+
+    }
 
     export interface IRenderedNodes {
         createInstance(options: any): IRenderedNodes;
@@ -64,7 +85,6 @@ declare module VirtualIndexedListView {
         items: any[];   
         subscribe(options: ISubscribeOptions): number;
         getIndexByCriteriaAsync(options: any): ng.IPromise<any>;
-        type: collectionType;
     }
 
     export interface ISubscribeOptions {

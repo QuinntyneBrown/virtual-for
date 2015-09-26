@@ -2,12 +2,9 @@
 
 module VirtualIndexedListView {
 
-    class LazyLoadCollectionManager implements ICollectionManager {
-        constructor(private $injector:ng.auto.IInjectorService, private $q: ng.IQService) {
-            
-        }
+    export class LazyLoadCollectionManager implements ICollectionManager {
 
-        public type: collectionType = collectionType.lazyLoad;
+        constructor(private $injector:ng.auto.IInjectorService, private $q: ng.IQService) { }
 
         public createInstance = (options: ILazyLoadCollectionManagerInstanceOptions) => {            
             var instance = new LazyLoadCollectionManager(this.$injector,this.$q);
@@ -64,7 +61,6 @@ module VirtualIndexedListView {
         public getIndexByCriteriaAsync = (options: any) => {
 
             var deferred = this.$q.defer();
-
             var index = null;
 
             for (var i = 0; i < this.items.length; i++) {
@@ -74,25 +70,18 @@ module VirtualIndexedListView {
             }
 
             deferred.resolve({ index: index });
-
             return deferred.promise;
         }
 
         private _numberOfItems: number;
 
-        public get numberOfItems() {
-            return this._numberOfItems;
-        }
+        public get numberOfItems() { return this._numberOfItems; }
 
-        public set numberOfItems(value: number) {
-            this._numberOfItems = value;
-        }
+        public set numberOfItems(value: number) { this._numberOfItems = value; }
 
         private _items: any[];
 
-        public get items() {
-            return this._items;
-        }
+        public get items() { return this._items; }
 
         public loadMore = () => {
             var lastLoadIndex = this.lastLoadedIndex;
@@ -106,9 +95,7 @@ module VirtualIndexedListView {
             }
         }
 
-        public set items(value: any[]) {
-            this._items = value;
-        }
+        public set items(value: any[]) { this._items = value; }
 
         public subscriptions: ISubscription[] = [];
 

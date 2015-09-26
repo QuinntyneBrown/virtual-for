@@ -2,10 +2,9 @@
 
 module VirtualIndexedListView {
 
-    export var safeDigest = (options:any) => {
-
-        if (!options.scope.$$phase && !options.scope.$root.$$phase)
-            options.scope.$digest();
+    export var safeDigest: ISafeDigestFn = (scope:ng.IScope) => {
+        if (!scope.$$phase && !scope.$root.$$phase)
+            scope.$digest();
     }
 
     angular.module("virtualIndexedListView").value("virtualIndexedListView.safeDigest", safeDigest);

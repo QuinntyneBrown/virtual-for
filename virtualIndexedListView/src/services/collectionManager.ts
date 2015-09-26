@@ -2,10 +2,8 @@
 
 module VirtualIndexedListView {
 
-    class CollectionManager implements ICollectionManager {
-        constructor(private $q:ng.IQService) {
-
-        }
+    export class CollectionManager implements ICollectionManager {
+        constructor(private $q:ng.IQService) { }
 
         public createInstance = (options: ICollectionManagerInstanceOptions) => {
             var instance = new CollectionManager(this.$q);
@@ -14,44 +12,29 @@ module VirtualIndexedListView {
             return instance;
         }
 
-        public type: collectionType = collectionType.collection;
-
         public getIndexByCriteriaAsync = (options: any) => {
-
             var deferred = this.$q.defer();
-
             var index = null;
-
             for (var i = 0; i < this.items.length; i++) {
                 if (this.items[i][options.criteria.key] == options.criteria.value) {
                     index = i;
                 }
             }
-
             deferred.resolve({ index: index });
-
             return deferred.promise;
         } 
 
         private _numberOfItems: number;
 
-        public get numberOfItems() {
-            return this._numberOfItems;
-        }
+        public get numberOfItems() { return this._numberOfItems; }
 
-        public set numberOfItems(value: number) {
-            this._numberOfItems = value;
-        }
+        public set numberOfItems(value: number) { this._numberOfItems = value; }
 
         private _items: any[];
 
-        public get items() {
-            return this._items;
-        }
+        public get items() { return this._items; }
 
-        public set items(value: any[]) {
-            this._items = value;
-        }
+        public set items(value: any[]) { this._items = value; }
 
         public subscriptions: ISubscription[] = [];
 

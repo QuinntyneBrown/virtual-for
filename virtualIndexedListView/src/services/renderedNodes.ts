@@ -27,10 +27,7 @@ module VirtualIndexedListView {
 
                 map.push({
                     top: this.getY(node) + node.offsetTop,
-                    left: this.getX(node) + node.offsetLeft,
-                    right: this.getX(node) + node.offsetLeft + node.offsetWidth,
                     bottom: this.getY(node) + node.offsetTop + node.offsetHeight,
-                    index: (<any>angular.element(node).scope()).$$index,
                     node: node
                 });
             }

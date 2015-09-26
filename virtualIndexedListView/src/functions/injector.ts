@@ -32,6 +32,8 @@ module VirtualIndexedListView {
                 case "IRenderedNodes":
                     return (<IRenderedNodes>this.$injector.get("virtualIndexedListView.renderedNodes")).createInstance({ container: options.container });
 
+                case "IVirtualNodes":
+                    return (<IRenderedNodes>this.$injector.get("virtualIndexedListView.virtualNodes")).createInstance({ items: options.items, numberOfRenderedItems: options.numberOfRenderedItems, itemHeight: options.itemHeight });
 
             }
 

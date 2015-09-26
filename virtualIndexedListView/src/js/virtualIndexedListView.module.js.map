@@ -1,1 +1,0 @@
-{"version":3,"sources":["virtualIndexedListView.module.ts"],"names":[],"mappings":"AAAA,sDAAsD;AAEtD,OAAO,CAAC,MAAM,CAAC,wBAAwB,EAAE,EAAE,CAAC,CAAC","file":"virtualIndexedListView.module.js","sourcesContent":["/// <reference path=\"../typings/typescriptapp.d.ts\" />\r\n\r\nangular.module(\"virtualIndexedListView\", []); "],"sourceRoot":"/source/"}
