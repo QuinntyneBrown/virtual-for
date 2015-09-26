@@ -16,9 +16,7 @@ module VirtualIndexedListView {
             var deferred = this.$q.defer();
             var index = null;
             for (var i = 0; i < this.items.length; i++) {
-                if (this.items[i][options.criteria.key] == options.criteria.value) {
-                    index = i;
-                }
+                if (this.items[i][options.criteria.key] == options.criteria.value) index = i;                
             }
             deferred.resolve({ index: index });
             return deferred.promise;

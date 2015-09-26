@@ -76,10 +76,8 @@
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
-    <TypeScriptCompile Include="src\enums\scrollingDirection.ts" />
     <TypeScriptCompile Include="src\functions\getX.ts" />
     <TypeScriptCompile Include="src\functions\injector.ts" />
-    <TypeScriptCompile Include="src\functions\getScrollDirection.ts" />
     <TypeScriptCompile Include="src\functions\getY.ts" />
     <TypeScriptCompile Include="src\functions\safeDigest.ts" />
     <TypeScriptCompile Include="src\functions\transformY.ts" />

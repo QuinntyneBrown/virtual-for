@@ -11,9 +11,7 @@ module VirtualIndexedListView {
         }
 
         public restirct: string = "A";
-
         public transclude: string = 'element';
-
         public scope: any = false;
 
         public compile = (template: ng.IAugmentedJQuery) => {
@@ -21,27 +19,20 @@ module VirtualIndexedListView {
             var parentElement = template.parent();
             var getHtml: IGetHtmlFn = this.getHtml;
 
-            return function (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes, controller: any, transclude: any) {
-
+            return  (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes, controller: any, transclude: any) => {
                 transclude(scope.$new(), (clone: ng.IAugmentedJQuery) => {
-
                     removeVirtualListCustomAttributes(clone);
-
                     virtualIndexedListViewRenderer.createInstance({
                         element: angular.element(parentElement),
                         template: getHtml(clone[0], true),
                         scope: scope,
+                        attributes: attributes,
                         items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
-                        itemName: attributes["virtualIndexedListViewItemName"],
-                        itemHeight: attributes["virtualIndexedListViewItemHeight"],
-                        name: attributes["virtualIndexedListViewName"],
                         dataService: attributes["virtualIndexedListViewDataService"],
                         searchTermNameOnScope: attributes["virtualIndexedListViewSearchTermNameOnScope"],
                         filterFnNameOnVm: attributes["virtualIndexedListViewFilterFnNameOnVm"]
-                    }).render();
+                    }).render({ lastScrollY: 0, scrollY: 0 });
                 });
-
-
             }
 
             function removeVirtualListCustomAttributes(clone: ng.IAugmentedJQuery) {

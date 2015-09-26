@@ -2,6 +2,14 @@
 
 declare module VirtualIndexedListView {
 
+    export interface IScopeCollectionManager extends ICollectionManager {
+        
+    }
+
+    export interface IScopeCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions {
+
+    }
+
     export interface ISafeDigestFn {
         (scope: ng.IScope)
     }
@@ -138,7 +146,6 @@ declare module VirtualIndexedListView {
     export interface IRenderOptions {
         scrollY?: number;
         lastScrollY?: number;
-        viewPortHeight: number;
         force?: boolean;
         items?:any[];
     }
@@ -154,7 +161,7 @@ declare module VirtualIndexedListView {
 
     export interface IVirtualIndexedListViewRenderer {
         createInstance(options: any): IVirtualIndexedListViewRenderer;
-        render(options?:any):void;
+        render(options: any): void;
     }
 
     export interface IGetHtmlFn {
