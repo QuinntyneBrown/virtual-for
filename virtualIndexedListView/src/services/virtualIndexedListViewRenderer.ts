@@ -176,14 +176,23 @@ module VirtualIndexedListView {
                 while (this.numberOfRenderedItems > renderedNodesLength) {                    
                     var tail = this.renderedNodes.getHeadAndTail().tail;
                     var index = (<any>angular.element(tail.node).scope()).$$index + 1;
+
                     var childScope: any = this.scope.$new(true);
                     childScope[this.itemName] = this.collectionManager.items[index];
                     childScope.$$index = index;
                     var itemContent = this.$compile(angular.element(this.template))(childScope);
                     this.container.augmentedJQuery.append(itemContent);
-                    var children = this.container.htmlElement.children;
-                    var element = <HTMLElement>children[children.length - 1];
-                    this.transformY(element, (this.getY(tail.node)));
+
+                    var element = itemContent[0];
+
+                    var headY: number = this.getY(element);
+                    var tailY: number = this.getY(tail.node);
+
+                    var currentY = this.container.top + headY + element.offsetTop;
+                    var desiredY = this.container.top + tailY + tail.node.offsetTop + this.itemHeight;
+                    var delta = (desiredY - currentY) + headY;
+
+                    this.transformY(element, delta);
                     renderedNodesLength++;
                 }
 
