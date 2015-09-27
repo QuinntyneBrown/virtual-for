@@ -3,16 +3,36 @@
 <head>
     <title>Inside Scrollable Element Example</title>
     <link href="insideScrollableElement.css" rel="stylesheet" />
+    <meta name="viewport"
+          content="user-scalable=no,
+          initial-scale=1,
+          maximum-scale=1,
+          minimum-scale=1,
+          width=device-width,
+          height=device-height,
+          target-densitydpi=device-dpi" />
 </head>
 <body data-ng-app="insideScrollableElementApp" data-ng-controller="appController as vm">
 
     <div id="scrollableElement" style="height: 500px; width: 500px; overflow-y: scroll;">
         
         <h1 class="title">Movies</h1>
+        
+        <div>
+            
+            <h1>More</h1>
+            <h1>More</h1>
+            <h1>More</h1>
+            <h1>More</h1>
 
-        <div style="height: 300px; width: 300px;">
-            <div virtual-indexed-list-view
-                 virtual-indexed-list-view-items='[
+            <div style="height: 300px; width: 300px;">
+
+                <h1>More</h1>
+                <h1>More</h1>
+                <h1>More</h1>
+                <h1>More</h1>
+                <div virtual-indexed-list-view
+                     virtual-indexed-list-view-items='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -34,13 +54,16 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-                 virtual-indexed-list-view-item-name="movie"
-                 virtual-indexed-list-view-item-height="75">
+                     virtual-indexed-list-view-item-name="movie"
+                     virtual-indexed-list-view-item-height="75">
 
-                <h1>{{ movie.name }} </h1>
+                    <h1>{{ movie.name }} </h1>
 
-            </div>
+                </div>
+            </div>          
+
         </div>
+
 
     </div>
 

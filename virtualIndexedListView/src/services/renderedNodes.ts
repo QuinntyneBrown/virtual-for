@@ -17,7 +17,7 @@ module VirtualIndexedListView {
         }
 
         public get map() {
-            var map = [];
+            var map: Array<any> = [];
 
             var nodes = this.nodes;
 
@@ -35,9 +35,9 @@ module VirtualIndexedListView {
             return map;
         }
 
-        public getAll = (options:any) => {
+        public getAll = (options:any):any => {
 
-            var direction;
+            var direction:any;
 
             switch(options.orientation) {
                 case "horizontal":

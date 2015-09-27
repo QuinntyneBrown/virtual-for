@@ -33,6 +33,9 @@ module VirtualIndexedListView {
             });
 
             instance.collectionManager.subscribe({ callback: instance.forceRender });
+
+
+
             instance.container.setHeight(instance.collectionManager.numberOfItems * instance.itemHeight);
 
             instance.$interval(() => {
@@ -41,7 +44,7 @@ module VirtualIndexedListView {
                     lastScrollY: instance.lastYScroll
                 });
                 instance.lastYScroll = instance.viewPort.scrollY;
-            }, 10,null, false);
+            }, 1,null, false);
 
             instance.$interval(instance.onResize, 10, null, false);
 
@@ -51,9 +54,8 @@ module VirtualIndexedListView {
         public render = (options: IRenderOptions) => {
             if (options.force) return this.forceRender();            
             if (this.hasRendered === false) return this.initialRender();
-            if (options.lastScrollY && options.scrollY > options.lastScrollY) return this.renderDown(options);            
-            if (options.lastScrollY && options.scrollY < options.lastScrollY) return this.renderUp(options);           
-            if (options.lastScrollY && options.scrollY == options.lastScrollY) return this.stabilizeRender(options);            
+            if (options.scrollY > options.lastScrollY) return this.renderTopToBottom(options);            
+            if (options.scrollY < options.lastScrollY) return this.renderBottomToTop(options);              
         }
 
         private forceRender = () => {
@@ -63,19 +65,21 @@ module VirtualIndexedListView {
             this.safeDigest(this.scope);                   
         }
 
-        public initialRender = () => {
+        public initialRender = () => {            
+            var fragment =  document.createDocumentFragment();
             for (var i = 0; i < this.numberOfRenderedItems; i++) {
                 var childScope: any = this.scope.$new(true);
                 childScope[this.itemName] = this.collectionManager.items[i];
                 childScope.$$index = i;
                 var itemContent = this.$compile(angular.element(this.template))(childScope);
-                this.container.augmentedJQuery.append(itemContent);
+                fragment.appendChild(itemContent[0]);                                
             }
+            this.container.augmentedJQuery[0].appendChild(fragment);
             this.hasRendered = true;
+            
         }
 
-        public renderDown = (options: IRenderOptions) => {
-
+        public renderTopToBottom = (options: IRenderOptions) => {
             var reachedBottom = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -121,7 +125,7 @@ module VirtualIndexedListView {
             scope.$$index = options.index;
         }
 
-        public renderUp = (options: IRenderOptions) => {
+        public renderBottomToTop = (options: IRenderOptions) => {
             var reachedTop = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -158,12 +162,6 @@ module VirtualIndexedListView {
             } while (!reachedTop && !allNodesHaveBeenMoved)
 
             if (digestNeeded) this.safeDigest(this.scope);
-        }
-
-        public stabilizeRender = (options: IRenderOptions) => {
-            var headAndTail = this.renderedNodes.getHeadAndTail();
-            if (headAndTail.head.top > options.scrollY) this.renderUp(options);
-            if (headAndTail.tail.bottom <= options.scrollY + this.viewPort.height) this.renderDown(options);
         }
 
         public onResize = () => {
@@ -211,9 +209,31 @@ module VirtualIndexedListView {
 
         public hasRendered: boolean = false;
 
+        public calculateItemHeight = (options:any):number => {
+            var itemHeight: number;
+            if (options.items.length > 0) {
+                var childScope: any = this.scope.$new(true);
+                childScope[this.itemName] = options.items[0];
+                var itemContent = this.$compile(angular.element(this.template))(childScope);
+                this.container.augmentedJQuery.append(itemContent);
+                itemHeight = itemContent[0].offsetHeight;
+                this.container.htmlElement.removeChild(itemContent[0]);
+            }
+            return itemHeight;
+        }
+
         public get itemName() { return this.attributes[this.controlPrefix + "ItemName"]; }
 
-        public get itemHeight() { return Number(this.attributes[this.controlPrefix + "ItemHeight"]); }
+        private _itemHeight: number;
+
+        public get itemHeight() {
+            if (!this._itemHeight && this.collectionManager.items.length > 0)
+                this._itemHeight = this.calculateItemHeight({ items: this.collectionManager.items });
+
+            if (!this._itemHeight) return Number(this.attributes[this.controlPrefix + "ItemHeight"]);
+
+            return this._itemHeight;
+        }
 
         public get name() { return this.attributes[this.controlPrefix + "Name"]; }
 

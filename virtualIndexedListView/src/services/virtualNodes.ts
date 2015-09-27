@@ -23,7 +23,7 @@ module VirtualIndexedListView {
         public numberOfItems: number;
 
         public get map(): Array<any> {
-            var map = [];
+            var map: Array<any> = [];
             var renderedNodeIndex = 0;
             for (var i = 0; i < this.items.length; i++) {
 
@@ -48,7 +48,7 @@ module VirtualIndexedListView {
         }
 
         public getYByRenderedIndexAndScrollY = (options:any) => {
-            var y = null;
+            var y:any = null;
 
             for (var i = 0; i < this.map.length; i++) {
 

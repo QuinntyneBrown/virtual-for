@@ -27,7 +27,7 @@ module VirtualIndexedListView {
                         template: getHtml(clone[0], true),
                         scope: scope,
                         attributes: attributes,
-                        items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope[attributes["virtualIndexedListViewCollectionName"]],
+                        items: attributes["virtualIndexedListViewItems"] ? JSON.parse(attributes["virtualIndexedListViewItems"]) : scope["vm"][attributes["virtualIndexedListViewCollectionName"]],
                         dataService: attributes["virtualIndexedListViewDataService"],
                         searchTermNameOnScope: attributes["virtualIndexedListViewSearchTermNameOnScope"],
                         filterFnNameOnVm: attributes["virtualIndexedListViewFilterFnNameOnVm"]

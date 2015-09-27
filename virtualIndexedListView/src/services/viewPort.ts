@@ -38,7 +38,7 @@ module VirtualIndexedListView {
             return this.scrollY + this.height;
         }
 
-        public getScrollableParent = (hTMLElement: HTMLElement) => {
+        public getScrollableParent = (hTMLElement: HTMLElement):any => {
 
             if (hTMLElement.tagName == "HTML")
                 return null;

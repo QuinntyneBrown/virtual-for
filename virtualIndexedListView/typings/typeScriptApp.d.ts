@@ -11,7 +11,7 @@ declare module VirtualIndexedListView {
     }
 
     export interface ISafeDigestFn {
-        (scope: ng.IScope)
+        (scope: ng.IScope):void;
     }
 
     export interface IVirtualNodesInstanceOptions {
@@ -28,7 +28,7 @@ declare module VirtualIndexedListView {
         pages: number;
         numberOfRenderedItems: number;
         numberOfItems: number;
-        getPageIndex(options:any);
+        getPageIndex(options:any):any;
 
     }
 
@@ -37,7 +37,7 @@ declare module VirtualIndexedListView {
         getAll(options: any): any;
         getTail(): any;
         getHead(): any;
-        getHeadAndTail();
+        getHeadAndTail():any;
     }
 
     export interface IRenderedNode {

@@ -41,7 +41,7 @@ module VirtualIndexedListView {
         }
 
         public get lastLoadedIndex() {
-            var index = null;
+            var index:any = null;
 
             for (var i = 0; i < this.items.length; i++) {
                 if (this.items[i] === null && index === null) {
@@ -61,7 +61,7 @@ module VirtualIndexedListView {
         public getIndexByCriteriaAsync = (options: any) => {
 
             var deferred = this.$q.defer();
-            var index = null;
+            var index:any = null;
 
             for (var i = 0; i < this.items.length; i++) {
                 if (this.items[i][options.criteria.key] == options.criteria.value) {
