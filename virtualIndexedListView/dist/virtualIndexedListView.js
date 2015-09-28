@@ -809,8 +809,10 @@ var VirtualIndexedListView;
                     var headAndTail = _this.renderedNodes.getHeadAndTail();
                     var tail = headAndTail.tail;
                     var head = headAndTail.head;
-                    if (tail.bottom >= _this.container.bottom)
+                    if (angular.element(tail.node).scope().$$index == _this.collectionManager.numberOfItems - 1)
                         reachedBottom = true;
+                    //if (tail.bottom >= this.container.bottom)
+                    //    reachedBottom = true;
                     if (head.bottom >= options.scrollY)
                         allNodesHaveBeenMoved = true;
                     if (!reachedBottom && !allNodesHaveBeenMoved) {
@@ -832,12 +834,6 @@ var VirtualIndexedListView;
                 if (digestNeeded)
                     _this.safeDigest(_this.scope);
             };
-            this.moveAndUpdateScope = function (options) {
-                _this.transformY(options.node, options.position);
-                var scope = angular.element(options.node).scope();
-                scope[_this.itemName] = options.item;
-                scope.$$index = options.index;
-            };
             this.renderBottomToTop = function (options) {
                 var reachedTop = false;
                 var allNodesHaveBeenMoved = false;
@@ -846,8 +842,10 @@ var VirtualIndexedListView;
                     var headAndTail = _this.renderedNodes.getHeadAndTail();
                     var tail = headAndTail.tail;
                     var head = headAndTail.head;
-                    if (tail.bottom <= _this.container.htmlElement.offsetTop + (_this.itemHeight * _this.numberOfRenderedItems))
+                    if (angular.element(head.node).scope().$$index == 0)
                         reachedTop = true;
+                    //if (tail.bottom <= this.container.htmlElement.offsetTop + (this.itemHeight * this.numberOfRenderedItems))
+                    //    reachedTop = true;
                     if (tail.top <= (_this.viewPort.scrollY + _this.viewPort.height))
                         allNodesHaveBeenMoved = true;
                     if (!reachedTop && !allNodesHaveBeenMoved) {
@@ -868,6 +866,12 @@ var VirtualIndexedListView;
                 } while (!reachedTop && !allNodesHaveBeenMoved);
                 if (digestNeeded)
                     _this.safeDigest(_this.scope);
+            };
+            this.moveAndUpdateScope = function (options) {
+                _this.transformY(options.node, options.position);
+                var scope = angular.element(options.node).scope();
+                scope[_this.itemName] = options.item;
+                scope.$$index = options.index;
             };
             this.onResize = function () {
                 if (!_this.maxViewPortHeight)

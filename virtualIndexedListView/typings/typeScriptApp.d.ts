@@ -2,13 +2,9 @@
 
 declare module VirtualIndexedListView {
 
-    export interface IScopeCollectionManager extends ICollectionManager {
-        
-    }
+    export interface IScopeCollectionManager extends ICollectionManager { }
 
-    export interface IScopeCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions {
-
-    }
+    export interface IScopeCollectionManagerInstanceOptions extends ICollectionManagerInstanceOptions { }
 
     export interface ISafeDigestFn {
         (scope: ng.IScope):void;

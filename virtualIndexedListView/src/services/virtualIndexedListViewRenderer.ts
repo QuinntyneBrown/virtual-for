@@ -13,7 +13,14 @@ module VirtualIndexedListView {
             private transformY: ITransformY) { }
 
         public createInstance = (options: any) => {
-            var instance = new VirtualIndexedListViewRenderer(this.$compile, this.$interval, this.getY, this.injector, this.safeDigest, this.transformY);
+            var instance = new VirtualIndexedListViewRenderer(
+                this.$compile,
+                this.$interval,
+                this.getY,
+                this.injector,
+                this.safeDigest,
+                this.transformY);
+
             instance.attributes = options.attributes;
             instance.scope = options.scope;
             instance.element = options.element;
@@ -21,10 +28,20 @@ module VirtualIndexedListView {
             
             instance.viewPort = this.injector.get({ interface: "IViewPort", element: instance.element });
             instance.container = this.injector.get({ interface: "IContainer", element: instance.element });
-            instance.collectionManager = this.injector.get({ interface: "ICollectionManager", element: instance.element, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm, items: options.items, dataService: options.dataService, attributes: options.attributes });
+            instance.collectionManager = this.injector.get({
+                interface: "ICollectionManager",
+                element: instance.element,
+                scope: options.scope,
+                searchTermNameOnScope: options.searchTermNameOnScope,
+                filterFnNameOnVm: options.filterFnNameOnVm,
+                items: options.items,
+                dataService: options.dataService,
+                attributes: options.attributes
+            });
             instance.renderedNodes = this.injector.get({ interface: "IRenderedNodes", container: instance.container });
 
-            if (instance.collectionManager instanceof LazyLoadCollectionManager) instance.$interval((<ILazyLoadCollectionManager>instance.collectionManager).loadMore, 1000, null, false);
+            if (instance.collectionManager instanceof LazyLoadCollectionManager)
+                instance.$interval((<ILazyLoadCollectionManager>instance.collectionManager).loadMore, 1000, null, false);
             
             instance.scope.$on(instance.scrollEventName, (event:any, criteria:any) => {
                 instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result: any) => {
@@ -33,8 +50,6 @@ module VirtualIndexedListView {
             });
 
             instance.collectionManager.subscribe({ callback: instance.forceRender });
-
-
 
             instance.container.setHeight(instance.collectionManager.numberOfItems * instance.itemHeight);
 
@@ -89,7 +104,7 @@ module VirtualIndexedListView {
                 var tail = headAndTail.tail;
                 var head = headAndTail.head;
 
-                if (tail.bottom >= this.container.bottom)
+                if ((<any>angular.element(tail.node).scope()).$$index == this.collectionManager.numberOfItems - 1)
                     reachedBottom = true;
 
                 if (head.bottom >= options.scrollY)
@@ -118,13 +133,6 @@ module VirtualIndexedListView {
             if (digestNeeded) this.safeDigest(this.scope);
         }
 
-        public moveAndUpdateScope = (options:any) => {
-            this.transformY(options.node, options.position);
-            var scope: any = angular.element(options.node).scope();
-            scope[this.itemName] = options.item;
-            scope.$$index = options.index;
-        }
-
         public renderBottomToTop = (options: IRenderOptions) => {
             var reachedTop = false;
             var allNodesHaveBeenMoved = false;
@@ -135,13 +143,13 @@ module VirtualIndexedListView {
                 var tail = headAndTail.tail;
                 var head = headAndTail.head;
 
-                if (tail.bottom <= this.container.htmlElement.offsetTop + (this.itemHeight * this.numberOfRenderedItems))
+                if ((<any>angular.element(head.node).scope()).$$index == 0)
                     reachedTop = true;
 
                 if (tail.top <= (this.viewPort.scrollY + this.viewPort.height))
                     allNodesHaveBeenMoved = true;
 
-                if (!reachedTop && !allNodesHaveBeenMoved) {                    
+                if (!reachedTop && !allNodesHaveBeenMoved) {
                     var headY: number = this.getY(head.node);
                     var tailY: number = this.getY(tail.node);
 
@@ -162,6 +170,13 @@ module VirtualIndexedListView {
             } while (!reachedTop && !allNodesHaveBeenMoved)
 
             if (digestNeeded) this.safeDigest(this.scope);
+        }
+
+        public moveAndUpdateScope = (options:any) => {
+            this.transformY(options.node, options.position);
+            var scope: any = angular.element(options.node).scope();
+            scope[this.itemName] = options.item;
+            scope.$$index = options.index;
         }
 
         public onResize = () => {
