@@ -10,7 +10,7 @@ module VirtualIndexedListView {
 
         public get = (options: any):any => {
             
-            switch(options.interface) {
+            switch (options.interfaceName) {
             
                 case "ICollectionManager":
                     if (options.filterFnNameOnVm && options.searchTermNameOnScope) return (<IFilterableCollectionManager>this.$injector.get("virtualIndexedListView.filterableCollectionManager")).createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });

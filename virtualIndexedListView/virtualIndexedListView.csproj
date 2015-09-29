@@ -73,6 +73,7 @@
     <TypeScriptCompile Include="examples\listDetail\app\directives\navBar.ts" />
     <TypeScriptCompile Include="examples\listDetail\app\listDetail.module.ts" />
     <TypeScriptCompile Include="examples\listDetail\app\services\dataService.ts" />
+    <TypeScriptCompile Include="examples\removeItem\removeItem.ts" />
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
     <TypeScriptCompile Include="src\directives\virtualIndexedListView.ts" />
@@ -130,6 +131,8 @@
     <Content Include="examples\listDetail\app\views\default.html" />
     <Content Include="examples\listDetail\listDetail.css" />
     <Content Include="examples\listDetail\listDetail.html" />
+    <Content Include="examples\removeItem\removeItem.css" />
+    <Content Include="examples\removeItem\removeItem.html" />
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />

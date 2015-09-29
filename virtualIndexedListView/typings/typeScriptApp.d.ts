@@ -54,6 +54,12 @@ declare module VirtualIndexedListView {
         get(options:any):any;
     }
 
+    export interface IInjectorGetOptions {
+        interfaceName: string;
+        element: ng.IAugmentedJQuery;
+        attributes: ng.IAttributes;
+    }
+
     export interface ILazyLoadCollectionManager extends ICollectionManager {
         createInstance(options: ILazyLoadCollectionManagerInstanceOptions): ICollectionManager;
         loadMore():any;
