@@ -14,13 +14,17 @@ describe("virtualIndexedListView", () => {
     var items: any[];
 
     var template: string = [
-        "<div virtual-indexed-list-view",
-         "virtual-indexed-list-view-items='[1,2,3]'",
-         "virtual-indexed-list-view-item-name='foo'",
-         "virtual-indexed-list-view-collection-name='foos'",
-         "virtual-indexed-list-view-item-height='10'>",
-        "{{ foo }}",
-    "</div>"
+        "<Html><div style='height:100px; overflow-y:'scroll'><div virtual-indexed-list-view",
+        "virtual-indexed-list-view-items='[",
+        JSON.stringify({ "name": "Matrix" }),
+        "," + JSON.stringify({ "name": "The Wedding Crashers" }),
+        "," + JSON.stringify({ "name": "Internship" }),
+        "]'",
+        "virtual-indexed-list-view-item-name='movie'",
+        "virtual-indexed-list-view-item-height='80'",
+        "virtual-indexed-list-view-name='basic'>",
+        "<h1 style='height:100px'>{{ movie.name }}</h1>",
+    "</div></div></Html>"
     ].join(" ");
 
     beforeEach(inject(($compile:ng.ICompileService, $rootScope: ng.IRootScopeService) => {
@@ -28,5 +32,13 @@ describe("virtualIndexedListView", () => {
         rootScope = $rootScope;
         scope = $rootScope.$new(true);
     }));
+
+    it("should be defined", () => {
+        var parent = angular.element(template);
+        var $element = angular.element(parent[0].children[0]);
+        var element = compile($element)(scope);
+        rootScope.$digest();
+        expect(element).toBeDefined();
+    });
 
 });

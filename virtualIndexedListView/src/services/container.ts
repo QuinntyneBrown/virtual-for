@@ -9,6 +9,8 @@ module VirtualIndexedListView {
         public createInstance = (options: IContainerInstanceOptions) => {
             var instance = new Container(this.getY);
             var container = angular.element("<div class='container'></div>");
+            container[0].style.padding = "0";
+            container[0].style.margin = "0";
             options.element.append(container);
             instance.augmentedJQuery = options.element.find(".container");
             return instance;

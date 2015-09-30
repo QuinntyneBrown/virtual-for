@@ -16,6 +16,18 @@ describe("viewPort", () => {
 
     it("should be defined", () => {
         expect(viewPort).toBeDefined();
+        expect(viewPort instanceof VirtualIndexedListView.ViewPort);
+    });
+
+    it("should create an instance", () => {
+        var element = angular.element("<div><h1>hi!</h1></div>");
+
+        var childElement = angular.element(element[0].children[0]);
+
+        var instance = viewPort.createInstance({ element: childElement });
+
+        expect(instance).toBeDefined();
+        expect(instance instanceof VirtualIndexedListView.ViewPort).toEqual(true);
     });
 
 

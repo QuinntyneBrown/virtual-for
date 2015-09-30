@@ -95,6 +95,7 @@ declare module VirtualIndexedListView {
         items: any[];   
         subscribe(options: ISubscribeOptions): number;
         getIndexByCriteriaAsync(options: any): ng.IPromise<any>;
+        subscriptions: Array<ISubscription>;
     }
 
     export interface ISubscribeOptions {
