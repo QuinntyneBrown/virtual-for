@@ -1,4 +1,4 @@
-﻿var basicApp = angular.module("basicApp", ["virtualIndexedListView"]);
+﻿var basicApp = angular.module("basicApp", ["popover","virtualIndexedListView"]);
 
 
 module Basic {

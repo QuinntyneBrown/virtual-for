@@ -26,7 +26,6 @@ module VirtualIndexedListView {
             instance.element = options.element;
             instance.template = options.template;
 
-
             instance.viewPort = this.injector.get({ interfaceName: "IViewPort", element: instance.element });
             instance.container = this.injector.get({ interfaceName: "IContainer", element: instance.element });
             instance.collectionManager = this.injector.get({
@@ -44,34 +43,26 @@ module VirtualIndexedListView {
             if (instance.collectionManager instanceof LazyLoadCollectionManager)
                 instance.$interval((<ILazyLoadCollectionManager>instance.collectionManager).loadMore, 1000, null, false);
 
-            instance.scope.$on(instance.scrollEventName, (event: any, criteria: any) => {
-                instance.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result: any) => {
-                    instance.viewPort.scrollTo(result.index * instance.itemHeight);
-                });
-            });
-
+            instance.scope.$on(instance.scrollEventName, instance.onScrollTo);
             instance.scope.$on(instance.removeItemEventName, instance.renderRemoveItem);
             instance.collectionManager.subscribe({ callback: instance.forceRender });
-
             instance.container.setHeight(instance.collectionManager.numberOfItems * instance.itemHeight);
-
-            instance.$interval(() => {
-                instance.render({
-                    scrollY: instance.viewPort.scrollY,
-                    lastScrollY: instance.lastYScroll
-                });
-                instance.lastYScroll = instance.viewPort.scrollY;
-            }, 1, null, false);
-
+            instance.$interval(instance.render, 1, null, false);
             instance.$interval(instance.onResize, 10, null, false);
             return instance;
         }
 
-        public render = (options: IRenderOptions) => {
-            if (options.force) return this.forceRender();
+        public onScrollTo = (event: any, criteria: any) => {
+            this.collectionManager.getIndexByCriteriaAsync({ criteria: criteria }).then((result: any) => {
+                this.viewPort.scrollTo(result.index * this.itemHeight);
+            });
+        }
+
+        public render = (options?:IRenderOptions) => {
+            if (options && options.force) return this.forceRender();
             if (this.hasRendered === false) return this.initialRender();
-            if (options.scrollY > options.lastScrollY) return this.renderTopToBottom(options);
-            if (options.scrollY < options.lastScrollY) return this.renderBottomToTop(options);
+            if (this.viewPort.scrollY > this.lastScrollY) return this.renderTopToBottom();
+            if (this.viewPort.scrollY < this.lastScrollY) return this.renderBottomToTop();
         }
 
         private forceRender = () => {
@@ -81,8 +72,7 @@ module VirtualIndexedListView {
             this.safeDigest(this.scope);
         }
 
-        public initialRender = () => {
-            
+        public initialRender = () => {           
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < this.numberOfRenderedItems; i++) {
                 var childScope: any = this.scope.$new(true);
@@ -95,7 +85,7 @@ module VirtualIndexedListView {
             this.hasRendered = true;
         }
 
-        public renderTopToBottom = (options: IRenderOptions) => {
+        public renderTopToBottom = () => {
             var reachedBottom = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -108,7 +98,7 @@ module VirtualIndexedListView {
                 if ((<any>angular.element(tail.node).scope()).$$index == this.collectionManager.numberOfItems - 1)
                     reachedBottom = true;
 
-                if (head.bottom >= options.scrollY)
+                if (head.bottom >= this.viewPort.scrollY)
                     allNodesHaveBeenMoved = true;
 
                 if (!reachedBottom && !allNodesHaveBeenMoved) {
@@ -132,9 +122,11 @@ module VirtualIndexedListView {
             } while (!reachedBottom && !allNodesHaveBeenMoved)
 
             if (digestNeeded) this.safeDigest(this.scope);
+
+            this.lastScrollY = this.viewPort.scrollY;
         }
 
-        public renderBottomToTop = (options: IRenderOptions) => {
+        public renderBottomToTop = () => {
             var reachedTop = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -171,6 +163,8 @@ module VirtualIndexedListView {
             } while (!reachedTop && !allNodesHaveBeenMoved)
 
             if (digestNeeded) this.safeDigest(this.scope);
+
+            this.lastScrollY = this.viewPort.scrollY;
         }
 
         public renderRemoveItem = (event: any, options: any) => {
@@ -290,7 +284,7 @@ module VirtualIndexedListView {
         public get removeItemEventName() { return this.controlPrefix + "RemoveItem" + this.name; }
 
         public scope: any;
-        public lastYScroll: number = 0;
+        public lastScrollY: number = 0;
         private collectionManager: ICollectionManager;
         private container: IContainer;
         private viewPort: IViewPort;

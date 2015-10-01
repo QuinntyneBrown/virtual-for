@@ -73,6 +73,7 @@
     <TypeScriptCompile Include="examples\listDetail\app\directives\navBar.ts" />
     <TypeScriptCompile Include="examples\listDetail\app\listDetail.module.ts" />
     <TypeScriptCompile Include="examples\listDetail\app\services\dataService.ts" />
+    <TypeScriptCompile Include="examples\listDetail\app\services\manager.ts" />
     <TypeScriptCompile Include="examples\removeItem\removeItem.ts" />
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
@@ -136,6 +137,7 @@
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />
+    <Content Include="git_modules\popover\popover.min.js" />
     <Content Include="git_modules\stateResolver\stateResolver.min.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">

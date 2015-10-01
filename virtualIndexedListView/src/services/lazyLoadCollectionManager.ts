@@ -84,6 +84,7 @@ module VirtualIndexedListView {
         public get items() { return this._items; }
 
         public loadMore = () => {
+
             var lastLoadIndex = this.lastLoadedIndex;
 
             if (!this.loaded) {

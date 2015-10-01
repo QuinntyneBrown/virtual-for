@@ -164,7 +164,7 @@ declare module VirtualIndexedListView {
 
     export interface IVirtualIndexedListViewRenderer {
         createInstance(options: any): IVirtualIndexedListViewRenderer;
-        render(options: any): void;
+        render(options?: any): void;
     }
 
     export interface IGetHtmlFn {
