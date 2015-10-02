@@ -22,12 +22,18 @@ module VirtualFor {
             return  (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes, controller: any, transclude: any) => {
                 transclude(scope.$new(), (clone: ng.IAugmentedJQuery) => {
                     removeVirtualListCustomAttributes(clone);
+
+                    var items = scope["vm"][attributes["virtualFor"]];
+
+                    if (!items)
+                        items = JSON.parse(attributes["virtualFor"]);
+
                     renderer.createInstance({
                         element: angular.element(parentElement),
                         template: getHtml(clone[0], true),
                         scope: scope,
                         attributes: attributes,
-                        items: attributes["virtualForItems"] ? JSON.parse(attributes["virtualForItems"]) : scope["vm"][attributes["virtualForCollectionName"]],
+                        items: items,
                         dataService: attributes["virtualForDataService"],
                         searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
                         filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]

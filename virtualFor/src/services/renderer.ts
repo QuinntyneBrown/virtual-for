@@ -258,7 +258,7 @@ module VirtualFor {
             return itemHeight;
         }
 
-        public get itemName() { return this.attributes[this.controlPrefix + "ItemName"]; }
+        public get itemName() { return this.attributes[this.controlPrefix + "Of"]; }
 
         private _itemHeight: number;
 

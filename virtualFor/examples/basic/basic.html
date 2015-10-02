@@ -16,9 +16,7 @@
 </head>
 <body data-ng-app="basicApp" data-ng-controller="appController as vm">
 
-
-    <div virtual-for
-         virtual-for-items='[
+    <div virtual-for='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -40,8 +38,7 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-         virtual-for-item-name="movie"
-         virtual-for-name="basic">
+         virtual-for-of="movie">
 
         <h1>{{ movie.name }} </h1>
 
@@ -49,13 +46,9 @@
 
 
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../../node_modules/lovefield/dist/lovefield.min.js"></script>
-    <script src="../../node_modules/rx/dist/rx.all.compat.min.js"></script>
     <script src="../../node_modules/angular/angular.min.js"></script>
-    <script src="../../node_modules/rx-angular/dist/rx.angular.min.js"></script>
     <script src="../../node_modules/angular-ui-bootstrap/ui-bootstrap.js"></script>
     <script src="../../node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
-
     <script src="../../git_modules/popover/popover.min.js"></script>
 
     <script src="../../dist/virtualFor.js"></script>
