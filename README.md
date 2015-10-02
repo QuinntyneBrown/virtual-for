@@ -8,6 +8,10 @@ This means that on a phone screen that can fit eight items, only the eight items
 
 ## Usage
 
+```js
+var basicApp = angular.module("basicApp", ["virtualFor"]);
+```
+
 ```html
     <div virtual-for='[
          { "name" : "Matrix" },
