@@ -43,15 +43,15 @@ module VirtualFor {
 
             function removeVirtualListCustomAttributes(clone: ng.IAugmentedJQuery) {
                 var names = [];
+                var attributes = clone[0].attributes;
 
-                for (var i = 0; i < clone[0].attributes.length; i++) {
-                    if (clone[0].attributes[i].nodeName.indexOf("virtual-for") > -1)
-                        names.push(clone[0].attributes[i].nodeName);
+                for (var i = 0; i < attributes.length; i++) {
+                    if (attributes[i].nodeName.indexOf("virtual-for") > -1)
+                        names.push(attributes[i].nodeName);
                 }
 
-                for (var i = 0; i < names.length; i++) {
-                    clone[0].removeAttribute(names[i]);
-                }
+                names.forEach((name: string) => { clone[0].removeAttribute(name); });
+
             }
         }
 

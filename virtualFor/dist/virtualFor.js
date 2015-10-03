@@ -4,6 +4,60 @@ angular.module("virtualFor", []);
 //# sourceMappingURL=virtualFor.module.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
+(function (VirtualFor_1) {
+    var VirtualFor = (function () {
+        function VirtualFor(getHtml, renderer) {
+            var _this = this;
+            this.getHtml = getHtml;
+            this.renderer = renderer;
+            this.restirct = "A";
+            this.transclude = 'element';
+            this.scope = false;
+            this.compile = function (template) {
+                var renderer = _this.renderer;
+                var parentElement = template.parent();
+                var getHtml = _this.getHtml;
+                return function (scope, element, attributes, controller, transclude) {
+                    transclude(scope.$new(), function (clone) {
+                        removeVirtualListCustomAttributes(clone);
+                        var items = scope["vm"][attributes["virtualFor"]];
+                        if (!items)
+                            items = JSON.parse(attributes["virtualFor"]);
+                        renderer.createInstance({
+                            element: angular.element(parentElement),
+                            template: getHtml(clone[0], true),
+                            scope: scope,
+                            attributes: attributes,
+                            items: items,
+                            dataService: attributes["virtualForDataService"],
+                            searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
+                            filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
+                        }).render({ lastScrollY: 0, scrollY: 0 });
+                    });
+                };
+                function removeVirtualListCustomAttributes(clone) {
+                    var names = [];
+                    var attributes = clone[0].attributes;
+                    for (var i = 0; i < attributes.length; i++) {
+                        if (attributes[i].nodeName.indexOf("virtual-for") > -1)
+                            names.push(attributes[i].nodeName);
+                    }
+                    names.forEach(function (name) { clone[0].removeAttribute(name); });
+                }
+            };
+        }
+        VirtualFor.createInstance = function (getHtml, renderer) {
+            return new VirtualFor(getHtml, renderer);
+        };
+        return VirtualFor;
+    })();
+    VirtualFor_1.VirtualFor = VirtualFor;
+    angular.module("virtualFor").directive("virtualFor", ["virtualFor.getHtml", "virtualFor.renderer", VirtualFor.createInstance]);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../directives/virtualFor.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
 (function (VirtualFor) {
     "use strict";
     var getHtml = function (who, deep) {
@@ -109,61 +163,6 @@ var VirtualFor;
 })(VirtualFor || (VirtualFor = {}));
 
 //# sourceMappingURL=../functions/transformY.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor_1) {
-    var VirtualFor = (function () {
-        function VirtualFor(getHtml, renderer) {
-            var _this = this;
-            this.getHtml = getHtml;
-            this.renderer = renderer;
-            this.restirct = "A";
-            this.transclude = 'element';
-            this.scope = false;
-            this.compile = function (template) {
-                var renderer = _this.renderer;
-                var parentElement = template.parent();
-                var getHtml = _this.getHtml;
-                return function (scope, element, attributes, controller, transclude) {
-                    transclude(scope.$new(), function (clone) {
-                        removeVirtualListCustomAttributes(clone);
-                        var items = scope["vm"][attributes["virtualFor"]];
-                        if (!items)
-                            items = JSON.parse(attributes["virtualFor"]);
-                        renderer.createInstance({
-                            element: angular.element(parentElement),
-                            template: getHtml(clone[0], true),
-                            scope: scope,
-                            attributes: attributes,
-                            items: items,
-                            dataService: attributes["virtualForDataService"],
-                            searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
-                            filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
-                        }).render({ lastScrollY: 0, scrollY: 0 });
-                    });
-                };
-                function removeVirtualListCustomAttributes(clone) {
-                    var names = [];
-                    for (var i = 0; i < clone[0].attributes.length; i++) {
-                        if (clone[0].attributes[i].nodeName.indexOf("virtual-for") > -1)
-                            names.push(clone[0].attributes[i].nodeName);
-                    }
-                    for (var i = 0; i < names.length; i++) {
-                        clone[0].removeAttribute(names[i]);
-                    }
-                }
-            };
-        }
-        VirtualFor.createInstance = function (getHtml, renderer) {
-            return new VirtualFor(getHtml, renderer);
-        };
-        return VirtualFor;
-    })();
-    VirtualFor_1.VirtualFor = VirtualFor;
-    angular.module("virtualFor").directive("virtualFor", ["virtualFor.getHtml", "virtualFor.renderer", VirtualFor.createInstance]);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../directives/virtualFor.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
