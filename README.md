@@ -1,6 +1,6 @@
-# virtualFor
+# virtual-for
 
-virtualFor allows an app to show huge lists of items much more performantly than ng-repeat.
+virtual-for allows an app to show huge lists of items much more performantly than ng-repeat.
 
 It renders into the DOM only as many items as are currently visible.
 
