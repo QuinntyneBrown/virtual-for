@@ -21,7 +21,7 @@ module VirtualFor {
 
             return  (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes, controller: any, transclude: any) => {
                 transclude(scope.$new(), (clone: ng.IAugmentedJQuery) => {
-                    removeVirtualListCustomAttributes(clone);
+                    removeCustomAttributes(clone,"virtual-for");
                     renderer.createInstance({
                         element: angular.element(parentElement),
                         template: getHtml(clone[0], true),
@@ -33,7 +33,6 @@ module VirtualFor {
                         filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
                     }).render({ lastScrollY: 0, scrollY: 0 });
 
-
                 });
             }
 
@@ -43,12 +42,11 @@ module VirtualFor {
                 return items;
             }
 
-            function removeVirtualListCustomAttributes(clone: ng.IAugmentedJQuery) {
+            function removeCustomAttributes(clone: ng.IAugmentedJQuery, prefix:string) {
                 var names = [];
                 var attributes = clone[0].attributes;
-
                 for (var i = 0; i < attributes.length; i++) {
-                    if (attributes[i].nodeName.indexOf("virtual-for") > -1)
+                    if (attributes[i].nodeName.indexOf(prefix) > -1)
                         names.push(attributes[i].nodeName);
                 }
 

@@ -1,16 +1,16 @@
 {
-  "name": "virtualFor",
+  "name": "virtual-for",
   "version": "1.0.0",
-  "description": "Virtual Indexed List View",
-  "main": "index.js",
+  "description": "An Angular 1.x directive using TypeScript",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/quinntynebrown/virtual-for.git"
   },
-  "author": "Quinntyne Brown",
+  "author": "quinntynebrown <quinntynebrown@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": ""

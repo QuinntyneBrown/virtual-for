@@ -2,6 +2,7 @@
 angular.module("virtualFor", []);
 
 //# sourceMappingURL=virtualFor.module.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor_1) {
@@ -19,27 +20,30 @@ var VirtualFor;
                 var getHtml = _this.getHtml;
                 return function (scope, element, attributes, controller, transclude) {
                     transclude(scope.$new(), function (clone) {
-                        removeVirtualListCustomAttributes(clone);
-                        var items = scope["vm"][attributes["virtualFor"]];
-                        if (!items)
-                            items = JSON.parse(attributes["virtualFor"]);
+                        removeCustomAttributes(clone, "virtual-for");
                         renderer.createInstance({
                             element: angular.element(parentElement),
                             template: getHtml(clone[0], true),
                             scope: scope,
                             attributes: attributes,
-                            items: items,
+                            items: parseItems(scope, attributes),
                             dataService: attributes["virtualForDataService"],
                             searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
                             filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
                         }).render({ lastScrollY: 0, scrollY: 0 });
                     });
                 };
-                function removeVirtualListCustomAttributes(clone) {
+                function parseItems(scope, attributes) {
+                    var items = scope["vm"][attributes["virtualFor"]];
+                    if (!items)
+                        items = JSON.parse(attributes["virtualFor"]);
+                    return items;
+                }
+                function removeCustomAttributes(clone, prefix) {
                     var names = [];
                     var attributes = clone[0].attributes;
                     for (var i = 0; i < attributes.length; i++) {
-                        if (attributes[i].nodeName.indexOf("virtual-for") > -1)
+                        if (attributes[i].nodeName.indexOf(prefix) > -1)
                             names.push(attributes[i].nodeName);
                     }
                     names.forEach(function (name) { clone[0].removeAttribute(name); });
@@ -55,7 +59,8 @@ var VirtualFor;
     angular.module("virtualFor").directive("virtualFor", ["virtualFor.getHtml", "virtualFor.renderer", VirtualFor.createInstance]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../directives/virtualFor.js.map
+//# sourceMappingURL=virtualFor.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -76,7 +81,8 @@ var VirtualFor;
     angular.module("virtualFor").value("virtualFor.getHtml", getHtml);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/getHtml.js.map
+//# sourceMappingURL=getHtml.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -89,7 +95,8 @@ var VirtualFor;
     angular.module("virtualFor").value("virtualFor.getX", VirtualFor.getX);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/getX.js.map
+//# sourceMappingURL=getX.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -102,7 +109,8 @@ var VirtualFor;
     angular.module("virtualFor").value("virtualFor.getY", VirtualFor.getY);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/getY.js.map
+//# sourceMappingURL=getY.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -135,7 +143,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.injector", ["$injector", Injector]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/injector.js.map
+//# sourceMappingURL=injector.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -146,7 +155,8 @@ var VirtualFor;
     angular.module("virtualFor").value("virtualFor.safeDigest", VirtualFor.safeDigest);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/safeDigest.js.map
+//# sourceMappingURL=safeDigest.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -162,7 +172,8 @@ var VirtualFor;
     angular.module("virtualFor").value("virtualFor.transformY", VirtualFor.transformY);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../functions/transformY.js.map
+//# sourceMappingURL=transformY.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -214,7 +225,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.collectionManager", ["$q", CollectionManager]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/collectionManager.js.map
+//# sourceMappingURL=collectionManager.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -280,7 +292,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.container", ["virtualFor.getY", Container]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/container.js.map
+//# sourceMappingURL=container.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -355,7 +368,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.filterableCollectionManager", ["$q", "$timeout", FilterableCollectionManager]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/filterableCollectionManager.js.map
+//# sourceMappingURL=filterableCollectionManager.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -467,7 +481,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.lazyLoadCollectionManager", ["$injector", "$q", LazyLoadCollectionManager]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/lazyLoadCollectionManager.js.map
+//# sourceMappingURL=lazyLoadCollectionManager.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -529,7 +544,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.renderedNode", ["virtualFor.getX", "virtualFor.getY", RenderedNode]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/renderedNode.js.map
+//# sourceMappingURL=renderedNode.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -618,7 +634,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.renderedNodes", ["virtualFor.getX", "virtualFor.getY", RenderedNodes]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/renderedNodes.js.map
+//# sourceMappingURL=renderedNodes.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -896,7 +913,8 @@ var VirtualFor;
         Renderer]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/renderer.js.map
+//# sourceMappingURL=renderer.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -949,7 +967,8 @@ var VirtualFor;
     angular.module("virtualFor").service("scopeCollectionManager", ["$q", ScopeCollectionManager]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/scopeCollectionManager.js.map
+//# sourceMappingURL=scopeCollectionManager.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -1012,7 +1031,8 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.viewPort", ["$window", ViewPort]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/viewPort.js.map
+//# sourceMappingURL=viewPort.js.map
+
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -1077,4 +1097,4 @@ var VirtualFor;
     angular.module("virtualFor").service("virtualFor.virtualNodes", [VirtualNodes]);
 })(VirtualFor || (VirtualFor = {}));
 
-//# sourceMappingURL=../services/virtualNodes.js.map
+//# sourceMappingURL=virtualNodes.js.map
