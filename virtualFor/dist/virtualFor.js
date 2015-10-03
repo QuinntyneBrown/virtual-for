@@ -1,7 +1,169 @@
 /// <reference path="../typings/typescriptapp.d.ts" />
 angular.module("virtualFor", []);
 
-//# sourceMappingURL=virtualIndexedListView.module.js.map
+//# sourceMappingURL=virtualFor.module.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    "use strict";
+    var getHtml = function (who, deep) {
+        if (!who || !who.tagName)
+            return '';
+        var txt, ax, el = document.createElement("div");
+        el.appendChild(who.cloneNode(false));
+        txt = el.innerHTML;
+        if (deep) {
+            ax = txt.indexOf('>') + 1;
+            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+        }
+        el = null;
+        return txt;
+    };
+    angular.module("virtualFor").value("virtualFor.getHtml", getHtml);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/getHtml.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.getX = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none")
+            return 0;
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[6];
+    };
+    angular.module("virtualFor").value("virtualFor.getX", VirtualFor.getX);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/getX.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.getY = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none")
+            return 0;
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
+    };
+    angular.module("virtualFor").value("virtualFor.getY", VirtualFor.getY);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/getY.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    "use strict";
+    var Injector = (function () {
+        function Injector($injector) {
+            var _this = this;
+            this.$injector = $injector;
+            this.get = function (options) {
+                switch (options.interfaceName) {
+                    case "ICollectionManager":
+                        if (options.filterFnNameOnVm && options.searchTermNameOnScope)
+                            return _this.$injector.get("virtualFor.filterableCollectionManager").createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });
+                        if (options.dataService)
+                            return _this.$injector.get("virtualFor.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
+                        return _this.$injector.get("virtualFor.collectionManager").createInstance({ items: options.items });
+                    case "IViewPort":
+                        return _this.$injector.get("virtualFor.viewPort").createInstance({ element: options.element });
+                    case "IContainer":
+                        return _this.$injector.get("virtualFor.container").createInstance({ element: options.element });
+                    case "IRenderedNodes":
+                        return _this.$injector.get("virtualFor.renderedNodes").createInstance({ container: options.container });
+                    case "IVirtualNodes":
+                        return _this.$injector.get("virtualFor.virtualNodes").createInstance({ items: options.items, numberOfRenderedItems: options.numberOfRenderedItems, itemHeight: options.itemHeight });
+                }
+            };
+        }
+        return Injector;
+    })();
+    angular.module("virtualFor").service("virtualFor.injector", ["$injector", Injector]);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/injector.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.safeDigest = function (scope) {
+        if (!scope.$$phase && !scope.$root.$$phase)
+            scope.$digest();
+    };
+    angular.module("virtualFor").value("virtualFor.safeDigest", VirtualFor.safeDigest);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/safeDigest.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.transformY = function (element, y) {
+        angular.element(element).css({
+            "-moz-transform": "translateY(" + y + "px)",
+            "-webkit-transform": "translateY(" + y + "px)",
+            "-ms-transform": "translateY(" + y + "px)",
+            "-transform": "translateY(" + y + "px)"
+        });
+        return element;
+    };
+    angular.module("virtualFor").value("virtualFor.transformY", VirtualFor.transformY);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../functions/transformY.js.map
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor_1) {
+    var VirtualFor = (function () {
+        function VirtualFor(getHtml, renderer) {
+            var _this = this;
+            this.getHtml = getHtml;
+            this.renderer = renderer;
+            this.restirct = "A";
+            this.transclude = 'element';
+            this.scope = false;
+            this.compile = function (template) {
+                var renderer = _this.renderer;
+                var parentElement = template.parent();
+                var getHtml = _this.getHtml;
+                return function (scope, element, attributes, controller, transclude) {
+                    transclude(scope.$new(), function (clone) {
+                        removeVirtualListCustomAttributes(clone);
+                        var items = scope["vm"][attributes["virtualFor"]];
+                        if (!items)
+                            items = JSON.parse(attributes["virtualFor"]);
+                        renderer.createInstance({
+                            element: angular.element(parentElement),
+                            template: getHtml(clone[0], true),
+                            scope: scope,
+                            attributes: attributes,
+                            items: items,
+                            dataService: attributes["virtualForDataService"],
+                            searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
+                            filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
+                        }).render({ lastScrollY: 0, scrollY: 0 });
+                    });
+                };
+                function removeVirtualListCustomAttributes(clone) {
+                    var names = [];
+                    for (var i = 0; i < clone[0].attributes.length; i++) {
+                        if (clone[0].attributes[i].nodeName.indexOf("virtual-for") > -1)
+                            names.push(clone[0].attributes[i].nodeName);
+                    }
+                    for (var i = 0; i < names.length; i++) {
+                        clone[0].removeAttribute(names[i]);
+                    }
+                }
+            };
+        }
+        VirtualFor.createInstance = function (getHtml, renderer) {
+            return new VirtualFor(getHtml, renderer);
+        };
+        return VirtualFor;
+    })();
+    VirtualFor_1.VirtualFor = VirtualFor;
+    angular.module("virtualFor").directive("virtualFor", ["virtualFor.getHtml", "virtualFor.renderer", VirtualFor.createInstance]);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=../directives/virtualFor.js.map
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
 (function (VirtualFor) {
@@ -463,16 +625,17 @@ var VirtualFor;
 (function (VirtualFor) {
     "use strict";
     var Renderer = (function () {
-        function Renderer($compile, $interval, getY, injector, safeDigest, transformY) {
+        function Renderer($compile, $interval, $$rAF, getY, injector, safeDigest, transformY) {
             var _this = this;
             this.$compile = $compile;
             this.$interval = $interval;
+            this.$$rAF = $$rAF;
             this.getY = getY;
             this.injector = injector;
             this.safeDigest = safeDigest;
             this.transformY = transformY;
             this.createInstance = function (options) {
-                var instance = new Renderer(_this.$compile, _this.$interval, _this.getY, _this.injector, _this.safeDigest, _this.transformY);
+                var instance = new Renderer(_this.$compile, _this.$interval, _this.$$rAF, _this.getY, _this.injector, _this.safeDigest, _this.transformY);
                 instance.attributes = options.attributes;
                 instance.scope = options.scope;
                 instance.element = options.element;
@@ -726,6 +889,7 @@ var VirtualFor;
     VirtualFor.Renderer = Renderer;
     angular.module("virtualFor").service("virtualFor.renderer", ["$compile",
         "$interval",
+        "$$rAF",
         "virtualFor.getY",
         "virtualFor.injector",
         "virtualFor.safeDigest",
@@ -915,165 +1079,3 @@ var VirtualFor;
 })(VirtualFor || (VirtualFor = {}));
 
 //# sourceMappingURL=../services/virtualNodes.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor_1) {
-    var VirtualFor = (function () {
-        function VirtualFor(getHtml, renderer) {
-            var _this = this;
-            this.getHtml = getHtml;
-            this.renderer = renderer;
-            this.restirct = "A";
-            this.transclude = 'element';
-            this.scope = false;
-            this.compile = function (template) {
-                var renderer = _this.renderer;
-                var parentElement = template.parent();
-                var getHtml = _this.getHtml;
-                return function (scope, element, attributes, controller, transclude) {
-                    transclude(scope.$new(), function (clone) {
-                        removeVirtualListCustomAttributes(clone);
-                        var items = scope["vm"][attributes["virtualFor"]];
-                        if (!items)
-                            items = JSON.parse(attributes["virtualFor"]);
-                        renderer.createInstance({
-                            element: angular.element(parentElement),
-                            template: getHtml(clone[0], true),
-                            scope: scope,
-                            attributes: attributes,
-                            items: items,
-                            dataService: attributes["virtualForDataService"],
-                            searchTermNameOnScope: attributes["virtualForSearchTermNameOnScope"],
-                            filterFnNameOnVm: attributes["virtualForFilterFnNameOnVm"]
-                        }).render({ lastScrollY: 0, scrollY: 0 });
-                    });
-                };
-                function removeVirtualListCustomAttributes(clone) {
-                    var names = [];
-                    for (var i = 0; i < clone[0].attributes.length; i++) {
-                        if (clone[0].attributes[i].nodeName.indexOf("virtual-for") > -1)
-                            names.push(clone[0].attributes[i].nodeName);
-                    }
-                    for (var i = 0; i < names.length; i++) {
-                        clone[0].removeAttribute(names[i]);
-                    }
-                }
-            };
-        }
-        VirtualFor.createInstance = function (getHtml, renderer) {
-            return new VirtualFor(getHtml, renderer);
-        };
-        return VirtualFor;
-    })();
-    VirtualFor_1.VirtualFor = VirtualFor;
-    angular.module("virtualFor").directive("virtualFor", ["virtualFor.getHtml", "virtualFor.renderer", VirtualFor.createInstance]);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../directives/virtualFor.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    "use strict";
-    var getHtml = function (who, deep) {
-        if (!who || !who.tagName)
-            return '';
-        var txt, ax, el = document.createElement("div");
-        el.appendChild(who.cloneNode(false));
-        txt = el.innerHTML;
-        if (deep) {
-            ax = txt.indexOf('>') + 1;
-            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
-        }
-        el = null;
-        return txt;
-    };
-    angular.module("virtualFor").value("virtualFor.getHtml", getHtml);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/getHtml.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.getX = function (element) {
-        var transform = angular.element(element).css("transform");
-        if (transform === "none")
-            return 0;
-        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[6];
-    };
-    angular.module("virtualFor").value("virtualFor.getX", VirtualFor.getX);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/getX.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.getY = function (element) {
-        var transform = angular.element(element).css("transform");
-        if (transform === "none")
-            return 0;
-        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
-    };
-    angular.module("virtualFor").value("virtualFor.getY", VirtualFor.getY);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/getY.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    "use strict";
-    var Injector = (function () {
-        function Injector($injector) {
-            var _this = this;
-            this.$injector = $injector;
-            this.get = function (options) {
-                switch (options.interfaceName) {
-                    case "ICollectionManager":
-                        if (options.filterFnNameOnVm && options.searchTermNameOnScope)
-                            return _this.$injector.get("virtualFor.filterableCollectionManager").createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });
-                        if (options.dataService)
-                            return _this.$injector.get("virtualFor.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
-                        return _this.$injector.get("virtualFor.collectionManager").createInstance({ items: options.items });
-                    case "IViewPort":
-                        return _this.$injector.get("virtualFor.viewPort").createInstance({ element: options.element });
-                    case "IContainer":
-                        return _this.$injector.get("virtualFor.container").createInstance({ element: options.element });
-                    case "IRenderedNodes":
-                        return _this.$injector.get("virtualFor.renderedNodes").createInstance({ container: options.container });
-                    case "IVirtualNodes":
-                        return _this.$injector.get("virtualFor.virtualNodes").createInstance({ items: options.items, numberOfRenderedItems: options.numberOfRenderedItems, itemHeight: options.itemHeight });
-                }
-            };
-        }
-        return Injector;
-    })();
-    angular.module("virtualFor").service("virtualFor.injector", ["$injector", Injector]);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/injector.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.safeDigest = function (scope) {
-        if (!scope.$$phase && !scope.$root.$$phase)
-            scope.$digest();
-    };
-    angular.module("virtualFor").value("virtualFor.safeDigest", VirtualFor.safeDigest);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/safeDigest.js.map
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.transformY = function (element, y) {
-        angular.element(element).css({
-            "-moz-transform": "translateY(" + y + "px)",
-            "-webkit-transform": "translateY(" + y + "px)",
-            "-ms-transform": "translateY(" + y + "px)",
-            "-transform": "translateY(" + y + "px)"
-        });
-        return element;
-    };
-    angular.module("virtualFor").value("virtualFor.transformY", VirtualFor.transformY);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=../functions/transformY.js.map

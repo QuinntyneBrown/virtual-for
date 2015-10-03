@@ -7,6 +7,7 @@ module VirtualFor {
     export class Renderer implements IRenderer {
         constructor(private $compile: ng.ICompileService,
             private $interval: ng.IIntervalService,
+            private $$rAF:any,
             private getY: IGetY,
             private injector: IInjector,
             private safeDigest: ISafeDigestFn,
@@ -16,6 +17,7 @@ module VirtualFor {
             var instance = new Renderer(
                 this.$compile,
                 this.$interval,
+                this.$$rAF,
                 this.getY,
                 this.injector,
                 this.safeDigest,
@@ -189,8 +191,8 @@ module VirtualFor {
             this.safeDigest(this.scope);
         }
 
-        public moveAndUpdateScope = (options: any) => {
-            this.transformY(options.node, options.position);
+        public moveAndUpdateScope = (options: any) => {            
+            this.transformY(options.node, options.position);            
             var scope: any = angular.element(options.node).scope();
             scope[this.itemName] = options.item;
             scope.$$index = options.index;
@@ -295,6 +297,7 @@ module VirtualFor {
 
     angular.module("virtualFor").service("virtualFor.renderer", ["$compile",
         "$interval",
+        "$$rAF",
         "virtualFor.getY",
         "virtualFor.injector",
         "virtualFor.safeDigest",
