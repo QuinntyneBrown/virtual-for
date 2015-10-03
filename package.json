@@ -18,6 +18,7 @@
   "homepage": "",
   "devDependencies": {
     "angular": "^1.4.5",
+    "angular-data-service": "^1.0.0",
     "angular-mocks": "^1.4.5",
     "angular-ui-bootstrap": "^0.13.4",
     "angular-ui-router": "^0.2.15",
