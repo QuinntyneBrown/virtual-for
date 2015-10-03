@@ -43,6 +43,7 @@
     "karma-spec-reporter": "0.0.19",
     "lovefield": "^2.0.63",
     "rx": "^3.1.2",
-    "rx-angular": "0.0.14"
+    "rx-angular": "0.0.14",
+    "state-resolver": "^1.0.0"
   }
 }
