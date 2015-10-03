@@ -23,3 +23,6 @@ var basicApp = angular.module("basicApp", ["virtualFor"]);
 
     </div>
 ```
+See the
+[changelog](https://github.com/quinntynebrown/virtualFor/blob/master/CHANGELOG.md)
+for changes and roadmap.
