@@ -6,6 +6,12 @@ It renders into the DOM only as many items as are currently visible.
 
 This means that on a phone screen that can fit eight items, only the eight items matching the current scroll position will be rendered.
 
+## Installation
+```bash
+# use npm
+npm install virtual-for
+```
+
 ## Usage
 
 ```js
