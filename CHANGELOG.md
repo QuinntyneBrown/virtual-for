@@ -1,7 +1,7 @@
 # Roadmap
 
-- [x] Add documentation
-- [x] Improve examples
+- [ ] Add documentation
+- [ ] Improve examples
 
 
 # Changelog

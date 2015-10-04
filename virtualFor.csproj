@@ -62,7 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="demo\demo.ts" />
     <TypeScriptCompile Include="examples\basic\basic.ts" />
     <TypeScriptCompile Include="examples\filter\filter.ts" />
     <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
@@ -77,9 +76,6 @@
     <TypeScriptCompile Include="examples\removeItem\removeItem.ts" />
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
-    <TypeScriptCompile Include="git_modules\dataService\dataService.d.ts" />
-    <TypeScriptCompile Include="git_modules\popover\popover.d.ts" />
-    <TypeScriptCompile Include="git_modules\stateResolver\stateResolver.d.ts" />
     <TypeScriptCompile Include="src\directives\virtualFor.ts" />
     <TypeScriptCompile Include="src\functions\getX.ts" />
     <TypeScriptCompile Include="src\functions\injector.ts" />
@@ -120,8 +116,6 @@
     <TypeScriptCompile Include="typings\typeScriptApp.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="demo\demo.css" />
-    <Content Include="demo\demo.html" />
     <Content Include="examples\basic\basic.css" />
     <Content Include="examples\filter\filter.css" />
     <Content Include="examples\filter\filter.html" />
@@ -139,11 +133,6 @@
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />
-    <Content Include="git_modules\busy\busy.css" />
-    <Content Include="git_modules\busy\busy.min.js" />
-    <Content Include="git_modules\dataService\dataService.min.js" />
-    <Content Include="git_modules\popover\popover.min.js" />
-    <Content Include="git_modules\stateResolver\stateResolver.min.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

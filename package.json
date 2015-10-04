@@ -20,6 +20,7 @@
     "angular": "^1.4.5",
     "angular-data-service": "^1.0.0",
     "angular-mocks": "^1.4.5",
+    "angular-popover": "^1.0.0",
     "angular-ui-bootstrap": "^0.13.4",
     "angular-ui-router": "^0.2.15",
     "bootstrap": "^3.3.5",
@@ -45,6 +46,7 @@
     "lovefield": "^2.0.63",
     "rx": "^3.1.2",
     "rx-angular": "0.0.14",
-    "state-resolver": "^1.0.0"
+    "state-resolver": "^1.0.0",
+    "work-spinner": "0.0.1"
   }
 }

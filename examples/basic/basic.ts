@@ -1,4 +1,4 @@
-﻿var basicApp = angular.module("basicApp", ["popover","virtualFor"]);
+﻿var basicApp = angular.module("basicApp", ["virtualFor"]);
 
 
 module Basic {
