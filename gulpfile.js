@@ -46,6 +46,7 @@ gulp.task('run-unit-tests', ['concat-compiled-ts-tests'], function () {
         'node_modules/angular/angular.js',
         'node_modules/angular-mocks/angular-mocks.js',
         'node_modules/rx-angular/dist/rx.angular.min.js',
+        'scripts/filtrex.js',
         'dist/virtualFor.js',
         'test/tests.js'])
         .pipe(karma({

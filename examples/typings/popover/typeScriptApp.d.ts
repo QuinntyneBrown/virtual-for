@@ -16,9 +16,6 @@ declare module Popover {
         left(spaceNeeded: number, rectangle: IRectangle): boolean;
     }
 
-
-
-
     export interface ITemplate {
         get(options:ITemplateGetOptions): ng.IPromise<string>;
     }

@@ -80,6 +80,7 @@
     <TypeScriptCompile Include="examples\typings\popover\typeScriptApp.d.ts" />
     <TypeScriptCompile Include="examples\typings\state-resolver\typeScriptApp.d.ts" />
     <TypeScriptCompile Include="src\directives\virtualFor.ts" />
+    <TypeScriptCompile Include="src\functions\compileExpression.ts" />
     <TypeScriptCompile Include="src\functions\getX.ts" />
     <TypeScriptCompile Include="src\functions\injector.ts" />
     <TypeScriptCompile Include="src\functions\getY.ts" />
@@ -98,6 +99,7 @@
     <TypeScriptCompile Include="src\services\virtualNodes.ts" />
     <TypeScriptCompile Include="src\virtualFor.module.ts" />
     <TypeScriptCompile Include="test\collectionManager.spec.ts" />
+    <TypeScriptCompile Include="test\compileExpression.spec.ts" />
     <TypeScriptCompile Include="test\container.spec.ts" />
     <TypeScriptCompile Include="test\getY.spec.ts" />
     <TypeScriptCompile Include="test\viewPort.spec.ts" />
@@ -136,6 +138,7 @@
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />
+    <Content Include="scripts\filtrex.js" />
     <Content Include="web.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

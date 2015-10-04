@@ -1,5 +1,7 @@
 ﻿/// <reference path="tsd.d.ts" />
 
+declare var compileExpression: any;
+
 declare module VirtualFor {
 
     export interface IScopeCollectionManager extends ICollectionManager { }
