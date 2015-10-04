@@ -31,8 +31,7 @@
                 <h1>More</h1>
                 <h1>More</h1>
                 <h1>More</h1>
-                <div virtual-for
-                     virtual-for-items='[
+                <div virtual-for='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -54,7 +53,7 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-                     virtual-for-item-name="movie"
+                     virtual-for-of="movie"
                      virtual-for-item-height="75">
 
                     <h1>{{ movie.name }} </h1>

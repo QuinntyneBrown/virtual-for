@@ -26,8 +26,7 @@
         <h1 class="title">Movies</h1>
 
         <div>
-            <div virtual-for
-                 virtual-for-items='[
+            <div virtual-for='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -49,7 +48,7 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-                 virtual-for-item-name="movie"
+                 virtual-for-of="movie"
                  virtual-for-search-term-name-on-scope="vm.filterTerm"
                  virtual-for-filter-fn-name-on-vm="filterFn">
 

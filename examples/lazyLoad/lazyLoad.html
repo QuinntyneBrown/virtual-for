@@ -15,9 +15,8 @@
 <body data-ng-app="lazyLoadApp" data-ng-controller="appController as vm">
 
 
-    <div virtual-for
-         virtual-for-items='[]'
-         virtual-for-item-name="tvSeries"
+    <div virtual-for='[]'
+         virtual-for-of="tvSeries"
          virtual-for-item-height="75"
          virtual-for-name="lazyLoad"
          virtual-for-data-service="dataService">

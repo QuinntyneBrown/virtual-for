@@ -1,9 +1,8 @@
 ﻿<div>
     <div class="list">
         <div style="height:80px;"
-             virtual-for
-             virtual-for-collection-name='list'
-             virtual-for-item-name="tvSeries"
+             virtual-for='list'
+             virtual-for-of="tvSeries"
              data-ng-click="$emit('listItemClicked',{ listItem: tvSeries })">
 
             <h1> {{ tvSeries.Item.Title }}</h1>

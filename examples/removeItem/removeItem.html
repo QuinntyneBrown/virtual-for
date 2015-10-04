@@ -15,8 +15,7 @@
 <body data-ng-app="removeItemApp" data-ng-controller="appController as vm">
 
 
-    <div virtual-for
-         virtual-for-items='[
+    <div virtual-for='[
          { "name" : "Matrix" },
          { "name" : "This the End" },
          { "name" : "Ghostbusters" },
@@ -38,7 +37,7 @@
          { "name" : "X-Men 3" },
          { "name" : "Fast 7" },
          { "name" : "Coming To America" }]'
-         virtual-for-item-name="movie"
+         virtual-for-of="movie"
          virtual-for-name="MyList">
 
         <h1 data-ng-click="$emit('virtualForRemoveItemMyList', { 'index': $$index  })">{{ movie.name }} </h1>
