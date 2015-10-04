@@ -76,6 +76,9 @@
     <TypeScriptCompile Include="examples\removeItem\removeItem.ts" />
     <TypeScriptCompile Include="examples\table\table.ts" />
     <TypeScriptCompile Include="examples\tabset\tabset.ts" />
+    <TypeScriptCompile Include="examples\typings\angular-data-service\typeScriptApp.d.ts" />
+    <TypeScriptCompile Include="examples\typings\popover\typeScriptApp.d.ts" />
+    <TypeScriptCompile Include="examples\typings\state-resolver\typeScriptApp.d.ts" />
     <TypeScriptCompile Include="src\directives\virtualFor.ts" />
     <TypeScriptCompile Include="src\functions\getX.ts" />
     <TypeScriptCompile Include="src\functions\injector.ts" />
@@ -154,6 +157,7 @@
   <ItemGroup>
     <Folder Include="dist\" />
     <Folder Include="examples\listDetail\app\views\partials\" />
+    <Folder Include="examples\typings\work-spinner\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

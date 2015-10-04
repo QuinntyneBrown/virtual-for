@@ -1,4 +1,5 @@
 ﻿/// <reference path="../../typings/typescriptapp.d.ts" />
-/// <reference path="../../node_modules/state-resolver/typings/typescriptapp.d.ts" />
-/// <reference path="../../node_modules/angular-data-service/typings/typescriptapp.d.ts" />
+/// <reference path="../typings/angular-data-service/typescriptapp.d.ts" />
+/// <reference path="../typings/state-resolver/typescriptapp.d.ts" />
+
 
