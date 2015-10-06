@@ -43,7 +43,7 @@ module VirtualFor {
             }
 
             function removeCustomAttributes(clone: ng.IAugmentedJQuery, prefix:string) {
-                var names = [];
+                var names: Array<string> = [];
                 var attributes = clone[0].attributes;
                 for (var i = 0; i < attributes.length; i++) {
                     if (attributes[i].nodeName.indexOf(prefix) > -1)

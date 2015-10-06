@@ -16,13 +16,13 @@ describe("renderer", () => {
     var $document: ng.IDocumentService;
 
     var template: string = [
-        "<Html><div style='height:100px; overflow-y:'scroll'><div virtual-for",
-        "virtual-for-items='[",
+        "<Html><div style='height:100px; overflow-y:'scroll'><div",
+        "virtual-for='[",
         JSON.stringify({ "name": "Matrix" }),
         "," + JSON.stringify({ "name": "The Wedding Crashers" }),
         "," + JSON.stringify({ "name": "Internship" }),
         "]'",
-        "virtual-for-item-name='movie'",
+        "virtual-for-of='movie'",
         "virtual-for-item-height='80'",
         "virtual-for-name='unit test'>",
         "<h1 style='height:100px'>{{ movie.name }}</h1>",
@@ -59,7 +59,7 @@ describe("renderer", () => {
         angular.element((<any>$document[0]).body).append(element[0]);
 
         var instance = renderer.createInstance({
-            attributes: { "virtualForItemName": "movie", "virtualForItemHeight": 10, "virtualForName": "unitTest" },
+            attributes: { "virtualForOf": "movie", "virtualForItemHeight": 10, "virtualForName": "unitTest" },
             items: items,
             element: element,
             scope: scope,

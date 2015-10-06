@@ -42,7 +42,7 @@ var ListDetail;
             key: "list",
             promise: ["$q", "dataService", function ($q, dataService) {
                 var deferred = $q.defer();
-                dataService.fromService({ method: "GET", url: "http://api.shomi.com/tvseries/search" }).then(function (results) {
+                dataService.fromService({ method: "GET", url: "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=0&LeagueID=00&Season=2015-16" }).then(function (results) {
                     deferred.resolve(results.data);
                 });
                 return deferred.promise;

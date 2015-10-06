@@ -49,7 +49,7 @@ module ListDetail {
                 promise: ["$q", "dataService", ($q: ng.IQService, dataService: DataService.IDataService) => {
                     var deferred = $q.defer();
 
-                    dataService.fromService({ method: "GET", url: "http://api.shomi.com/tvseries/search" }).then((results: any) => {
+                    dataService.fromService({ method: "GET", url: "http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=0&LeagueID=00&Season=2015-16" }).then((results: any) => {
                         deferred.resolve(results.data);
                     });
 
