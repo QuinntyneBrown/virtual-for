@@ -2,6 +2,7 @@
 
 - [ ] Add documentation
 - [ ] Improve examples
+- [ ] Add horizontal scrolling (carousel)
 
 
 # Changelog
