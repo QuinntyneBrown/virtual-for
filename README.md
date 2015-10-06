@@ -8,7 +8,6 @@ This means that on a phone screen that can fit eight items, only the eight items
 
 ## Installation
 ```console
-# use npm
 npm install virtual-for
 ```
 
