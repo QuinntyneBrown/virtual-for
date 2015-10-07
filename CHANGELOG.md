@@ -3,7 +3,7 @@
 - [ ] Add documentation
 - [ ] Improve examples
 - [ ] Add horizontal scrolling (carousel)
-
+- [ ] Make renderers observable
 
 # Changelog
 
