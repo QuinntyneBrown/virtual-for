@@ -12,15 +12,15 @@ module VirtualFor {
         }
 
         private scrollableParentElement: ng.IAugmentedJQuery;
-
-        private _scrollY: number;
+        
+        private get windowElement() { return angular.element(this.$window); }
 
         public get scrollY() {
 
             if (this.scrollableParentElement)
                 return (<HTMLElement>this.scrollableParentElement[0]).scrollTop;
 
-            return this.$window.pageYOffset;
+            return this.windowElement.scrollTop();
         }
 
         private _height: number;
@@ -28,7 +28,7 @@ module VirtualFor {
         public get height() {
             if (this.scrollableParentElement) { return (<HTMLElement>this.scrollableParentElement[0]).offsetHeight; }
 
-            return this.$window.innerHeight;
+            return this.windowElement.height();
         }
 
         public get bottom() {

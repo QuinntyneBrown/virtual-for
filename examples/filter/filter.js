@@ -24,7 +24,8 @@ var Filter;
                 { "name": "The Transporter" },
                 { "name": "X-Men 3" },
                 { "name": "Fast 7" },
-                { "name": "Coming To America" }];
+                { "name": "Coming To America" }
+            ];
             this.filterFn = function (item, searchTerm) {
                 return item.name.indexOf(searchTerm) > -1;
             };
