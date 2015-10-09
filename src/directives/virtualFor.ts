@@ -21,7 +21,8 @@ module VirtualFor {
 
             return  (scope: ng.IScope, element: ng.IAugmentedJQuery, attributes: ng.IAttributes, controller: any, transclude: any) => {
                 transclude(scope.$new(), (clone: ng.IAugmentedJQuery) => {
-                    removeCustomAttributes(clone,"virtual-for");
+                    removeCustomAttributes(clone, "virtual-for");
+
                     renderer.createInstance({
                         element: angular.element(parentElement),
                         template: getHtml(clone[0], true),
@@ -37,9 +38,17 @@ module VirtualFor {
             }
 
             function parseItems(scope: ng.IScope, attributes: ng.IAttributes): Array<any> {
-                var items = scope["vm"][attributes["virtualFor"]];
-                if (!items) items = JSON.parse(attributes["virtualFor"]);
-                return items;
+                var match = attributes["virtualFor"].match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/);
+                if (match) {
+                    var collectionStringArray = match[2].split(".");
+                    var items:any = scope;
+                    for (var i = 0; i < collectionStringArray.length; i++) {
+                        items = items[collectionStringArray[i]];
+                    }
+                    return items;
+                } else {
+                    return JSON.parse(attributes["virtualFor"]);
+                }
             }
 
             function removeCustomAttributes(clone: ng.IAugmentedJQuery, prefix:string) {

@@ -34,10 +34,18 @@ var VirtualFor;
                     });
                 };
                 function parseItems(scope, attributes) {
-                    var items = scope["vm"][attributes["virtualFor"]];
-                    if (!items)
-                        items = JSON.parse(attributes["virtualFor"]);
-                    return items;
+                    var match = attributes["virtualFor"].match(/^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/);
+                    if (match) {
+                        var collectionStringArray = match[2].split(".");
+                        var items = scope;
+                        for (var i = 0; i < collectionStringArray.length; i++) {
+                            items = items[collectionStringArray[i]];
+                        }
+                        return items;
+                    }
+                    else {
+                        return JSON.parse(attributes["virtualFor"]);
+                    }
                 }
                 function removeCustomAttributes(clone, prefix) {
                     var names = [];

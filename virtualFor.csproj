@@ -63,6 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\basic.ts" />
+    <TypeScriptCompile Include="examples\carousel\elections.d.ts" />
+    <TypeScriptCompile Include="examples\carousel\elections.module.ts" />
+    <TypeScriptCompile Include="examples\carousel\services\candiadateDataService.ts" />
     <TypeScriptCompile Include="examples\filter\filter.ts" />
     <TypeScriptCompile Include="examples\insideScrollableElement\insideScrollableElement.ts" />
     <TypeScriptCompile Include="examples\listDetail\app\controllers\defaultController.ts" />
@@ -121,6 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="examples\basic\basic.css" />
+    <Content Include="examples\carousel\elections.css" />
+    <Content Include="examples\carousel\index.html" />
     <Content Include="examples\filter\filter.css" />
     <Content Include="examples\filter\filter.html" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.css" />
@@ -137,6 +142,7 @@
     <Content Include="examples\tabset\tabset.html" />
     <Content Include="scripts\filtrex.js" />
     <Content Include="web.config" />
+    <Content Include="examples\carousel\manifest.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -156,6 +162,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />
+    <Folder Include="examples\carousel\directives\candidateCarousel\" />
+    <Folder Include="examples\carousel\views\" />
     <Folder Include="examples\listDetail\app\views\partials\" />
     <Folder Include="examples\typings\work-spinner\" />
   </ItemGroup>
