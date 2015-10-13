@@ -60,7 +60,7 @@ module VirtualFor {
             });
         }
 
-        public render = (options?:IRenderOptions) => {
+        public render = (options?: IRenderOptions) => {            
             if (options && options.force) return this.forceRender();
             if (this.hasRendered === false) return this.initialRender();
             if (this.viewPort.scrollY > this.lastScrollY) return this.renderTopToBottom();
@@ -88,6 +88,7 @@ module VirtualFor {
         }
 
         public renderTopToBottom = () => {
+            console.log(this.calculateScrollBottomDiff());
             var reachedBottom = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -129,6 +130,7 @@ module VirtualFor {
         }
 
         public renderBottomToTop = () => {
+            console.log(this.calculateScrollBottomDiff());
             var reachedTop = false;
             var allNodesHaveBeenMoved = false;
             var digestNeeded = false;
@@ -198,6 +200,11 @@ module VirtualFor {
             scope.$$index = options.index;
         }
 
+        public calculateScrollBottomDiff = () => {
+            
+            return this.container.top;
+        }
+
         public onResize = () => {
             if (!this.maxViewPortHeight) this.maxViewPortHeight = this.viewPort.height;
             if (this.maxViewPortHeight && this.maxViewPortHeight < this.viewPort.height) {
@@ -245,6 +252,7 @@ module VirtualFor {
         public get max() {
             return Math.ceil(((this.viewPort.height * this.renderPageSize) + this.container.htmlElement.offsetTop) / Number(this.itemHeight));
         }
+
         public hasRendered: boolean = false;
 
         public calculateItemHeight = (options: any): number => {

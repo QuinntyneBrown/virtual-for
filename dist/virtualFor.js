@@ -56,6 +56,12 @@ var VirtualFor;
                     }
                     names.forEach(function (name) { clone[0].removeAttribute(name); });
                 }
+                function verifyRepeatExpression(repeatExpression) {
+                    if (repeatExpression.match(/limitTo/) || repeatExpression.match(/startFrom/)) {
+                        throw new Error('"limitTo" and "startFrom" filters are not allowed in directive');
+                    }
+                }
+                ;
             };
         }
         VirtualFor.createInstance = function (getHtml, renderer) {
@@ -68,6 +74,124 @@ var VirtualFor;
 })(VirtualFor || (VirtualFor = {}));
 
 //# sourceMappingURL=virtualFor.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+angular.module("virtualFor").value("virtualFor.compileExpression", compileExpression);
+
+//# sourceMappingURL=compileExpression.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    "use strict";
+    var getHtml = function (who, deep) {
+        if (!who || !who.tagName)
+            return '';
+        var txt, ax, el = document.createElement("div");
+        el.appendChild(who.cloneNode(false));
+        txt = el.innerHTML;
+        if (deep) {
+            ax = txt.indexOf('>') + 1;
+            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+        }
+        el = null;
+        return txt;
+    };
+    angular.module("virtualFor").value("virtualFor.getHtml", getHtml);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=getHtml.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.getX = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none")
+            return 0;
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[6];
+    };
+    angular.module("virtualFor").value("virtualFor.getX", VirtualFor.getX);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=getX.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.getY = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none")
+            return 0;
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
+    };
+    angular.module("virtualFor").value("virtualFor.getY", VirtualFor.getY);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=getY.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    "use strict";
+    var Injector = (function () {
+        function Injector($injector) {
+            var _this = this;
+            this.$injector = $injector;
+            this.get = function (options) {
+                switch (options.interfaceName) {
+                    case "ICollectionManager":
+                        if (options.filterFnNameOnVm && options.searchTermNameOnScope)
+                            return _this.$injector.get("virtualFor.filterableCollectionManager").createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });
+                        if (options.dataService)
+                            return _this.$injector.get("virtualFor.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
+                        return _this.$injector.get("virtualFor.collectionManager").createInstance({ items: options.items });
+                    case "IViewPort":
+                        return _this.$injector.get("virtualFor.viewPort").createInstance({ element: options.element });
+                    case "IContainer":
+                        return _this.$injector.get("virtualFor.container").createInstance({ element: options.element });
+                    case "IRenderedNodes":
+                        return _this.$injector.get("virtualFor.renderedNodes").createInstance({ container: options.container });
+                    case "IVirtualNodes":
+                        return _this.$injector.get("virtualFor.virtualNodes").createInstance({ items: options.items, numberOfRenderedItems: options.numberOfRenderedItems, itemHeight: options.itemHeight });
+                }
+            };
+        }
+        return Injector;
+    })();
+    angular.module("virtualFor").service("virtualFor.injector", ["$injector", Injector]);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=injector.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.safeDigest = function (scope) {
+        if (!scope.$$phase && !scope.$root.$$phase)
+            scope.$digest();
+    };
+    angular.module("virtualFor").value("virtualFor.safeDigest", VirtualFor.safeDigest);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=safeDigest.js.map
+
+/// <reference path="../../typings/typescriptapp.d.ts" />
+var VirtualFor;
+(function (VirtualFor) {
+    VirtualFor.transformY = function (element, y) {
+        angular.element(element).css({
+            "-moz-transform": "translateY(" + y + "px)",
+            "-webkit-transform": "translateY(" + y + "px)",
+            "-ms-transform": "translateY(" + y + "px)",
+            "-transform": "translateY(" + y + "px)"
+        });
+        return element;
+    };
+    angular.module("virtualFor").value("virtualFor.transformY", VirtualFor.transformY);
+})(VirtualFor || (VirtualFor = {}));
+
+//# sourceMappingURL=transformY.js.map
 
 /// <reference path="../../typings/typescriptapp.d.ts" />
 var VirtualFor;
@@ -609,6 +733,7 @@ var VirtualFor;
                 _this.hasRendered = true;
             };
             this.renderTopToBottom = function () {
+                console.log(_this.calculateScrollBottomDiff());
                 var reachedBottom = false;
                 var allNodesHaveBeenMoved = false;
                 var digestNeeded = false;
@@ -641,6 +766,7 @@ var VirtualFor;
                 _this.lastScrollY = _this.viewPort.scrollY;
             };
             this.renderBottomToTop = function () {
+                console.log(_this.calculateScrollBottomDiff());
                 var reachedTop = false;
                 var allNodesHaveBeenMoved = false;
                 var digestNeeded = false;
@@ -696,6 +822,9 @@ var VirtualFor;
                 var scope = angular.element(options.node).scope();
                 scope[_this.itemName] = options.item;
                 scope.$$index = options.index;
+            };
+            this.calculateScrollBottomDiff = function () {
+                return _this.container.top;
             };
             this.onResize = function () {
                 if (!_this.maxViewPortHeight)
@@ -998,121 +1127,3 @@ var VirtualFor;
 })(VirtualFor || (VirtualFor = {}));
 
 //# sourceMappingURL=virtualNodes.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-angular.module("virtualFor").value("virtualFor.compileExpression", compileExpression);
-
-//# sourceMappingURL=compileExpression.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    "use strict";
-    var getHtml = function (who, deep) {
-        if (!who || !who.tagName)
-            return '';
-        var txt, ax, el = document.createElement("div");
-        el.appendChild(who.cloneNode(false));
-        txt = el.innerHTML;
-        if (deep) {
-            ax = txt.indexOf('>') + 1;
-            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
-        }
-        el = null;
-        return txt;
-    };
-    angular.module("virtualFor").value("virtualFor.getHtml", getHtml);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=getHtml.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.getX = function (element) {
-        var transform = angular.element(element).css("transform");
-        if (transform === "none")
-            return 0;
-        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[6];
-    };
-    angular.module("virtualFor").value("virtualFor.getX", VirtualFor.getX);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=getX.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.getY = function (element) {
-        var transform = angular.element(element).css("transform");
-        if (transform === "none")
-            return 0;
-        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[5];
-    };
-    angular.module("virtualFor").value("virtualFor.getY", VirtualFor.getY);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=getY.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    "use strict";
-    var Injector = (function () {
-        function Injector($injector) {
-            var _this = this;
-            this.$injector = $injector;
-            this.get = function (options) {
-                switch (options.interfaceName) {
-                    case "ICollectionManager":
-                        if (options.filterFnNameOnVm && options.searchTermNameOnScope)
-                            return _this.$injector.get("virtualFor.filterableCollectionManager").createInstance({ items: options.items, scope: options.scope, searchTermNameOnScope: options.searchTermNameOnScope, filterFnNameOnVm: options.filterFnNameOnVm });
-                        if (options.dataService)
-                            return _this.$injector.get("virtualFor.lazyLoadCollectionManager").createInstance({ items: options.items, dataService: options.dataService });
-                        return _this.$injector.get("virtualFor.collectionManager").createInstance({ items: options.items });
-                    case "IViewPort":
-                        return _this.$injector.get("virtualFor.viewPort").createInstance({ element: options.element });
-                    case "IContainer":
-                        return _this.$injector.get("virtualFor.container").createInstance({ element: options.element });
-                    case "IRenderedNodes":
-                        return _this.$injector.get("virtualFor.renderedNodes").createInstance({ container: options.container });
-                    case "IVirtualNodes":
-                        return _this.$injector.get("virtualFor.virtualNodes").createInstance({ items: options.items, numberOfRenderedItems: options.numberOfRenderedItems, itemHeight: options.itemHeight });
-                }
-            };
-        }
-        return Injector;
-    })();
-    angular.module("virtualFor").service("virtualFor.injector", ["$injector", Injector]);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=injector.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.safeDigest = function (scope) {
-        if (!scope.$$phase && !scope.$root.$$phase)
-            scope.$digest();
-    };
-    angular.module("virtualFor").value("virtualFor.safeDigest", VirtualFor.safeDigest);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=safeDigest.js.map
-
-/// <reference path="../../typings/typescriptapp.d.ts" />
-var VirtualFor;
-(function (VirtualFor) {
-    VirtualFor.transformY = function (element, y) {
-        angular.element(element).css({
-            "-moz-transform": "translateY(" + y + "px)",
-            "-webkit-transform": "translateY(" + y + "px)",
-            "-ms-transform": "translateY(" + y + "px)",
-            "-transform": "translateY(" + y + "px)"
-        });
-        return element;
-    };
-    angular.module("virtualFor").value("virtualFor.transformY", VirtualFor.transformY);
-})(VirtualFor || (VirtualFor = {}));
-
-//# sourceMappingURL=transformY.js.map

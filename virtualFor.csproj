@@ -120,7 +120,9 @@
     <TypeScriptCompile Include="typings\typeScriptApp.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\virtualFor.js" />
     <Content Include="examples\basic\basic.css" />
+    <Content Include="examples\basic\basic.js" />
     <Content Include="examples\filter\filter.css" />
     <Content Include="examples\filter\filter.html" />
     <Content Include="examples\insideScrollableElement\insideScrollableElement.css" />
@@ -135,8 +137,33 @@
     <Content Include="examples\table\table.css" />
     <Content Include="examples\table\table.html" />
     <Content Include="examples\tabset\tabset.html" />
+    <Content Include="index.html" />
+    <Content Include="node_modules\angular-ui-bootstrap\ui-bootstrap-csp.css" />
+    <Content Include="node_modules\angular\angular.js" />
+    <Content Include="node_modules\angular\angular.min.js" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap-theme.css" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap-theme.min.css" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="node_modules\jquery\dist\jquery.js" />
+    <Content Include="node_modules\jquery\dist\jquery.min.js" />
+    <Content Include="node_modules\lovefield\dist\lovefield.js" />
+    <Content Include="node_modules\lovefield\dist\lovefield.min.js" />
+    <Content Include="node_modules\rx-angular\dist\rx.angular.js" />
+    <Content Include="node_modules\rx-angular\dist\rx.angular.min.js" />
+    <Content Include="node_modules\rx\dist\rx.all.compat.js" />
+    <Content Include="node_modules\rx\dist\rx.all.compat.min.js" />
     <Content Include="scripts\filtrex.js" />
     <Content Include="web.config" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap.css.map" />
+    <Content Include="node_modules\bootstrap\dist\css\bootstrap-theme.css.map" />
+    <Content Include="node_modules\rx-angular\dist\rx.angular.map" />
+    <Content Include="node_modules\angular\angular.min.js.map" />
+    <Content Include="node_modules\rx\dist\rx.all.compat.map" />
+    <Content Include="node_modules\lovefield\dist\lovefield.min.js.map" />
+    <Content Include="node_modules\jquery\dist\jquery.min.map" />
+    <None Include="Properties\PublishProfiles\virtual-for - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\virtual-for - Web Deploy.pubxml" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -155,7 +182,6 @@
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="dist\" />
     <Folder Include="examples\listDetail\app\views\partials\" />
     <Folder Include="examples\typings\work-spinner\" />
   </ItemGroup>

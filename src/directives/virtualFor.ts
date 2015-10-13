@@ -62,6 +62,12 @@ module VirtualFor {
                 names.forEach((name: string) => { clone[0].removeAttribute(name); });
 
             }
+
+            function verifyRepeatExpression (repeatExpression) {
+                if (repeatExpression.match(/limitTo/) || repeatExpression.match(/startFrom/)) {
+                    throw new Error('"limitTo" and "startFrom" filters are not allowed in directive');
+                }
+            };
         }
 
     }
