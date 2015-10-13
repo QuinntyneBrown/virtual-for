@@ -1,6 +1,6 @@
 # virtual-for
 
-http://electioncarousel.azurewebsites.net/
+http://virtual-for.azurewebsites.net/
 
 virtual-for allows an app to show huge lists of items much more performantly than ng-repeat.
 
